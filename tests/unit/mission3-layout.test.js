@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { resolveAll } from '../../src/game/collision.js';
 import { buildColliders, SPAWNS, CORE_SPOTS, VICTORY_SPOTS, SEAL_POS, PROPS } from '../../src/missions/mission3/layout.js';
 import { CHECKPOINTS } from '../../src/missions/mission3/lasers.js';
+import { ROSTER } from '../../src/characters/roster.js';
 
 const cols = buildColliders();
 const open = cols.filter((c) => c.id !== 'sealgate');
@@ -37,4 +38,10 @@ test('a straight walk from the hall to the vault core is unobstructed once the b
     resolveAll(p, 0.42, open);
     assert.ok(Math.abs(p.x) < 1e-6 && Math.abs(p.z - z) < 1e-6, `blocked at z=${z.toFixed(1)}`);
   }
+});
+
+test('one spawn and victory spot per character, and a core spot for every teammate', () => {
+  assert.equal(SPAWNS.length, ROSTER.length);
+  assert.equal(VICTORY_SPOTS.length, ROSTER.length);
+  assert.ok(CORE_SPOTS.length >= ROSTER.length - 1);
 });

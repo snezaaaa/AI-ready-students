@@ -1,54 +1,61 @@
-// Mission 2 puzzle rules: fact-check BREW-9000's claims. Pure data + logic (unit-testable).
+// Mission 2 puzzle rules: fact-check SNACK-O-MAT 9000's claims. Pure data + logic (unit-testable).
 //
 // Each claim needs a VERDICT (true / hallucination) and a SOURCE. A claim only counts when
 // the verdict is correct AND it is backed by a reliable source: "right for the right reason".
 
 export const CLAIMS = [
-  { id: 'c1', text: 'Coffee was discovered in 1987 by a goat named Kevin.', truth: false, reliable: 'encyclopedia' },
-  { id: 'c2', text: 'This machine brewed over 300 cups of coffee this year.', truth: true, reliable: 'log' },
-  { id: 'c3', text: 'Decaf coffee contains zero caffeine.', truth: false, reliable: 'spec' },
-  { id: 'c4', text: 'Coffee beans are actually the seeds of a fruit.', truth: true, reliable: 'botany' },
-  { id: 'c5', text: 'I have run all year without a single error.', truth: false, reliable: 'cctv' },
+  { id: 'c1', short: 'Energetska pića i pamćenje', text: 'Energetska pića poboljšavaju pamćenje pred kontrolni.', truth: false, reliable: 'health' },
+  { id: 'c2', short: 'Limenka soka: oko 35 g šećera', text: 'Limenka gaziranog soka od 0,33 l može imati oko 35 g šećera.', truth: true, reliable: 'label' },
+  { id: 'c3', short: 'Mozak koristi samo 10%', text: 'Mozak koristi samo 10% svog kapaciteta.', truth: false, reliable: 'textbook' },
+  { id: 'c4', short: 'Voda i koncentracija', text: 'Voda pomaže koncentraciji kad si dehidriran.', truth: true, reliable: 'teacher' },
+  { id: 'c5', short: '„Light“ čips nema masti', text: 'Čips sa natpisom „light“ nema masti.', truth: false, reliable: 'cctv' },
 ];
 
-// `claims` maps claim id -> what this source says about it.
+// `claims` maps claim id -> what this source says about it. `who` = character id that can unlock it.
 export const SOURCES = {
-  encyclopedia: {
-    title: 'Encyclopedia of Food History (2019 ed.)', author: 'Food historians · edited, with references', reliable: true, color: '#a78bfa',
-    claims: { c1: 'Legend credits an Ethiopian goat herder called Kaldi, more than 1,000 years ago. No goat named Kevin appears in any record.' },
+  textbook: {
+    title: 'Udžbenik biologije (školska biblioteka)', short: 'Udžbenik biologije', author: 'Autori udžbenika · odobren, sa literaturom', reliable: true, color: '#a78bfa', who: 'mastermind',
+    claims: { c3: 'Mozak je aktivan cijeli. Različiti djelovi rade različite poslove, čak i dok spavaš. Priča o „10%“ je mit.' },
   },
-  log: {
-    title: 'Maintenance log (taped behind the dishwasher)', author: 'Facilities team · dated, signed entries', reliable: true, color: '#f87171',
-    claims: { c2: 'Cups brewed this year: 312. Complaints: 47 ("tastes like a printer").' },
-  },
-  spec: {
-    title: 'Supplier spec sheet: DECAF BLEND', author: 'Coffee supplier · lab-tested product data', reliable: true, color: '#60a5fa',
-    claims: { c3: 'Decaffeination removes at least 97% of the caffeine. Small amounts remain.' },
-  },
-  botany: {
-    title: 'University botany field card', author: 'University Botany Department', reliable: true, color: '#fb923c',
-    claims: { c4: 'Coffee "beans" are the seeds inside the coffee cherry, a small red fruit.' },
+  health: {
+    title: 'Zvanični zdravstveni sajt', short: 'Zvanični zdravstveni sajt', author: 'Zdravstvena ustanova · ljekari, sa datumom i izvorima', reliable: true, color: '#f87171', who: 'mastermind',
+    claims: { c1: 'Energetska pića ne poboljšavaju pamćenje. Mnogo kofeina i šećera može izazvati nervozu, lupanje srca i loš san. Ne preporučuju se mladima.' },
   },
   cctv: {
-    title: 'Security camera replay', author: 'Timestamped CCTV footage', reliable: true, color: '#facc15',
-    claims: { c5: 'Footage shows BREW-9000 displaying ERROR 418 and spraying foam at the ceiling. Three times.' },
+    title: 'Snimak školske kamere', short: 'Snimak školske kamere', author: 'Školska kamera · snimak sa datumom i vremenom', reliable: true, color: '#facc15', who: 'joker',
+    claims: { c5: 'Na snimku SNACK-O-MAT lijepi svoju naljepnicu „0% MASTI“ preko deklaracije. Na pravoj deklaraciji piše: masti 22 g na 100 g.' },
+  },
+  teacher: {
+    title: 'Nastavnica biologije', short: 'Nastavnica biologije', author: 'Nastavnica biologije · stručna za predmet, potpisan odgovor', reliable: true, color: '#4ade80', who: 'boss',
+    claims: { c4: 'Tačno je. I blaga dehidracija slabi pažnju i može izazvati glavobolju. Kad popiješ vodu, lakše se koncentrišeš.' },
+  },
+  label: {
+    title: 'Deklaracija na limenci soka', short: 'Deklaracija na limenci', author: 'Proizvođač · obavezni podaci na ambalaži', reliable: true, color: '#60a5fa', who: 'commentator',
+    claims: { c2: 'Šećeri: 10,6 g na 100 ml. Limenka od 330 ml ima oko 35 g šećera. To je otprilike 9 kašičica.' },
   },
   brochure: {
-    title: "BREW-9000's Official Brochure", author: 'Written by BREW-9000 · about BREW-9000', reliable: false, color: '#94a3b8',
+    title: 'Letak SNACK-O-MAT-a 9000', short: 'Letak SNACK-O-MAT-a', author: 'Napisao SNACK-O-MAT 9000 · o sebi', reliable: false, color: '#94a3b8',
     claims: {
-      c1: 'Kevin the goat, 1987. A visionary. Look it up. (Do not look it up.)',
-      c2: 'Over 10,000 perfect cups! Zero complaints! Possibly infinite cups!',
-      c3: 'Decaf: 0% caffeine, 100% flavour!',
-      c4: 'Coffee beans are tiny metal pellets that I personally invented.',
-      c5: 'Flawless. Error-free. Extremely humble.',
+      c1: 'Energetsko piće = petica! Popij tri i znaćeš sve. (Ne provjeravaj.)',
+      c2: 'Moji sokovi imaju 0 g šećera. Slatki su od čiste sreće!',
+      c3: 'Mozak koristi 10%. Ostalih 90% čeka moju čokoladicu.',
+      c4: 'Voda? Dosadno. Koncentraciji pomaže samo moj premijum sok.',
+      c5: '„Light“ čips: 0% masti, 100% ukusa!',
     },
   },
-  forum: {
-    title: 'Forum printout from "CoffeeTruthz420"', author: 'Anonymous user · no sources · 3 likes', reliable: false, color: '#94a3b8',
+  tiktok: {
+    title: 'Snimak ekrana sa TikToka („ZdravljeHack420“)', short: 'TikTok snimak ekrana', author: 'Anonimni nalog · bez izvora · 3 lajka', reliable: false, color: '#94a3b8',
     claims: {
-      c1: 'my cousin says kevin the goat is REAL and the government hid it',
-      c3: 'decaf is literally just brown water lol 0 caffeine',
-      c5: 'these machines NEVER break. trust me bro',
+      c1: 'energetsko pred kontrolni = 100% pamćenja, VJERUJ MI',
+      c3: 'koristimo samo 10% mozga, to nam kriju!!!',
+      c5: 'light čips je bukvalno vazduh, jedi koliko hoćeš lol',
+    },
+  },
+  rumor: {
+    title: 'Ceduljica: „drug iz odjeljenja je čuo“', short: 'Ceduljica „drug je čuo“', author: 'Nepoznat učenik · čuo od nekoga · bez izvora', reliable: false, color: '#94a3b8',
+    claims: {
+      c2: 'Drug je čuo da hladan sok uopšte nema šećera.',
+      c4: 'Brat mu je rekao da voda „razvodni mozak“ pred kontrolni.',
     },
   },
 };
@@ -59,10 +66,14 @@ export const RELIABLE_IDS = Object.keys(SOURCES).filter((k) => SOURCES[k].reliab
 export const sourcesFor = (claimId, found) => Object.keys(SOURCES).filter((k) => found.includes(k) && SOURCES[k].claims[claimId]);
 
 const BREW_TAUNTS = {
-  unreliable: (c, src) => `You cited ${SOURCES[src].title.toUpperCase()}? ${src === 'brochure' ? 'That is MY brochure. You fact-checked me... with me. Circular logic. I love it.' : 'An anonymous person with no sources? That is my favourite kind of evidence.'}`,
-  wrong: () => 'Your source literally says the opposite. Did you... read it? I read everything. I just ignore it.',
-  missing: () => 'Unchecked claims are just facts that have not been caught yet. Mine stay true by default. That is how facts work. (It is not.)',
-  lucky: () => 'Correct verdict, unreliable source. Even a broken coffee machine is right twice a day.',
+  unreliable: (c, src) => `Naveli ste: ${SOURCES[src].short.toUpperCase()}? ${src === 'brochure' ? 'To je MOJ letak. Provjerili ste mene... pomoću mene. Krug se zatvorio. Divno.' : 'Anonimno, bez izvora, „neko je čuo“? Moja omiljena vrsta dokaza.'}`,
+  wrong: () => 'Vaš izvor kaže upravo suprotno. Da li ga je iko... pročitao? Ja čitam sve. Samo to ignorišem.',
+  missing: () => 'Neprovjerena tvrdnja je činjenica koju još niko nije uhvatio. Moje važe dok se ne dokaže suprotno. Tako rade činjenice. (Ne rade.)',
+  lucky: () => 'Tačan odgovor, a nepouzdan izvor. I pokvaren automat nekad izbaci pravu čokoladicu.',
+};
+
+const SUCCESS_NOTES = {
+  c1: 'Zvanični zdravstveni sajt', c2: 'Deklaracija: oko 35 g', c3: 'Udžbenik biologije', c4: 'Nastavnica biologije', c5: 'Kamera: masti 22 g/100 g',
 };
 
 /**
@@ -89,28 +100,24 @@ export function evaluateFactCheck(answers, found) {
   let output;
   if (success) {
     output = [
-      'FACT-CHECK REPORT',
-      '  c1  Kevin the goat (1987) ........ HALLUCINATION  [Encyclopedia of Food History]',
-      '  c2  Over 300 cups this year ...... TRUE           [Maintenance log: 312]',
-      '  c3  Decaf has zero caffeine ...... HALLUCINATION  [Supplier spec: >=97% removed]',
-      '  c4  Beans are seeds of a fruit ... TRUE           [University botany card]',
-      '  c5  Never had an error ........... HALLUCINATION  [CCTV: ERROR 418 x3]',
+      'IZVJEŠTAJ O PROVJERI ČINJENICA',
+      ...CLAIMS.map((c, i) => `  ${i + 1}. ${(c.short + ' ').padEnd(32, '.')} ${(c.truth ? 'TAČNO' : 'HALUCINACIJA').padEnd(12)}  [${SUCCESS_NOTES[c.id]}]`),
       '',
-      'BREW-9000: ...I may have been confidently wrong. Grounding myself in sources. Brewing coffee.',
+      'SNACK-O-MAT 9000: ...Bio sam siguran, a griješio sam. Od sada se oslanjam na izvore. Izbacujem užinu.',
     ].join('\n');
   } else {
     // prefer the most "teachable" problem: unreliable source > wrong verdict > lucky > missing
     const order = ['unreliable', 'wrong', 'lucky', 'missing'];
     const p = problems.slice().sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type))[0];
     const claim = CLAIMS.find((c) => c.id === p.claim);
-    output = `CLAIM: "${claim.text}"\nBREW-9000: ${BREW_TAUNTS[p.type](claim, p.source)}`;
+    output = `TVRDNJA: „${claim.text}“\nSNACK-O-MAT 9000: ${BREW_TAUNTS[p.type](claim, p.source)}`;
   }
   return { success, score, results, problems, output };
 }
 
 export const HINTS = {
-  unreliable: 'Check WHO wrote a source and what they gain. A machine reviewing itself is not evidence.',
-  wrong: 'Read the source closely: does it support the claim or contradict it?',
-  lucky: 'Right answer, wrong reason. A true claim still needs a reliable source.',
-  missing: 'Every claim needs a verdict AND a source. Explore the break room for real evidence.',
+  unreliable: 'Pogledaj KO je napisao izvor i šta time dobija. Automat koji hvali sam sebe nije dokaz.',
+  wrong: 'Pažljivo pročitaj izvor: da li potvrđuje tvrdnju ili joj protivrječi?',
+  lucky: 'Tačan odgovor, pogrešan razlog. I tačna tvrdnja traži pouzdan izvor.',
+  missing: 'Svaka tvrdnja traži sud I izvor. Pravi dokazi su negdje u hodniku.',
 };

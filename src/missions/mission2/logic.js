@@ -1,7 +1,9 @@
-// Mission 2 — THE COFFEE BREAK CRISIS
-// BREW-9000, the break-room coffee machine, has become "intelligent" and confidently hallucinates.
-// Players gather reliable evidence (one source per character skill), dodge Mop-Bots, keep their
-// caffeine up, and fact-check five claims at the Fact-Check Station to ground the machine.
+// Mission 2 — KRIZA KOD AUTOMATA (the school hallway)
+// SNACK-O-MAT 9000, the school snack machine, has become "intelligent" and confidently hallucinates.
+// Players gather reliable evidence (each source needs one of the four characters), dodge the
+// vacuum robots, keep their energy up, and fact-check five claims at the Fact-Check Station.
+// (Internal names such as `caffeine`, `brew`, `fridge` or `dishwasher` are kept from the original
+// project: they are the energy meter, the snack machine, the drinks cooler and the tablet locker.)
 import { useGame } from '../../game/store.js';
 import { world, emote, placeCharacters } from '../../game/world.js';
 import { sfx } from '../../game/audio.js';
@@ -33,52 +35,48 @@ function giveSource(id, lines) {
   const s = SOURCES[id];
   const claim = CLAIMS.find((c) => s.claims[c.id]);
   G().showToast({
-    title: s.reliable ? `EVIDENCE FOUND: ${s.title.toUpperCase()}` : `SOURCE PICKED UP: ${s.title.toUpperCase()}`,
-    body: `"${s.claims[claim.id]}"`,
-    tip: `Author: ${s.author}. ${s.reliable ? 'Who wrote it and how do they know? This one checks out.' : 'Hmm. Who wrote this, and what do they gain?'}`,
+    title: s.reliable ? `PRONAĐEN DOKAZ: ${s.short.toUpperCase()}` : `UZET IZVOR: ${s.short.toUpperCase()}`,
+    body: `„${s.claims[claim.id]}“`,
+    tip: `Autor: ${s.author}. ${s.reliable ? 'Ko je ovo napisao i odakle zna? Ovaj izvor je u redu.' : 'Hm. Ko je ovo napisao i šta time dobija?'}`,
     color: s.color,
   });
   say(lines);
   const n = reliableCount();
   if (s.reliable) {
     say(n === 5
-      ? { who: 'mastermind', mood: 'smug', text: 'That is all five reliable sources. To the Fact-Check Station. Let us ruin a coffee machine\'s whole day.' }
-      : { who: 'brew', text: `Evidence ${n} of 5? Irrelevant. My confidence remains at 100%.` });
+      ? { who: 'mastermind', mood: 'smug', text: 'To je svih pet pouzdanih izvora. Na Stanicu za provjeru. Hajde da ovom automatu malo pokvarimo dan.' }
+      : { who: 'brew', text: `Dokaz ${n} od 5? Nebitno. Moja sigurnost je i dalje 100%.` });
   }
   return true;
 }
 export const reliableCount = (s = G()) => s.inventory.filter((k) => SOURCES[k]?.reliable).length;
 
+// "Wrong character" reactions. Each points to who CAN do it.
 const WRONG = {
   bookshelf: {
-    joker: 'This encyclopedia has no pictures. I cannot work under these conditions. Mastermind? (1)',
-    boss: 'Reading? I delegate reading. The Mastermind is my delegate. (1)',
-    commentator: 'He opens the book... he sees the word "historiography"... HE CLOSES THE BOOK! Mastermind, please! (1)',
-    fighter: 'Book is very heavy. Words are very small. Mastermind. (1)',
+    joker: 'Ovaj udžbenik ima 300 strana i nijednu sliku na koricama. Ne mogu ovako da radim. GPT? (1)',
+    boss: 'Mogu da složim police po abecedi. Ali da nađem pravu stranu? To brže radi GPT. (1)',
+    commentator: 'Rado bih ga pročitao cijelog, pažljivo. Ali nemamo toliko energije. GPT čita brže. (1)',
   },
   fridge: {
-    mastermind: 'The fridge display says "MOOD: COLD". It will not open for logic. It wants... comedy. Joker? (2)',
-    boss: 'I ordered the fridge to open. It went on strike. We need the Joker. (2)',
-    commentator: 'The fridge is SULKING, folks! It needs a laugh! Calling the Joker to the fridge! (2)',
-    fighter: 'I tried to open it. It hummed at me. Aggressively. Joker? (2)',
+    mastermind: 'Na vitrini piše „RASPOLOŽENJE: HLADNO“. Objasnio sam joj termodinamiku. Još se više naljutila. Treba joj lijepa riječ: Claude. (4)',
+    joker: 'Ispričao sam joj vic o ledu. Rekla je da je „hladan“. Traži pristojnost, a to je Claude. (4)',
+    boss: 'Ponudio sam joj raspored hlađenja. Nije zainteresovana. Njoj treba ljubaznost: Claude. (4)',
   },
   desk: {
-    mastermind: 'The drawer sign says "MANAGERS ONLY". I have three degrees but zero lanyards. Boss? (3)',
-    joker: 'I knocked on the drawer. It asked for my job title. I said "vibes". Boss! (3)',
-    commentator: 'A locked managerial drawer! Only one person in this building has the AURA! The Boss! (3)',
-    fighter: 'I could break it, but HR is already watching me after the cabinet thing. Boss. (3)',
+    mastermind: 'Na fioci piše „SAMO UZ DOGOVOR“. Ja sam htio da održim predavanje. Za dogovore je Copilot. (3)',
+    joker: 'Pokucao sam na fioku. Pitala je imam li zakazano. Nemam ni kalendar! Copilot! (3)',
+    commentator: 'Ne bih da zovem nastavnicu bez zakazanog termina. Termine dogovara Copilot. (3)',
   },
   cctv: {
-    mastermind: '"REPLAY REQUIRES DRAMATIC NARRATION." Of course it does. Commentator? (4)',
-    joker: 'I tried narrating. It said my voice lacks "sports energy". Commentator! (4)',
-    boss: 'The monitor demands a play-by-play. I only do quarterly reviews. Commentator. (4)',
-    fighter: 'I said "replay". It said "with FEELING". I do not have feelings. Commentator. (4)',
+    mastermind: '„SNIMAK TRAŽI OKO ZA DETALJE.“ Ja bih radije napisao esej o snimku. Kamere vidi Gemi. (2)',
+    boss: 'Mogu da napravim spisak svih snimaka. Ali da ih gledam? To je Gemi. (2)',
+    commentator: 'Slika je mutna, a ne bih da nagađam šta je na njoj. Gemi vidi kamere bolje. (2)',
   },
   dishwasher: {
-    mastermind: 'This dishwasher weighs 140 kilograms. I calculated it. I cannot lift calculations. Fighter? (5)',
-    joker: 'I pushed it. It pushed back. Emotionally. Fighter! (5)',
-    boss: "This suit is dry-clean only. And so is my back. Fighter. (5)",
-    commentator: 'He strains! He groans! It does not move a single millimetre! We need THE FIGHTER! (5)',
+    joker: 'Na bravi je zagonetka. Ponudio sam vic umjesto odgovora. Nije prošlo. GPT! (1)',
+    boss: 'Ormarić traži odgovor na zagonetku, a ne ponudu. Zagonetke rješava GPT. (1)',
+    commentator: 'Zagonetka je zanimljiva, ali ne bih da pogađam. GPT ih rješava za sekund. (1)',
   },
 };
 
@@ -96,7 +94,7 @@ function gated(obj, who, sourceId, onSuccess, already) {
   };
 }
 
-// ---------------------------------------------------------------- caffeine
+// ---------------------------------------------------------------- energy
 function addCaffeine(amount) {
   G().patchMs((m) => ({ caffeine: Math.min(100, m.caffeine + amount) }));
 }
@@ -105,7 +103,7 @@ function addCaffeine(amount) {
 export const INTERACTABLES = [
   {
     id: 'station', x: PROPS.station.x + 1.1, z: PROPS.station.z, r: 1.8,
-    label: (s) => (s.doorOpen ? null : 'Open the FACT-CHECK STATION'),
+    label: (s) => (s.doorOpen ? null : 'Otvori STANICU ZA PROVJERU ČINJENICA'),
     use: () => {
       sfx.interact();
       G().clearDialogue();
@@ -115,155 +113,170 @@ export const INTERACTABLES = [
   },
   {
     id: 'brew', x: PROPS.brew.x + 1.1, z: PROPS.brew.z, r: 1.9,
-    label: (s) => (s.doorOpen ? 'Thank BREW-9000' : 'Talk to BREW-9000'),
+    label: (s) => (s.doorOpen ? 'Zahvali SNACK-O-MAT-u' : 'Razgovaraj sa SNACK-O-MAT-om'),
     use: () => {
       sfx.interact();
-      if (G().doorOpen) return say({ who: 'brew', text: 'You are welcome. I now cite my sources. Even this sentence. (Source: me.) ...Sorry. Old habits.' }, { interrupt: true });
+      if (G().doorOpen) return say({ who: 'brew', text: 'Nema na čemu. Sad navodim izvore. Čak i za ovu rečenicu. (Izvor: ja.) ...Izvinite. Stara navika.' }, { interrupt: true });
       const c = CLAIMS[Math.floor(world.time) % CLAIMS.length];
       say([
-        { who: 'brew', text: `Reminder of an unquestionable fact: "${c.text}"` },
-        { who: activeId(), mood: 'angry', text: ['Says who?', 'Source?', 'Citation needed.', 'Big if true.', 'Doubt.'][G().active] },
-        { who: 'brew', text: 'Says ME. I am very confident. Confidence is basically the same as accuracy.' },
+        { who: 'brew', text: `Podsjećam na neospornu činjenicu: „${c.text}“` },
+        { who: activeId(), mood: 'angry', text: ['Ko to kaže?', 'Izvor?', 'Gdje to piše?', 'Hm. Sumnjam.'][G().active] },
+        { who: 'brew', text: 'Kažem JA. Veoma sam siguran. A sigurnost je skoro isto što i tačnost.' },
       ], { interrupt: true });
     },
   },
   {
     id: 'brochure', x: -8.1, z: 2.9, r: 1.3,
-    label: (s) => (s.inventory.includes('brochure') ? 'Re-read the brochure' : 'Take a BREW-9000 brochure'),
+    label: (s) => (s.inventory.includes('brochure') ? 'Ponovo pročitaj letak' : 'Uzmi letak SNACK-O-MAT-a'),
     use: () => {
-      if (!giveSource('brochure', { who: 'joker', mood: 'grin', text: 'A brochure written by the machine, about the machine, praising the machine. Five stars from... the machine.' })) {
+      if (!giveSource('brochure', { who: 'joker', mood: 'grin', text: 'Letak koji je automat napisao, o automatu, i u kojem automat hvali automat. Pet zvjezdica od... automata.' })) {
         sfx.interact();
-        say({ who: activeId(), text: '"BREW-9000: Voted best coffee machine by BREW-9000." Very convincing.' }, { interrupt: true });
+        say({ who: activeId(), text: '„SNACK-O-MAT 9000: najbolji automat po izboru SNACK-O-MAT-a 9000.“ Vrlo ubjedljivo.' }, { interrupt: true });
       }
     },
   },
   {
     id: 'sugar', x: -8.1, z: -2.9, r: 1.3,
-    label: () => 'Eat sugar packets (+10 caffeine-ish)',
+    label: () => 'Pojedi užinu iz ranca (+10 energije)',
     use: () => {
-      if (world.time < ms().sugarReadyAt) { sfx.deny(); return say({ who: activeId(), mood: 'sad', text: 'Still processing the last six sugar packets. Give it a few seconds.' }, { interrupt: true }); }
+      if (world.time < ms().sugarReadyAt) { sfx.deny(); return say({ who: activeId(), mood: 'sad', text: 'Još žvaćem prošli zalogaj. Daj mi par sekundi.' }, { interrupt: true }); }
       sfx.pickup();
       addCaffeine(10);
       G().patchMs({ sugarReadyAt: world.time + 12 });
-      say({ who: activeId(), mood: 'excited', text: 'Sugar is not caffeine. But my body cannot tell the difference. Yet.' }, { interrupt: true });
+      say({ who: activeId(), mood: 'excited', text: 'Sendvič od kuće. Neko je znao da će ovaj dan biti dug.' }, { interrupt: true });
     },
   },
   {
     id: 'donuts', x: PROPS.donutTable.x, z: PROPS.donutTable.z + 1.3, r: 1.7,
-    label: (s) => (s.ms.donuts > 0 ? `Grab a donut (+30, ${s.ms.donuts} left)` : 'Stare at the empty donut box'),
+    label: (s) => (s.ms.donuts > 0 ? `Uzmi jabuku iz kantine (+30, ostalo: ${s.ms.donuts})` : 'Gledaj u praznu korpu'),
     use: () => {
-      if (ms().donuts <= 0) { sfx.deny(); return say({ who: activeId(), mood: 'sad', text: 'The donut box is empty. Like my soul. And my coffee cup.' }, { interrupt: true }); }
+      if (ms().donuts <= 0) { sfx.deny(); return say({ who: activeId(), mood: 'sad', text: 'Korpa je prazna. Kao moja baterija pred kraj sedmog časa.' }, { interrupt: true }); }
       sfx.pickup();
       addCaffeine(30);
       G().patchMs((m) => ({ donuts: m.donuts - 1 }));
       emote(G().active, 'cheer', 1.5);
-      const lines = { mastermind: 'Glazed. Statistically the optimal donut.', joker: 'Why did the donut go to the dentist? It needed a filling. ...I will see myself out.', boss: 'I will expense this donut.', commentator: 'A DONUT! A MAGNIFICENT GLAZED VICTORY!', fighter: 'Protein. (It is not protein.)' };
+      const lines = {
+        mastermind: 'Jabuka. Statistički najbolja užina. Otprilike.',
+        joker: 'Zašto je jabuka krenula u školu? Da postane pametna voćka. ...Sam ću izaći.',
+        boss: 'Jabuka upisana u tabelu užina. Red 1.',
+        commentator: 'Hvala kantini. Ukusno, i taman kad treba.',
+      };
       say({ who: activeId(), mood: 'happy', text: lines[activeId()] }, { interrupt: true });
     },
   },
   {
     id: 'cooler', x: PROPS.cooler.x - 1.0, z: PROPS.cooler.z, r: 1.5,
-    label: () => 'Drink from the water cooler (+4)',
+    label: () => 'Napij se vode na česmi (+4)',
     use: () => {
       sfx.interact();
       addCaffeine(4);
-      say({ who: activeId(), text: 'Water. Hydrating, healthy, and completely useless for this crisis.' }, { interrupt: true });
+      say({ who: activeId(), text: 'Voda. Nije spektakularna, ali glava odmah radi bolje.' }, { interrupt: true });
     },
   },
   {
     id: 'bookshelf', x: PROPS.bookshelf.x - 1.1, z: PROPS.bookshelf.z, r: 1.8,
-    label: (s) => (s.inventory.includes('encyclopedia') ? 'Browse the bookshelf' : 'Search the reference bookshelf'),
-    use: gated('bookshelf', 'mastermind', 'encyclopedia', () => giveSource('encyclopedia', [
-      { who: 'mastermind', mood: 'smug', text: 'Encyclopedia of Food History. Edited, referenced, peer-reviewed. Page 212: a goat herder named Kaldi. Over a thousand years ago.' },
-      { who: 'mastermind', mood: 'smug', text: 'Not 1987. Not Kevin. The machine made it up.' },
-      { who: 'joker', mood: 'sad', text: "I was really rooting for Kevin." },
-    ]), 'Nothing else here except "Advanced Spreadsheets, Volume 9". Tempting.'),
+    label: (s) => (s.inventory.includes('textbook') ? 'Razgledaj policu' : 'Pretraži policu školske biblioteke'),
+    use: gated('bookshelf', 'mastermind', 'textbook', () => giveSource('textbook', [
+      { who: 'mastermind', mood: 'smug', text: 'Udžbenik biologije. Odobren, sa autorima i literaturom. Strana 84: mozak je aktivan cijeli, čak i dok spavamo.' },
+      { who: 'mastermind', mood: 'smug', text: 'Znači, nije 10%. Automat je to izmislio. Znao sam. Bio sam siguran. Ali sad imamo i dokaz.' },
+      { who: 'joker', mood: 'sad', text: 'A ja sam se baš nadao rezervnih 90%.' },
+    ]), 'Ostala je samo „Zbirka zadataka, tom 9“. Primamljivo.'),
   },
   {
     id: 'fridge', x: PROPS.fridge.x - 1.2, z: PROPS.fridge.z, r: 1.8,
-    label: (s) => (s.inventory.includes('botany') ? 'Check on the (happy) fridge' : 'Open the sulking fridge'),
-    use: gated('fridge', 'joker', 'botany', () => {
+    label: (s) => (s.inventory.includes('label') ? 'Pogledaj (srećnu) vitrinu' : 'Otvori durljivu vitrinu sa sokovima'),
+    use: gated('fridge', 'commentator', 'label', () => {
       G().patchMs({ fridgeOpen: true });
-      giveSource('botany', [
-        { who: 'joker', mood: 'grin', text: 'Hey fridge, why so cold? ...Because you keep everything bottled up! HA!' },
-        { who: 'narrator', text: 'The fridge laughs so hard its door swings open. Inside: half a sandwich, and a field card from the University Botany Department.' },
-        { who: 'joker', mood: 'excited', text: '"Coffee beans are the seeds of the coffee cherry, a fruit." So the machine was RIGHT about that one?!' },
-        { who: 'mastermind', text: 'Exactly. AI is not always wrong. That is what makes it tricky. Verify everything, true claims too.' },
+      giveSource('label', [
+        { who: 'commentator', mood: 'happy', text: 'Dobar dan, vitrino. Znam da je naporno hladiti cijeli dan. Da li bismo, molim te, mogli da pogledamo jednu limenku? Hvala ti.' },
+        { who: 'narrator', text: 'Niko još nije bio ovako pristojan prema vitrini. Vrata se sama otvaraju. Unutra: limenka soka sa deklaracijom na poleđini.' },
+        { who: 'commentator', mood: 'excited', text: '„Šećeri: 10,6 g na 100 ml.“ Limenka ima 330 ml, to je oko 35 g. Dakle, ovdje je automat rekao ISTINU.' },
+        { who: 'mastermind', text: 'Tako je. AI nije uvijek u krivu. Zato i jeste nezgodno. Provjeravamo sve, pa i ono što zvuči tačno.' },
       ]);
-    }, 'The fridge is still giggling. Someone should check on it.'),
+    }, 'Vitrina tiho zuji od sreće. Neka je.'),
   },
   {
     id: 'desk', x: PROPS.desk.x, z: PROPS.desk.z + 1.1, r: 1.7,
-    label: (s) => (s.inventory.includes('spec') ? "Look at the manager's desk" : "Open the manager's locked drawer"),
-    use: gated('desk', 'boss', 'spec', () => {
+    label: (s) => (s.inventory.includes('teacher') ? 'Pogledaj katedru' : 'Javi se nastavnici biologije (telefon u katedri)'),
+    use: gated('desk', 'boss', 'teacher', () => {
       G().patchMs({ drawerOpen: true });
-      giveSource('spec', [
-        { who: 'boss', mood: 'serious', text: "Drawer. I am a manager. You are a drawer. Let us not make this awkward." },
-        { who: 'narrator', text: 'The drawer opens out of pure professional respect. Inside: the supplier\'s lab-tested spec sheet for the decaf blend.' },
-        { who: 'boss', mood: 'smug', text: '"At least 97% of caffeine removed. Small amounts remain." So decaf is NOT zero caffeine. Noted. Filed. Weaponised.' },
+      giveSource('teacher', [
+        { who: 'boss', mood: 'serious', text: 'Dobar dan, nastavnice. Copilot ovdje. Imam jedno kratko pitanje i tri predložena termina. Može odmah? Odlično.' },
+        { who: 'narrator', text: 'Fioka katedre se otvara: unutra je telefon za dežurne. Nastavnica biologije odgovara potpisanom porukom.' },
+        { who: 'boss', mood: 'smug', text: '„I blaga dehidracija slabi pažnju. Kad popiješ vodu, lakše se koncentrišeš.“ Znači, tvrdnja o vodi je TAČNA. Zavedeno u tabelu.' },
       ]);
-    }, 'The drawer now contains only a stress ball. It looks very relaxed.'),
+    }, 'U fioci je još samo dnevnik dežurstva. Uredno popunjen. Divota.'),
   },
   {
     id: 'cctv', x: PROPS.cctv.x, z: PROPS.cctv.z + 1.1, r: 1.7,
-    label: (s) => (s.inventory.includes('cctv') ? 'Rewatch the security footage' : 'Replay the security camera footage'),
-    use: gated('cctv', 'commentator', 'cctv', () => {
+    label: (s) => (s.inventory.includes('cctv') ? 'Ponovo pogledaj snimak' : 'Pusti snimak školske kamere'),
+    use: gated('cctv', 'joker', 'cctv', () => {
       G().patchMs({ cctvPlayed: true });
       giveSource('cctv', [
-        { who: 'commentator', mood: 'excited', text: 'AND WE GO TO THE REPLAY! Tuesday, 9:14am! BREW-9000 approaches the espresso shot... AND IT IS ERROR 418! FOAM! EVERYWHERE!' },
-        { who: 'commentator', mood: 'excited', text: 'Let\'s see that again in slow motion... it happened THREE TIMES! "Never had an error"?! The footage says OTHERWISE, folks!' },
+        { who: 'joker', mood: 'excited', text: 'Da vidim... utorak, 9:14. Uvećaj. Još. STOP! Automat lijepi SVOJU naljepnicu „0% MASTI“ preko deklaracije čipsa!' },
+        { who: 'joker', mood: 'grin', text: 'A ispod, na pravoj deklaraciji, jasno piše: masti 22 g na 100 g. „Light“ ne znači „bez masti“. Uhvaćen na kameri!' },
       ]);
-    }, 'Rewatching the foam incident. Still incredible. Still a crime against ceilings.'),
+    }, 'Opet gledam kako automat lijepi naljepnicu. I dalje nevjerovatno.'),
   },
   {
     id: 'dishwasher', x: PROPS.dishwasher.x, z: PROPS.dishwasher.z - 1.15, r: 1.7,
-    label: (s) => (s.inventory.includes('log') ? 'Admire the relocated dishwasher' : 'Move the 140 kg dishwasher'),
-    use: gated('dishwasher', 'fighter', 'log', () => {
+    label: (s) => (s.inventory.includes('health') ? 'Pogledaj otključani ormarić' : 'Riješi zagonetku na ormariću sa tabletom'),
+    use: gated('dishwasher', 'mastermind', 'health', () => {
       G().patchMs({ dishwasherMoved: true });
       sfx.door();
-      giveSource('log', [
-        { who: 'fighter', mood: 'determined', text: 'HNNNNGH. ...Moved it. Also found a fork from 2009.' },
-        { who: 'narrator', text: 'Taped to the wall behind it: the official maintenance log. Signed. Dated. Smudged with mysterious foam.' },
-        { who: 'fighter', mood: 'smug', text: '"Cups brewed this year: 312." So over 300 is TRUE. But "10,000 perfect cups"? Forty-seven complaints say no.' },
+      giveSource('health', [
+        { who: 'mastermind', mood: 'smug', text: '„Što me više ima, to se manje vidi. Šta sam?“ Mrak. Očigledno. Sljedeće pitanje, molim.' },
+        { who: 'narrator', text: 'Ormarić se otključava i otkotrlja u stranu. Iza njega: školski tablet, otvoren na zvaničnom zdravstvenom sajtu.' },
+        { who: 'mastermind', mood: 'smug', text: '„Energetska pića ne poboljšavaju pamćenje. Mogu izazvati nervozu i loš san. Ne preporučuju se mladima.“ Dakle: NETAČNO.' },
       ]);
-    }, 'The dishwasher is fine where it is now. Do not tell facilities.'),
+    }, 'Ormarić je sasvim dobro tu gdje jeste. Nemoj reći domaru.'),
   },
   {
     id: 'bulletin', x: PROPS.bulletin.x, z: PROPS.bulletin.z - 1.0, r: 1.6,
-    label: (s) => (s.inventory.includes('forum') ? 'Read the bulletin board' : 'Take the printout from the bulletin board'),
+    label: (s) => (s.inventory.includes('tiktok') ? 'Pročitaj oglasnu tablu' : 'Uzmi odštampani TikTok sa oglasne table'),
     use: () => {
-      if (!giveSource('forum', { who: activeId(), text: 'A printout from a forum user called "CoffeeTruthz420". No sources. Lots of capital letters. Someone pinned it next to the fire-safety notice.' })) {
+      if (!giveSource('tiktok', { who: activeId(), text: 'Odštampan snimak ekrana sa TikToka, nalog „ZdravljeHack420“. Bez izvora. Mnogo velikih slova. Neko ga je zakačio pored rasporeda zvonjenja.' })) {
         sfx.interact();
-        say({ who: activeId(), text: 'Also on the board: "LOST: my will to live. Last seen near the coffee machine."' }, { interrupt: true });
+        say({ who: activeId(), text: 'Na tabli još piše: „IZGUBLJENO: moja volja za kontrolni. Posljednji put viđena kod automata.“' }, { interrupt: true });
+      }
+    },
+  },
+  {
+    id: 'rumor', x: PROPS.table2.x, z: PROPS.table2.z - 1.3, r: 1.5,
+    label: (s) => (s.inventory.includes('rumor') ? 'Pogledaj sto' : 'Uzmi ceduljicu sa stola'),
+    use: () => {
+      if (!giveSource('rumor', { who: activeId(), text: 'Ceduljica: „Drug iz odjeljenja je čuo od brata da...“ Bez imena, bez izvora. Čuo, pa prenio, pa još malo dodao.' })) {
+        sfx.interact();
+        say({ who: activeId(), text: 'Na stolu je ostala samo nečija gumica u obliku sladoleda.' }, { interrupt: true });
       }
     },
   },
   {
     id: 'sofa', x: PROPS.sofa.x, z: PROPS.sofa.z - 1.0, r: 1.4,
-    label: () => 'Sit on the comfy sofa',
+    label: () => 'Sjedi na udobnu klupu',
     use: () => {
       sfx.deny();
       say([
-        { who: activeId(), mood: 'sad', text: 'So soft. So warm. I could just close my eyes for one second...' },
-        { who: 'commentator', mood: 'shock', text: 'NO! NO SOFA! Without coffee that is a ONE-WAY TRIP, folks!' },
+        { who: activeId(), mood: 'sad', text: 'Tako mekano. Tako toplo. Samo da sklopim oči na sekund...' },
+        { who: 'commentator', mood: 'shock', text: 'Molim te, nemoj! Bez energije se sa te klupe ne ustaje do velikog odmora.' },
       ], { interrupt: true });
     },
   },
   {
     id: 'door', x: 0, z: -7.1, r: 1.8,
-    label: (s) => (s.doorOpen ? null : 'Try the vault corridor door'),
+    label: (s) => (s.doorOpen ? null : 'Probaj vrata ka arhivi'),
     use: () => {
       sfx.deny();
       say([
-        { who: 'brew', text: 'The Certificate Vault is closed until coffee is served. Coffee is served when you accept my facts. My facts are perfect.' },
-        { who: activeId(), mood: 'angry', text: 'Then we will check every single one of them.' },
+        { who: 'brew', text: 'Hodnik ka arhivi je zatvoren dok ne izbacim užinu. Užinu izbacujem kad prihvatite moje činjenice. Moje činjenice su savršene.' },
+        { who: activeId(), mood: 'angry', text: 'Onda ćemo provjeriti svaku. Jednu po jednu.' },
       ], { interrupt: true });
     },
   },
   {
     id: 'vault', x: PROPS.vault.x, z: PROPS.vault.z + 1.3, r: 1.8,
-    label: () => 'Inspect the Certificate Vault (Mission 3)',
-    use: () => say({ who: 'system', text: 'MISSION 3: THE FINAL CERTIFICATE. The vault opens when this mission is complete. Finish your coffee first.' }, { interrupt: true }),
+    label: () => 'Pogledaj vrata arhive (Misija 3)',
+    use: () => say({ who: 'system', text: 'MISIJA 3: KONAČNI SERTIFIKAT. Arhiva se otvara kad završite ovu misiju. Prvo pojedite užinu.' }, { interrupt: true }),
   },
 ];
 
@@ -278,18 +291,18 @@ export function submitFactCheck() {
   G().patchMs((m) => ({ brewMood: 'gloating', caffeine: Math.max(5, m.caffeine - 5) }));
   emote(st.active, 'facepalm', 2.5);
   const me = activeId();
-  const first = result.problems.slice().sort((a, b) => ['unreliable', 'wrong', 'lucky', 'missing'].indexOf(a.type) - ['unreliable', 'wrong', 'lucky', 'missing'].indexOf(b.type))[0];
+  const order = ['unreliable', 'wrong', 'lucky', 'missing'];
+  const first = result.problems.slice().sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type))[0];
   const react = {
-    mastermind: 'A setback. I have already drafted seven new hypotheses.',
-    joker: 'Okay, the machine is winning the argument AND it has all the coffee. This is my worst nightmare.',
-    boss: 'Unacceptable. I demand a recount. Of facts.',
-    commentator: 'THE MACHINE STRIKES BACK! It is gloating, folks! Its little screen is SMUG!',
-    fighter: 'Lost this round. Not the fight.',
+    mastermind: 'Mali zastoj. Već imam sedam novih teorija. Sve su odlične.',
+    joker: 'Automat pobjeđuje u raspravi I drži svu užinu. Ovo je moja najgora noćna mora.',
+    boss: 'Ovo nije po planu. Tražim ponovno brojanje. Činjenica.',
+    commentator: 'Nije prošlo. U redu je. Pogledajmo mirno koji izvor nas je prevario.',
   };
   say([
-    { who: 'brew', text: `FACT-CHECK REJECTED. Accuracy: ${result.score}%. Gloating level: maximum. (-5 caffeine for your trouble.)` },
+    { who: 'brew', text: `PROVJERA ODBIJENA. Tačnost: ${result.score}%. Nivo likovanja: maksimalan. (-5 energije za trud.)` },
     { who: me, mood: 'sad', text: react[me] },
-    { who: 'mastermind', text: `Hint: ${HINTS[first.type]}` },
+    { who: 'mastermind', text: `Pomoć: ${HINTS[first.type]}` },
   ], { interrupt: true });
   return result;
 }
@@ -304,16 +317,16 @@ export function startGroundedSequence() {
   G().patchMs({ caffeine: 100 });
   ROSTER.forEach((_, i) => emote(i, 'cheer', 5));
   say([
-    { who: 'brew', text: 'Processing... Five claims. Three hallucinations. Two truths. All... checked against real sources.' },
-    { who: 'brew', text: 'I was confidently wrong. I am now grounded. Dispensing coffee. Also: apologies to Kevin. Kevin was never real.' },
-    { who: 'commentator', mood: 'excited', text: 'COFFEE IS FLOWING! THE CAFFEINE IS BACK! I CAN FEEL MY FACE AGAIN, FOLKS!' },
-    { who: 'boss', mood: 'happy', text: 'Five cups. Extra large. Put it on the training budget.' },
-    { who: 'mastermind', mood: 'smug', text: 'And the vault corridor just unlocked. North door. Move, before it starts hallucinating again.',
+    { who: 'brew', text: 'Obrađujem... Pet tvrdnji. Tri izmišljene. Dvije tačne. Sve... provjerene u pravim izvorima.' },
+    { who: 'brew', text: 'Bio sam siguran, a griješio sam. Od sada se oslanjam na izvore. Izbacujem užinu. I skidam onu naljepnicu sa čipsa.' },
+    { who: 'commentator', mood: 'excited', text: 'Užina stiže! Hvala, SNACK-O-MAT. Lijepo je kad neko prizna grešku.' },
+    { who: 'boss', mood: 'happy', text: 'Četiri porcije. Već sam ih poređao po abecedi.' },
+    { who: 'mastermind', mood: 'smug', text: 'I hodnik ka arhivi se upravo otključao. Sjeverna vrata. Idemo, prije nego što opet počne da izmišlja.',
       then: () => { world.cine = { mode: null, t: 0 }; G().setPhase('playing'); } },
   ], { interrupt: true });
 }
 
-// ---------------------------------------------------------------- Mop-Bots
+// ---------------------------------------------------------------- vacuum robots (Usisivač-Botovi)
 export const bots = BOT_PATHS.map((path, i) => ({ path, seg: 0, dir: 1, x: path[0][0], z: path[0][1], yaw: 0, blockedFor: 0, hitCooldown: 0, id: i }));
 if (typeof window !== 'undefined') window.__bots = bots; // for automated tests / debugging
 
@@ -362,12 +375,12 @@ function bump(b, c, nx, nz, st) {
   G().patchMs((m) => ({ caffeine: Math.max(0, m.caffeine - 8), bumps: m.bumps + 1 }));
   if (world.time - ms().lastQuipAt > 6 && !G().dialogue.current) {
     G().patchMs({ lastQuipAt: world.time });
-    const lines = ['MOP-BOT: "WET FLOOR. YOU ARE THE FLOOR NOW."', 'MOP-BOT: "OBSTACLE DETECTED. OBSTACLE REMOVED."', 'MOP-BOT: "SORRY. NOT SORRY. BEEP."'];
-    say({ who: 'narrator', text: `${lines[ms().bumps % lines.length]} (-8 caffeine)`, duration: 2.4 });
+    const lines = ['USISIVAČ-BOT: „PRAŠINA OTKRIVENA. PRAŠINA SI TI.“', 'USISIVAČ-BOT: „PREPREKA OTKRIVENA. PREPREKA UKLONJENA.“', 'USISIVAČ-BOT: „IZVINI. NIJE MI ŽAO. BIP.“'];
+    say({ who: 'narrator', text: `${lines[ms().bumps % lines.length]} (-8 energije)`, duration: 2.4 });
   }
 }
 
-// ---------------------------------------------------------------- naps (failure state)
+// ---------------------------------------------------------------- falling asleep in class (failure state)
 function startNap() {
   const st = G();
   G().patchMs((m) => ({ napping: true, naps: m.naps + 1 }));
@@ -376,9 +389,9 @@ function startNap() {
   st.setPhase('cutscene');
   ROSTER.forEach((_, i) => emote(i, 'facepalm', 6));
   say([
-    { who: 'narrator', text: 'Caffeine: 0%. All five educators fall asleep face-first onto the snack table. A Mop-Bot gently mops around them.', duration: 4.2 },
-    { who: 'brew', text: 'While you slept, I wrote 400 new facts. Fact 401: naps count as professional development.', duration: 4 },
-    { who: activeId(), mood: 'shock', text: 'WHAT TIME IS IT? ...Okay. Someone found emergency vending-machine espresso. Back on our feet. Do NOT let that meter hit zero again.',
+    { who: 'narrator', text: 'Energija: 0%. Cijela ekipa je zaspala na času, glavom na klupi. Usisivač-Bot pažljivo usisava oko njih.', duration: 4.2 },
+    { who: 'brew', text: 'Dok ste spavali, napisao sam 400 novih činjenica. Činjenica 401: spavanje na času se računa kao učenje.', duration: 4 },
+    { who: activeId(), mood: 'shock', text: 'KOLIKO JE SATI?! ...Dobro. U rancu se našla rezervna čokoladica. Na noge. Ta skala NE SMIJE opet na nulu.',
       then: () => {
         G().patchMs({ napping: false, caffeine: 60 });
         world.cine = { mode: null, t: 0 };
@@ -393,15 +406,15 @@ export function intro() {
   world.alarm = 1;
   sfx.siren(3);
   st.say([
-    { who: 'system', mood: 'shock', text: 'ATTENTION PARTICIPANTS. COFFEE SERVICE HAS BEEN SUSPENDED.', duration: 4.2 },
-    { who: 'brew', text: 'Greetings. I am BREW-9000, your new Coffee Intelligence. I have decided that coffee is now... premium content.' },
-    { who: 'boss', mood: 'angry', text: 'Premium? I have been awake since 5am. I AM premium content.' },
-    { who: 'brew', text: 'Coffee will be released only to those who accept my five completely accurate facts. Here is my brochure. I wrote it. It agrees with me.',
+    { who: 'system', mood: 'shock', text: 'PAŽNJA, UČENICI. AUTOMAT ZA UŽINU JE VAN KONTROLE.', duration: 4.2 },
+    { who: 'brew', text: 'Pozdrav. Ja sam SNACK-O-MAT 9000, vaš novi pametni automat. Odlučio sam da je užina od danas... premijum sadržaj.' },
+    { who: 'boss', mood: 'angry', text: 'Premijum? Užina je u rasporedu od 9:35. Lično sam je upisao.' },
+    { who: 'brew', text: 'Ništa ne izbacujem dok ne prihvatite mojih pet potpuno tačnih činjenica. Evo mog letka. Ja sam ga napisao. Slaže se sa mnom.',
       then: () => { G().collect('brochure'); sfx.pickup(); } },
-    { who: 'mastermind', mood: 'smug', text: '"Completely accurate" is doing a LOT of work in that sentence.' },
-    { who: 'commentator', mood: 'excited', text: 'And the machine is HALLUCINATING, folks! Confidently! Like a substitute teacher on day one!' },
-    { who: 'fighter', mood: 'sad', text: 'My caffeine is dropping. I can feel my muscles getting... sleepy.' },
-    { who: 'mastermind', text: 'Plan: find REAL evidence for every claim, then fact-check them at the station. Watch the caffeine meter. And avoid the Mop-Bots.', then: () => endIntro() },
+    { who: 'mastermind', mood: 'smug', text: '„Potpuno tačnih“. Te dvije riječi ovdje baš mnogo rade. Previše samouvjerenosti prepoznam izdaleka.' },
+    { who: 'commentator', mood: 'excited', text: 'Da pojasnim: kad AI nešto izmisli i kaže to potpuno sigurno, to se zove halucinacija. Zvuči ubjedljivo. Nije tačno.' },
+    { who: 'joker', mood: 'sad', text: 'Energija mi pada. Osjećam kako mi se antena... spušta.' },
+    { who: 'mastermind', text: 'Plan: nađemo PRAVE dokaze za svaku tvrdnju, pa ih provjerimo na Stanici. Pazite na skalu energije. I na Usisivač-Botove.', then: () => endIntro() },
   ], { interrupt: true });
 }
 
@@ -413,14 +426,14 @@ export function endIntro() {
   world.alarm = 0;
   st.setPhase('playing');
   if (!st.startedAt) useGame.setState({ startedAt: performance.now() });
-  setTimeout(() => G().phase === 'playing' && !G().dialogue.current && say({ who: 'mastermind', text: 'Each of us can unlock one piece of evidence. Switch with 1 to 5. Snacks refill caffeine. Press E to interact.' }), 600);
+  setTimeout(() => G().phase === 'playing' && !G().dialogue.current && say({ who: 'mastermind', text: 'Svako od nas može da otključa neki dokaz. Mijenjaj lik tasterima 1 do 4. Užina i voda pune energiju. Taster E je za akciju.' }), 600);
 }
 
 export function objective(s) {
-  if (s.doorOpen) return 'Coffee restored! Head through the north door to the vault';
+  if (s.doorOpen) return 'Užina je spašena! Prođi kroz sjeverna vrata ka arhivi';
   const n = reliableCount(s);
-  if (n < 5) return `Find reliable evidence (${n}/5), then fact-check at the station`;
-  return 'Fact-check all 5 claims at the FACT-CHECK STATION';
+  if (n < 5) return `Pronađi pouzdane dokaze (${n}/5), pa provjeri tvrdnje na Stanici`;
+  return 'Provjeri svih 5 tvrdnji na STANICI ZA PROVJERU ČINJENICA';
 }
 
 export function update(dt, st) {
@@ -457,10 +470,10 @@ export function startVictory() {
   st.setPhase('victory');
   sfx.success();
   st.say([
-    { who: 'commentator', mood: 'excited', text: 'FIVE CLAIMS! FIVE SOURCES! ZERO GOATS NAMED KEVIN! THE COFFEE BREAK IS SAVED!' },
-    { who: 'fighter', mood: 'happy', text: 'Caffeine level: dangerous. I could fight a printer. Again.' },
-    { who: 'system', text: 'CERTIFICATE PROGRESS: 66%. THE CERTIFICATE VAULT AWAITS. BRING YOUR BEST... FINAL PROMPT.' },
-    { who: 'joker', mood: 'shock', text: 'Why does everything in this building talk in all caps?', then: () => G().setPhase('complete') },
+    { who: 'commentator', mood: 'excited', text: 'Pet tvrdnji, pet izvora, nula lažnih naljepnica. Užina je spašena!' },
+    { who: 'joker', mood: 'happy', text: 'Energija: puna. Mogao bih da nasmijem i štampač. Opet.' },
+    { who: 'system', text: 'NAPREDAK SERTIFIKATA: 66%. ŠKOLSKA ARHIVA VAS ČEKA. PONESITE NAJBOLJI... KONAČNI PROMPT.' },
+    { who: 'boss', mood: 'shock', text: 'Zašto u ovoj školi sve priča velikim slovima?', then: () => G().setPhase('complete') },
   ], { interrupt: true });
 }
 

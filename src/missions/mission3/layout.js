@@ -24,11 +24,11 @@ export const PROPS = {
 
 export const SPAWNS = [
   // far enough from the south wall that the third-person camera has room behind the player
-  [-2, 8.6, Math.PI], [-1, 9.1, Math.PI], [0, 8.6, Math.PI], [1, 9.1, Math.PI], [2, 8.6, Math.PI],
+  [-1.5, 8.6, Math.PI], [-0.5, 9.1, Math.PI], [0.5, 9.1, Math.PI], [1.5, 8.6, Math.PI],
 ];
-export const CORE_SPOTS = [[-3, -18.6], [-1.6, -17.9], [1.6, -17.9], [3, -18.6], [0, -19.2]];
+export const CORE_SPOTS = [[-3, -18.6], [-1.6, -17.9], [1.6, -17.9], [3, -18.6]];
 export const VICTORY_SPOTS = [
-  [-2.4, -24.4, 0], [-1.2, -23.9, 0], [0, -23.6, 0], [1.2, -23.9, 0], [2.4, -24.4, 0],
+  [-1.8, -24.3, 0], [-0.6, -23.8, 0], [0.6, -23.8, 0], [1.8, -24.3, 0],
 ];
 export const CORE_ENTRY_Z = -16.6;
 

@@ -27,7 +27,12 @@ function Panel({ w, h, p, r, tex, emissive = 0.9 }) {
 }
 const sign = (w, h, bg, fg, lines, font = 48) => makeCanvasTexture(w, h, (g) => {
   g.fillStyle = bg; g.fillRect(0, 0, w, h); g.fillStyle = fg; g.textAlign = 'center';
-  lines.forEach((t, i) => { g.font = `${i === 0 ? font : Math.round(font * 0.55)}px ${FONT}`; g.fillText(t, w / 2, h / (lines.length + 1) * (i + 1) + font * 0.3); });
+  lines.forEach((t, i) => {
+    let f = i === 0 ? font : Math.round(font * 0.55);
+    g.font = `${f}px ${FONT}`;
+    while (g.measureText(t).width > w - 24 && f > 12) { f -= 2; g.font = `${f}px ${FONT}`; }   // fit long words
+    g.fillText(t, w / 2, h / (lines.length + 1) * (i + 1) + font * 0.3);
+  });
 });
 
 // ---------------------------------------------------------------- textures
@@ -55,23 +60,23 @@ function useTextures() {
     });
     return {
       floor, books, skyline,
-      breakSign: sign(512, 128, '#7c2d12', '#fde68a', ['BREAK ROOM'], 64),
-      noNap: sign(256, 128, '#1e3a8a', '#ffffff', ['NO NAPPING', 'per Policy 7.4(b)'], 34),
-      station: sign(512, 128, '#f59e0b', '#111111', ['FACT-CHECK STATION', 'trust · but · verify'], 46),
-      manager: sign(256, 64, '#111827', '#facc15', ['MANAGER · KEEP OUT'], 26),
-      m3: sign(512, 256, '#1e1b4b', '#c4b5fd', ['MISSION 3', 'THE FINAL CERTIFICATE', 'NEXT MISSION'], 44),
-      vaultSign: sign(256, 96, '#065f46', '#d1fae5', ['VAULT'], 56),
-      donutLabel: sign(256, 64, '#fce7f3', '#be185d', ['FREE DONUTS'], 30),
+      breakSign: sign(512, 128, '#7c2d12', '#fde68a', ['ŠKOLSKI HODNIK'], 54),
+      noNap: sign(256, 128, '#1e3a8a', '#ffffff', ['NE SPAVAJ', 'Kućni red, član 7'], 34),
+      station: sign(512, 128, '#f59e0b', '#111111', ['PROVJERA ČINJENICA', 'vjeruj · ali · provjeri'], 44),
+      manager: sign(256, 64, '#111827', '#facc15', ['KATEDRA · NE DIRAJ'], 26),
+      m3: sign(512, 256, '#1e1b4b', '#c4b5fd', ['MISIJA 3', 'KONAČNI SERTIFIKAT', 'SLJEDEĆA MISIJA'], 44),
+      vaultSign: sign(256, 96, '#065f46', '#d1fae5', ['ARHIVA'], 50),
+      donutLabel: sign(256, 64, '#dcfce7', '#166534', ['JABUKE · KANTINA'], 26),
       bulletin: makeCanvasTexture(512, 320, (g, w, h) => {
         g.fillStyle = '#b45309'; g.fillRect(0, 0, w, h); g.fillStyle = '#d97706'; g.fillRect(12, 12, w - 24, h - 24);
-        const notes = [['#fef9c3', 'LOST: my will to live. Last seen near the coffee machine.'], ['#e0f2fe', 'Fire drill Thursday. (Actual fire: please ignore.)'], ['#ffffff', 'CoffeeTruthz420 says: "decaf is just brown water lol"'], ['#fce7f3', 'Yoga @ lunch. Bring your own stress.']];
+        const notes = [['#fef9c3', 'IZGUBLJENO: moja volja za kontrolni. Viđena kod automata.'], ['#e0f2fe', 'Raspored zvonjenja: uvijek prerano ujutru.'], ['#ffffff', 'ZdravljeHack420: „light čips je bukvalno vazduh lol“'], ['#fce7f3', 'Sekcija: šah, srijedom. Ponesi strpljenje.']];
         notes.forEach(([c, t], i) => { const x = 30 + (i % 2) * 240, y = 30 + Math.floor(i / 2) * 140; g.save(); g.translate(x + 100, y + 60); g.rotate((i - 1.5) * 0.04); g.fillStyle = c; g.fillRect(-100, -60, 200, 120); g.fillStyle = '#111'; g.font = 'bold 17px system-ui'; wrapText(g, t, -88, -32, 176, 21); g.fillStyle = '#dc2626'; g.beginPath(); g.arc(0, -52, 6, 0, 7); g.fill(); g.restore(); });
       }),
     };
   }, []);
 }
 
-// ---------------------------------------------------------------- BREW-9000
+// ---------------------------------------------------------------- SNACK-O-MAT 9000 (internal name: brew)
 function Brew() {
   const mood = useGame((s) => s.ms.brewMood || 'smug');
   const attempts = useGame((s) => s.attempts);
@@ -98,23 +103,16 @@ function Brew() {
     g.stroke();
     // caption
     g.textAlign = 'center'; g.font = `28px ${FONT}`;
-    if (mood === 'humbled') { g.fillText('I WAS WRONG.', w / 2, 420); g.font = 'bold 22px system-ui'; g.fillText('Now citing sources. Brewing...', w / 2, 460); }
-    else if (mood === 'gloating') { g.fillText('HA HA HA HA', w / 2, 420); g.font = 'bold 22px system-ui'; g.fillText(`Failed fact-checks: ${attempts}`, w / 2, 460); }
-    else { const c = CLAIMS[tick % CLAIMS.length]; g.font = 'bold 22px system-ui'; g.fillStyle = '#fde68a'; g.fillText(`FACT #${(tick % CLAIMS.length) + 1} (TOTALLY TRUE):`, w / 2, 395); g.fillStyle = '#fff'; g.font = 'bold 24px system-ui'; g.textAlign = 'left'; wrapText(g, c.text, 40, 432, w - 80, 30); }
+    if (mood === 'humbled') { g.fillText('POGRIJEŠIO SAM.', w / 2, 420); g.font = 'bold 22px system-ui'; g.fillText('Sad navodim izvore. Izbacujem užinu...', w / 2, 460); }
+    else if (mood === 'gloating') { g.fillText('HA HA HA HA', w / 2, 420); g.font = 'bold 22px system-ui'; g.fillText(`Neuspjelih provjera: ${attempts}`, w / 2, 460); }
+    else { const c = CLAIMS[tick % CLAIMS.length]; g.font = 'bold 22px system-ui'; g.fillStyle = '#fde68a'; g.fillText(`ČINJENICA br. ${(tick % CLAIMS.length) + 1} (SKROZ TAČNA):`, w / 2, 395); g.fillStyle = '#fff'; g.font = 'bold 24px system-ui'; g.textAlign = 'left'; wrapText(g, c.text, 40, 432, w - 80, 30); }
   }, [mood, tick, attempts]);
-  const steam = useRef([]);
-  const stream = useRef();
   const doorOpen = useGame((s) => s.doorOpen);
-  useFrame((s) => {
-    const t = s.clock.elapsedTime;
-    steam.current.forEach((m, i) => {
-      if (!m) return;
-      const k = (t * 0.5 + i / 6) % 1;
-      m.position.set(0.3 + Math.sin(t + i) * 0.1, 3.3 + k * 1.0, -0.6 + i * 0.25);
-      m.scale.setScalar(0.12 + k * 0.25);
-      m.material.opacity = 0.35 * (1 - k);
-    });
-    if (stream.current) stream.current.scale.y = doorOpen ? 1 + Math.sin(t * 20) * 0.05 : 0.0001;
+  const snack = useRef();
+  useFrame((st, dtRaw) => {
+    // once the machine is grounded it finally drops a snack into the tray
+    if (snack.current) snack.current.position.y = damp(snack.current.position.y, doorOpen ? 0.56 : 1.05, 3, Math.min(dtRaw, 0.1));
+    if (snack.current) snack.current.visible = doorOpen;
   });
   return (
     <group position={[PROPS.brew.x, 0, PROPS.brew.z]}>
@@ -123,20 +121,17 @@ function Brew() {
       </RoundedBox>
       <Box s={[0.06, 1.7, 1.9]} p={[0.37, 2.2, 0]} c="#1c1917" />
       <Panel w={1.7} h={1.7} p={[0.41, 2.2, 0]} r={[0, Math.PI / 2, 0]} tex={face} emissive={1.1} />
-      <Box s={[0.4, 0.12, 2.2]} p={[0.5, 1.15, 0]} c="#57534e" o={{ metalness: 0.7 }} />
-      <Cyl a={[0.06, 0.08, 0.3, 12]} p={[0.55, 1.0, 0]} c="#292524" o={{ metalness: 0.8 }} />
-      <mesh ref={stream} position={[0.55, 0.78, 0]}><cylinderGeometry args={[0.03, 0.03, 0.4, 8]} />{M('#4a2c17')}</mesh>
-      <Cyl a={[0.11, 0.09, 0.2, 16]} p={[0.55, 0.53, 0]} c="#ffffff" />
+      {/* product shelves under the screen + delivery tray */}
+      {[-0.9, -0.45, 0, 0.45, 0.9].map((z, i) => <Box key={z} s={[0.05, 0.3, 0.3]} p={[0.37, 1.02, z]} c={['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7'][i]} cast={false} />)}
+      <Box s={[0.12, 0.34, 1.9]} p={[0.36, 0.6, 0]} c="#1c1917" />
+      <mesh ref={snack} position={[0.46, 1.05, 0.2]} visible={false}><boxGeometry args={[0.12, 0.2, 0.32]} />{M('#22c55e')}</mesh>
       <Box s={[1.4, 0.06, 2.8]} p={[-0.2, 0.42, 0]} c="#44403c" />
       {[-0.8, 0.8].map((z) => <Box key={z} s={[0.06, 0.2, 0.2]} p={[0.37, 3.0, z]} c="#ef4444" o={{ emissive: '#ef4444', emissiveIntensity: 1.5 }} />)}
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <mesh key={i} ref={(el) => (steam.current[i] = el)}><sphereGeometry args={[1, 10, 8]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.3} depthWrite={false} /></mesh>
-      ))}
     </group>
   );
 }
 
-// ---------------------------------------------------------------- Mop-Bots
+// ---------------------------------------------------------------- vacuum robots
 function MopBots() {
   const groups = useRef([]), mops = useRef([]), lights = useRef([]);
   useFrame((s, dt) => {
@@ -165,15 +160,15 @@ function MopBots() {
     </group>
   ));
 }
-const WET = typeof document !== 'undefined' ? sign(256, 64, '#facc15', '#111', ['WET FLOOR'], 34) : null;
+const WET = typeof document !== 'undefined' ? sign(256, 64, '#facc15', '#111', ['USISAVAM!'], 34) : null;
 
 // ---------------------------------------------------------------- evidence props
 function Fridge() {
   const open = useGame((s) => s.ms.fridgeOpen);
   const door = useRef();
   useFrame((_, dt) => { door.current.rotation.y = damp(door.current.rotation.y, open ? 1.6 : 0, 4, Math.min(dt, 0.1)); });
-  const mood = useMemo(() => sign(256, 96, '#0c4a6e', '#7dd3fc', ['MOOD: COLD'], 34), []);
-  const happy = useMemo(() => sign(256, 96, '#14532d', '#86efac', ['MOOD: LOL'], 34), []);
+  const mood = useMemo(() => sign(256, 96, '#0c4a6e', '#7dd3fc', ['HLADNA SAM'], 34), []);
+  const happy = useMemo(() => sign(256, 96, '#14532d', '#86efac', ['HVALA! :)'], 34), []);
   return (
     <group position={[PROPS.fridge.x, 0, PROPS.fridge.z]}>
       <Box s={[1.1, 2.3, 1.3]} p={[0.05, 1.15, 0]} c="#f1f5f9" o={{ metalness: 0.3, roughness: 0.35 }} />
@@ -195,8 +190,8 @@ function Dishwasher() {
   const ref = useRef();
   useFrame((_, dt) => { ref.current.position.x = damp(ref.current.position.x, moved ? PROPS.dishwasher.movedX : PROPS.dishwasher.x, 3, Math.min(dt, 0.1)); });
   const log = useMemo(() => makeCanvasTexture(256, 320, (g, w, h) => {
-    g.fillStyle = '#fefce8'; g.fillRect(0, 0, w, h); g.fillStyle = '#111'; g.font = 'bold 22px system-ui'; g.fillText('MAINTENANCE LOG', 20, 40);
-    g.font = '16px system-ui'; ['Cups this year: 312', 'Complaints: 47', '"tastes like a printer"', 'Tue: ERROR 418 (foam)', 'Signed: Facilities'].forEach((t, i) => g.fillText(t, 20, 90 + i * 40));
+    g.fillStyle = '#fefce8'; g.fillRect(0, 0, w, h); g.fillStyle = '#111'; g.font = 'bold 22px system-ui'; g.fillText('ZDRAVSTVENI SAJT', 20, 40);
+    g.font = '16px system-ui'; ['Energetska pića:', 'NE poboljšavaju pamćenje', 'nervoza, loš san', 'ne preporučuju se mladima', 'Izvor: ljekari'].forEach((t, i) => g.fillText(t, 20, 90 + i * 40));
     g.fillStyle = 'rgba(180,180,180,.6)'; g.fillRect(150, 230, 80, 60);
   }), []);
   return (
@@ -246,11 +241,11 @@ function Cctv() {
     tex.userData.redraw((g, w, h) => {
       if (!played) {
         for (let i = 0; i < 400; i++) { const v = Math.random() * 255; g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(Math.random() * w, Math.random() * h, 6, 4); }
-        g.fillStyle = '#ef4444'; g.font = 'bold 16px system-ui'; g.fillText('NO SIGNAL · NEEDS NARRATION', 14, 24);
+        g.fillStyle = '#ef4444'; g.font = 'bold 16px system-ui'; g.fillText('NEMA SLIKE · TREBA OKO', 14, 24);
       } else {
         g.fillStyle = '#1f2937'; g.fillRect(0, 0, w, h); g.fillStyle = '#d6d3d1'; g.fillRect(40, 50, 60, 90);
         const f = (t * 2) % 1; g.fillStyle = '#fff'; for (let i = 0; i < 10; i++) { g.beginPath(); g.arc(70 + Math.sin(i * 7) * 40 * f, 50 - f * 50 - i * 3, 8 + i, 0, 7); g.fill(); }
-        g.fillStyle = '#ef4444'; g.font = 'bold 18px system-ui'; g.fillText('REPLAY · ERROR 418 x3', 110, 30); g.fillText('● REC TUE 09:14', 120, 150);
+        g.fillStyle = '#ef4444'; g.font = 'bold 18px system-ui'; g.fillText('LAŽNA NALJEPNICA', 104, 30); g.fillText('● REC UTO 09:14', 110, 150);
       }
     });
   });
@@ -278,11 +273,11 @@ function Beacon({ id, p, color }) {
   );
 }
 const BEACONS = [
-  { id: 'encyclopedia', p: [PROPS.bookshelf.x - 0.5, 3.0, PROPS.bookshelf.z], color: '#a78bfa' },
-  { id: 'botany', p: [PROPS.fridge.x - 0.3, 2.8, PROPS.fridge.z], color: '#fb923c' },
-  { id: 'spec', p: [PROPS.desk.x + 0.75, 1.5, PROPS.desk.z + 0.3], color: '#60a5fa' },
+  { id: 'textbook', p: [PROPS.bookshelf.x - 0.5, 3.0, PROPS.bookshelf.z], color: '#a78bfa' },
+  { id: 'label', p: [PROPS.fridge.x - 0.3, 2.8, PROPS.fridge.z], color: '#60a5fa' },
+  { id: 'teacher', p: [PROPS.desk.x + 0.75, 1.5, PROPS.desk.z + 0.3], color: '#4ade80' },
   { id: 'cctv', p: [PROPS.cctv.x, 3.2, PROPS.cctv.z], color: '#facc15' },
-  { id: 'log', p: [PROPS.dishwasher.x, 1.7, PROPS.dishwasher.z], color: '#f87171' },
+  { id: 'health', p: [PROPS.dishwasher.x, 1.7, PROPS.dishwasher.z], color: '#f87171' },
 ];
 
 function Lighting() {
@@ -316,7 +311,7 @@ function Chair({ p, ry = 0 }) {
   );
 }
 
-function RoundTable({ x, z, donuts }) {  // chairs only on the x sides: Mop-Bot lanes run along z
+function RoundTable({ x, z, donuts }) {  // chairs only on the x sides: robot lanes run along z
   const left = useGame((s) => s.ms.donuts ?? 3);
   return (
     <group position={[x, 0, z]}>
@@ -326,10 +321,10 @@ function RoundTable({ x, z, donuts }) {  // chairs only on the x sides: Mop-Bot 
       {[Math.PI / 2, -Math.PI / 2].map((a) => <Chair key={a} p={[Math.sin(a) * 1.0, 0, Math.cos(a) * 1.0]} ry={a + Math.PI} />)}
       {donuts && (
         <group position={[0, 0.82, 0]}>
-          <Box s={[0.6, 0.08, 0.45]} p={[0, 0, 0]} c="#fbcfe8" />
+          <Box s={[0.6, 0.08, 0.45]} p={[0, 0, 0]} c="#a16207" />
           {[0, 1, 2].map((i) => i < left && (
-            <mesh key={i} position={[-0.18 + i * 0.18, 0.07, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-              <torusGeometry args={[0.07, 0.035, 8, 16]} />{M(['#f472b6', '#a16207', '#fde68a'][i])}
+            <mesh key={i} position={[-0.18 + i * 0.18, 0.11, 0]} castShadow>
+              <sphereGeometry args={[0.075, 12, 10]} />{M(['#dc2626', '#16a34a', '#ef4444'][i])}
             </mesh>
           ))}
         </group>
@@ -385,9 +380,10 @@ export default function BreakRoom() {
         {[-2.6, 2.6].map((z) => <group key={z}><Box s={[1.1, 0.95, 2.6]} p={[0, 0.475, z]} c="#78350f" /><Box s={[1.2, 0.06, 2.7]} p={[0, 0.98, z]} c="#e7e5e4" /></group>)}
         <Box s={[0.5, 0.25, 0.4]} p={[0.1, 1.13, 2.9]} c="#f8fafc" />
         <Box s={[0.42, 0.04, 0.32]} p={[0.1, 1.27, 2.9]} r={[0, 0.2, 0]} c="#fbbf24" />
-        <Cyl a={[0.14, 0.14, 0.3, 16]} p={[0.1, 1.16, -2.9]} c="#e0f2fe" o={{ transparent: true, opacity: 0.7 }} />
-        <Box s={[0.2, 0.18, 0.2]} p={[0.1, 1.1, -2.9]} c="#ffffff" />
-        <Cyl a={[0.18, 0.18, 0.35, 16]} p={[0.15, 1.18, -1.8]} c="#ef4444" />
+        {/* a school backpack with a packed snack */}
+        <Box s={[0.4, 0.5, 0.5]} p={[0.1, 1.26, -2.9]} c="#2563eb" />
+        <Box s={[0.42, 0.16, 0.36]} p={[0.14, 1.12, -2.9]} c="#1d4ed8" />
+        <Box s={[0.2, 0.1, 0.24]} p={[0.2, 1.06, -2.3]} c="#fde68a" />
       </group>
       <Brew />
 

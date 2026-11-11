@@ -18,7 +18,7 @@ export default function KeyboardController() {
         if (e.code === 'Enter' && s.dialogue.current) { s.advanceDialogue(); return; }
         if (e.code === 'KeyE') interact();
         if (e.code === 'Space' && s.phase === 'playing') world.jumpRequest = true;
-        const m = /^Digit([1-5])$/.exec(e.code) || /^Numpad([1-5])$/.exec(e.code);
+        const m = /^Digit([1-4])$/.exec(e.code) || /^Numpad([1-4])$/.exec(e.code);
         if (m) switchTo(Number(m[1]) - 1);
       }
       world.keys.add(e.code);

@@ -333,6 +333,12 @@ export default function BlockyAvatar({ index, cfg }) {
             <B s={[0.3, 0.1, 0.3]} p={[0, 0.02, 0]} c={look.skin} />
             <RoundedBox args={[0.68, 0.64, 0.62]} radius={0.12} smoothness={4} position={[0, 0.36, 0]} material={mat(look.skin)} castShadow />
             <Face refs={face} look={look} />
+            {look.antenna && (
+              <group position={[0, 0.72, 0]}>
+                <B s={[0.04, 0.26, 0.04]} p={[0, 0.16, 0]} c="#475569" />
+                <B s={[0.11, 0.11, 0.11]} p={[0, 0.33, 0]} c={look.antenna} o={{ emissive: look.antenna, emissiveIntensity: 0.9 }} />
+              </group>
+            )}
             <Hair look={look} />
             <HeadAccessory look={look} />
           </group>

@@ -39,7 +39,7 @@ kbd { display: inline-block; min-width: 1.7em; padding: 2px 6px; margin: 0 2px; 
 .logo.small .logo-main { font-size: clamp(30px, 6vw, 60px); }
 .pitch { text-align: center; color: #e2e8f0; font-size: clamp(14px, 1.8vw, 18px); max-width: 640px; margin: 0; }
 
-.lineup { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; width: min(980px, 100%); }
+.lineup { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: min(980px, 100%); }
 .lineup-card { position: relative; background: var(--panel); border: 2px solid var(--c); border-radius: 14px; padding: 12px 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
 .lineup-card .num { position: absolute; top: 6px; left: 8px; font: 900 14px var(--display); color: var(--c); }
 .lineup-card b { font-size: 14px; color: var(--c); }
@@ -164,7 +164,7 @@ kbd { display: inline-block; min-width: 1.7em; padding: 2px 6px; margin: 0 2px; 
   .char-btn { width: 74px; } .char-btn .skill { display: none; }
 }
 @media (max-width: 860px) {
-  .lineup { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lineup { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lesson-grid, .compare, .next { grid-template-columns: 1fr; }
 }
@@ -264,6 +264,7 @@ kbd { display: inline-block; min-width: 1.7em; padding: 2px 6px; margin: 0 2px; 
 .cert-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .cert-controls label { display: flex; gap: 8px; align-items: center; font-weight: 700; flex: 1; min-width: 220px; }
 .cert-controls input { flex: 1; font: 600 15px var(--font); padding: 9px 12px; border-radius: 10px; border: 2px solid #334155; background: #0f172a; color: #fff; pointer-events: auto; }
+.cert-note { font-size: 12.5px; margin: -4px 0 0; }
 .recap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .recap div { background: rgba(255,255,255,.04); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
 .recap b { color: var(--yellow); }
@@ -274,8 +275,7 @@ kbd { display: inline-block; min-width: 1.7em; padding: 2px 6px; margin: 0 2px; 
 
 /* ---------- certificate printing ----------
    A dedicated copy (#print-certificate, portalled under <body>) is the only thing printed.
-   It is sized in millimetres to fit A4 landscape (297x210) or US Letter landscape (279.4x215.9);
-   the paper is chosen with the print buttons (data-paper on <html>), A4 by default. */
+   It is sized in millimetres to fit exactly one A4 landscape page (297x210). */
 #print-certificate { display: none; }
 @media print {
   @page { size: A4 landscape; margin: 0; }
@@ -286,7 +286,6 @@ kbd { display: inline-block; min-width: 1.7em; padding: 2px 6px; margin: 0 2px; 
     width: var(--page-w, 297mm); height: var(--page-h, 210mm); margin: 0; padding: 0;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  html[data-paper='letter'] #print-certificate { --page-w: 279.4mm; --page-h: 215.9mm; }
   #print-certificate .certificate {
     box-sizing: border-box; width: calc(var(--page-w, 297mm) - 24mm); height: calc(var(--page-h, 210mm) - 24mm);
     margin: 0; padding: 12mm 16mm; border: 3.5mm double #b45309; border-radius: 2mm;

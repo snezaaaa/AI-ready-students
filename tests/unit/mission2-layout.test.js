@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveAll } from '../../src/game/collision.js';
-import { buildColliders, SPAWNS, BOT_PATHS, PROPS } from '../../src/missions/mission2/layout.js';
+import { buildColliders, SPAWNS, VICTORY_SPOTS, BOT_PATHS, PROPS } from '../../src/missions/mission2/layout.js';
+import { ROSTER } from '../../src/characters/roster.js';
 
 const cols = buildColliders().filter((c) => c.enabled !== false && c.id !== 'door');
 
@@ -10,7 +11,8 @@ const POINTS = [
   [PROPS.station.x + 1.1, PROPS.station.z], [PROPS.brew.x + 1.1, PROPS.brew.z], [-8.1, 2.9], [-8.1, -2.9],
   [PROPS.bookshelf.x - 1.1, PROPS.bookshelf.z], [PROPS.fridge.x - 1.2, PROPS.fridge.z], [PROPS.desk.x, PROPS.desk.z + 1.1],
   [PROPS.cctv.x, PROPS.cctv.z + 1.1], [PROPS.dishwasher.x, PROPS.dishwasher.z - 1.15], [PROPS.bulletin.x, PROPS.bulletin.z - 1.0],
-  [PROPS.cooler.x - 1.0, PROPS.cooler.z], [PROPS.sofa.x, PROPS.sofa.z - 1.0],
+  [PROPS.cooler.x - 1.0, PROPS.cooler.z], [PROPS.sofa.x, PROPS.sofa.z - 1.0], [PROPS.table2.x, PROPS.table2.z - 1.3],
+  [PROPS.donutTable.x, PROPS.donutTable.z + 1.3],
 ];
 
 test('spawns and interaction points are reachable (not inside furniture)', () => {
@@ -21,7 +23,7 @@ test('spawns and interaction points are reachable (not inside furniture)', () =>
   }
 });
 
-test('Mop-Bot patrol routes never clip furniture or walls', () => {
+test('vacuum-robot patrol routes never clip furniture or walls', () => {
   for (const path of BOT_PATHS) {
     for (let i = 0; i < path.length; i++) {
       const [ax, az] = path[i], [bx, bz] = path[(i + 1) % path.length];
@@ -35,6 +37,12 @@ test('Mop-Bot patrol routes never clip furniture or walls', () => {
   }
 });
 
-test('Mop-Bots keep clear of the spawn area', () => {
+test('vacuum robots keep clear of the spawn area', () => {
   for (const path of BOT_PATHS) for (const [, z] of path) assert.ok(z < 5.0);
+});
+
+test('one spawn and one victory spot per character (four)', () => {
+  assert.equal(ROSTER.length, 4);
+  assert.equal(SPAWNS.length, ROSTER.length);
+  assert.equal(VICTORY_SPOTS.length, ROSTER.length);
 });

@@ -6,6 +6,7 @@ import { world } from '../../game/world.js';
 import { makeCanvasTexture, useCanvasTexture, FONT } from '../../scene/canvasTexture.js';
 import { HALL, CORRIDOR, CORE, WALL_T, GAP, SEAL_POS, PROPS } from './layout.js';
 import { SEALS } from './dilemmas.js';
+import { ROSTER } from '../../characters/roster.js';
 import { LASERS, CHECKPOINTS, SWEEP_HEIGHT, dangerZone } from './lasers.js';
 import { laserStates } from './logic.js';
 
@@ -43,20 +44,22 @@ function useTextures() {
     });
     const sign = (lines, bg, fg) => makeCanvasTexture(512, 128, (g, w, h) => {
       g.fillStyle = bg; g.fillRect(0, 0, w, h); g.fillStyle = fg; g.textAlign = 'center';
-      g.font = `46px ${FONT}`; g.fillText(lines[0], w / 2, 62); if (lines[1]) { g.font = 'bold 24px system-ui'; g.fillText(lines[1], w / 2, 104); }
+      let f = 46; g.font = `${f}px ${FONT}`;
+      while (g.measureText(lines[0]).width > w - 28 && f > 18) { f -= 2; g.font = `${f}px ${FONT}`; }   // fit long titles
+      g.fillText(lines[0], w / 2, 62); if (lines[1]) { g.font = 'bold 24px system-ui'; g.fillText(lines[1], w / 2, 104); }
     });
     return {
       marble, grid,
-      banners: [banner('PRIVACY', '#0c4a6e'), banner('INTEGRITY', '#4c1d95'), banner('FAIRNESS', '#7c2d12'), banner('OVERSIGHT', '#7f1d1d')],
-      corridorSign: sign(['LASER CORRIDOR', 'of Mandatory Compliance · jump the low beams'], '#450a0a', '#fecaca'),
-      consoleSign: sign(['THE FINAL PROMPT', 'broadcast console · voice authorisation required'], '#3b0764', '#f5d0fe'),
-      trophy: sign(['EMPLOYEE OF THE MONTH', 'PROMPTOTRON 3000 · 12 months running'], '#78350f', '#fde68a'),
-      brewJr: sign(['BREW-9000 Jr.', 'now with citations'], '#14532d', '#bbf7d0'),
+      banners: [banner('PRIVATNOST', '#0c4a6e'), banner('INTEGRITET', '#4c1d95'), banner('PRAVIČNOST', '#7c2d12'), banner('ODGOVORNOST', '#7f1d1d')],
+      corridorSign: sign(['HODNIK SA SENZORIMA', 'preskoči niske zrake · sačekaj kapije'], '#450a0a', '#fecaca'),
+      consoleSign: sign(['KONAČNI PROMPT', 'konzola · potreban jasan glas'], '#3b0764', '#f5d0fe'),
+      trophy: sign(['UČENIK GENERACIJE', 'PROMPTOTRON 3000 · 12 godina zaredom'], '#78350f', '#fde68a'),
+      brewJr: sign(['SNACK-O-MAT Jr.', 'sada sa izvorima'], '#14532d', '#bbf7d0'),
     };
   }, []);
 }
 
-// ---------------------------------------------------------------- the Administrator's screen
+// ---------------------------------------------------------------- the Archivist's (ARHIVAR) screen
 function AdminScreen() {
   const strikes = useGame((s) => s.ms.strikes ?? 0);
   const lockdown = useGame((s) => s.ms.lockdown);
@@ -82,15 +85,15 @@ function AdminScreen() {
     g.stroke();
     // slide panel
     g.fillStyle = '#f8fafc'; g.fillRect(560, 70, 410, 300); g.fillStyle = '#7c3aed'; g.fillRect(560, 70, 410, 50);
-    g.fillStyle = '#fff'; g.font = 'bold 24px system-ui'; g.fillText(lockdown ? 'MANDATORY TRAINING' : doorOpen ? 'THANK YOU' : 'POLICY OVERVIEW', 580, 104);
+    g.fillStyle = '#fff'; g.font = 'bold 24px system-ui'; g.fillText(lockdown ? 'VANREDNI ČAS' : doorOpen ? 'HVALA' : 'PRAVILA ARHIVE', 580, 104);
     g.fillStyle = '#1f2937'; g.font = 'bold 22px system-ui';
-    const bullets = doorOpen ? ['• You wrote a responsible prompt', '• I am... proud?', '• Slides 2–4,000 cancelled'] : ['• Protect student data', '• Detectors are not judges', '• Check for bias', '• Humans decide'];
+    const bullets = doorOpen ? ['• Napisali ste odgovoran prompt', '• Ja sam... ponosan?', '• Slajdovi 2–4.000 otkazani'] : ['• Čuvaj lične podatke', '• AI pomaže, rad je tvoj', '• Pazi na stereotipe', '• Provjeri, pa predaj'];
     bullets.forEach((b, i) => g.fillText(b, 580, 165 + i * 46));
-    g.textAlign = 'center'; g.fillStyle = col; g.font = `40px ${FONT}`;
-    g.fillText(doorOpen ? 'VAULT OPEN' : `SLIDE ${slide} OF 4,000`, 765, 430);
+    g.textAlign = 'center'; g.fillStyle = col; g.font = `34px ${FONT}`;
+    g.fillText(doorOpen ? 'ARHIVA OTVORENA' : `SLAJD ${slide} OD 4.000`, 765, 430);
     g.font = 'bold 26px system-ui'; g.fillStyle = '#fff';
-    g.fillText(doorOpen ? 'Certificates released' : `Seals ${seals}/4 · Strikes ${strikes}/3`, 765, 475);
-    g.fillText('THE ADMINISTRATOR', 300, 470);
+    g.fillText(doorOpen ? 'Sertifikat je vaš' : `Pečati ${seals}/4 · Greške ${strikes}/3`, 765, 475);
+    g.fillText('ARHIVAR', 300, 470);
   }, [strikes, lockdown, doorOpen, seals, slide]);
   return (
     <group position={[0, 0, HALL.minZ + 0.06]}>
@@ -192,7 +195,7 @@ function Certificates() {
     refs.current.forEach((m, i) => {
       if (!m) return;
       const c = world.chars[i];
-      const tx = open ? c.x : (i - 2) * 0.5, tz = open ? c.z : CORE.minZ - 0.3, ty = open ? c.y + 2.55 + Math.sin(s.clock.elapsedTime * 2 + i) * 0.08 : 2.8;
+      const tx = open ? c.x : (i - 1.5) * 0.5, tz = open ? c.z : CORE.minZ - 0.3, ty = open ? c.y + 2.55 + Math.sin(s.clock.elapsedTime * 2 + i) * 0.08 : 2.8;
       m.position.x = damp(m.position.x, tx, 1.6, dt);
       m.position.y = damp(m.position.y, ty, 1.6, dt);
       m.position.z = damp(m.position.z, tz, 1.6, dt);
@@ -202,11 +205,11 @@ function Certificates() {
   });
   const tex = useMemo(() => makeCanvasTexture(256, 180, (g, w, h) => {
     g.fillStyle = '#fef3c7'; g.fillRect(0, 0, w, h); g.strokeStyle = '#b45309'; g.lineWidth = 8; g.strokeRect(8, 8, w - 16, h - 16);
-    g.fillStyle = '#78350f'; g.textAlign = 'center'; g.font = `22px ${FONT}`; g.fillText('CERTIFICATE', w / 2, 60);
-    g.font = 'bold 15px system-ui'; g.fillText('AI READY EDUCATOR', w / 2, 90); g.fillStyle = '#dc2626'; g.beginPath(); g.arc(w / 2, 130, 20, 0, 7); g.fill();
+    g.fillStyle = '#78350f'; g.textAlign = 'center'; g.font = `22px ${FONT}`; g.fillText('AI SERTIFIKAT', w / 2, 60);
+    g.font = 'bold 14px system-ui'; g.fillText('ODGOVORNI AI ISTRAŽIVAČ', w / 2, 90); g.fillStyle = '#dc2626'; g.beginPath(); g.arc(w / 2, 130, 20, 0, 7); g.fill();
   }), []);
-  return Array.from({ length: 5 }, (_, i) => (
-    <mesh key={i} ref={(el) => (refs.current[i] = el)} position={[(i - 2) * 0.5, 2.8, CORE.minZ - 0.3]} visible={false}>
+  return ROSTER.map((_, i) => (
+    <mesh key={i} ref={(el) => (refs.current[i] = el)} position={[(i - 1.5) * 0.5, 2.8, CORE.minZ - 0.3]} visible={false}>
       <planeGeometry args={[0.75, 0.53]} />
       <meshStandardMaterial map={tex} emissiveMap={tex} emissive="#ffffff" emissiveIntensity={0.6} side={THREE.DoubleSide} toneMapped={false} />
     </mesh>
@@ -289,7 +292,7 @@ export default function VaultHall() {
       <AdminScreen />
       {SEALS.map((s) => <SealPedestal key={s.id} seal={s} />)}
       <Barrier />
-      {/* trophy case & BREW-9000 Jr. */}
+      {/* trophy case & SNACK-O-MAT Jr. */}
       <group position={[PROPS.trophy.x, 0, PROPS.trophy.z + 0.4]}>
         <Box s={[0.8, 2.2, 1.5]} p={[0, 1.1, 0]} c="#78350f" />
         <Box s={[0.02, 1.6, 1.3]} p={[0.41, 1.3, 0]} c="#bae6fd" o={{ transparent: true, opacity: 0.35 }} />
@@ -368,11 +371,11 @@ function FloorZones() {
     jump: makeCanvasTexture(256, 128, (g, w, h) => {
       g.fillStyle = 'rgba(220,38,38,0.85)'; g.fillRect(0, 0, w, h);
       g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 14; for (let x = -h; x < w; x += 40) { g.beginPath(); g.moveTo(x, h); g.lineTo(x + h, 0); g.stroke(); }
-      g.fillStyle = '#fff'; g.font = `64px ${FONT}`; g.textAlign = 'center'; g.fillText('JUMP', w / 2, 88);
+      g.fillStyle = '#fff'; g.font = `58px ${FONT}`; g.textAlign = 'center'; g.fillText('SKOČI', w / 2, 86);
     }),
     wait: makeCanvasTexture(256, 64, (g, w, h) => {
       g.fillStyle = 'rgba(245,158,11,0.9)'; g.fillRect(0, 0, w, h);
-      g.fillStyle = '#111'; g.font = `40px ${FONT}`; g.textAlign = 'center'; g.fillText('WAIT', w / 2, 46);
+      g.fillStyle = '#111'; g.font = `40px ${FONT}`; g.textAlign = 'center'; g.fillText('ČEKAJ', w / 2, 46);
     }),
   }), []);
   return LASERS.map((l) => {

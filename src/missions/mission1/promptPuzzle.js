@@ -1,59 +1,58 @@
 // Mission 1 puzzle rules. Pure data + logic (no React / three) so it is unit-testable.
 
 export const SLOTS = [
-  { id: 'role', label: 'ROLE', color: '#f472b6', question: 'WHO should the AI be?' },
-  { id: 'task', label: 'TASK', color: '#60a5fa', question: 'WHAT exactly should it do?' },
-  { id: 'context', label: 'CONTEXT', color: '#34d399', question: 'For WHOM / under what conditions?' },
-  { id: 'format', label: 'OUTPUT FORMAT', color: '#fbbf24', question: 'HOW should the answer look?' },
+  { id: 'role', label: 'ULOGA', color: '#f472b6', question: 'KO treba da bude AI?' },
+  { id: 'task', label: 'ZADATAK', color: '#60a5fa', question: 'ŠTA tačno treba da uradi?' },
+  { id: 'context', label: 'KONTEKST', color: '#34d399', question: 'ZA KOGA i u kakvoj situaciji?' },
+  { id: 'format', label: 'FORMAT', color: '#fbbf24', question: 'KAKO treba da izgleda odgovor?' },
 ];
 
 // `good` cards must be found in the room first. Decoys are always available (and always wrong).
 export const CARDS = {
   role: [
-    { id: 'role_good', good: true, text: 'You are an experienced instructional designer who helps busy teachers.' },
-    { id: 'role_toaster', text: 'You are a toaster. A sentient one.',
-      fail: 'BEEP. AS A TOASTER, MY LESSON PLAN IS: 1) Bread. 2) Heat. 3) Toast. Would you like that lightly browned?' },
-    { id: 'role_none', text: '(no role, the AI will figure it out)',
-      fail: 'Hello! I am a Generic Assistant. Here is a generic answer about generic things, delivered generically.' },
+    { id: 'role_good', good: true, text: 'Ti si strpljiv tutor iz biologije koji objašnjava srednjoškolcima.' },
+    { id: 'role_toaster', text: 'Ti si toster. Toster koji misli.',
+      fail: 'BIP. KAO TOSTER, MOJ PLAN UČENJA JE: 1) Hljeb. 2) Toplota. 3) Tost. Da ti kontrolni bude blago zapečen?' },
+    { id: 'role_none', text: '(bez uloge, snaći će se AI sam)',
+      fail: 'Zdravo! Ja sam Opšti Asistent. Evo opšteg odgovora o opštim stvarima, napisanog sasvim uopšteno.' },
   ],
   task: [
-    { id: 'task_good', good: true, text: 'Create a 45-minute lesson plan that introduces photosynthesis.' },
-    { id: 'task_vague', text: 'Do something with plants, I guess.',
-      fail: 'Task complete. I have emotionally supported a fern. It is doing much better now.' },
-    { id: 'task_huge', text: 'Explain all of science. Every part. Now.',
-      fail: 'Beginning "All of Science". Estimated completion: 14,000 years. Chapter 1: The Atom (Part 1 of 9,000)...' },
+    { id: 'task_good', good: true, text: 'Napravi mi plan učenja za kontrolni iz fotosinteze.' },
+    { id: 'task_vague', text: 'Uradi nešto sa biljkama, valjda.',
+      fail: 'Zadatak završen. Pružio sam emotivnu podršku jednom fikusu. Sad mu je mnogo bolje.' },
+    { id: 'task_huge', text: 'Objasni mi cijelu biologiju. Sve. Odmah.',
+      fail: 'Počinjem „Cijelu biologiju“. Završavam za oko 14.000 godina. Lekcija 1: Ćelija (1. dio od 9.000)...' },
   ],
   context: [
-    { id: 'context_good', good: true, text: 'For 7th graders with mixed reading levels, in a classroom with no lab equipment.' },
-    { id: 'context_tuesday', text: "Context: it's Tuesday.",
-      fail: 'Since it is Tuesday, I assumed your students are 3 to 97 years old and own a particle accelerator.' },
-    { id: 'context_vibes', text: 'No context. Vibes only.',
-      fail: 'Lesson designed for PhD botanists with a $2M lab. Step 1: Calibrate your electron microscope.' },
+    { id: 'context_good', good: true, text: 'Ja sam učenik 1. razreda gimnazije, kontrolni je za 3 dana, imam 30 min dnevno i slabije razumijem hemijski dio.' },
+    { id: 'context_tuesday', text: 'Kontekst: utorak je.',
+      fail: 'Pošto je utorak, pretpostavio sam da imaš između 3 i 97 godina i laboratoriju u podrumu.' },
+    { id: 'context_vibes', text: 'Bez konteksta. Samo vajb.',
+      fail: 'Plan je spreman za doktora botanike sa laboratorijom od 2 miliona eura. Korak 1: kalibriši elektronski mikroskop.' },
   ],
   format: [
-    { id: 'format_good', good: true, text: 'Present it as a table with columns: Time, Activity, Materials.' },
-    { id: 'format_dance', text: 'Output format: interpretive dance.',
-      fail: '[The AI rises. It sways. It gestures vaguely at the sun. It bows deeply.] ...That was the lesson plan.' },
-    { id: 'format_wall', text: 'One 47-page paragraph. No line breaks.',
-      fail: 'Photosynthesisisaprocessbywhichplantsuselightenergytoconvertwaterandcarbondioxideinto... (page 1 of 47)' },
+    { id: 'format_good', good: true, text: 'Daj tabelu: Dan, Šta učim, Kako se provjerim.' },
+    { id: 'format_dance', text: 'Format odgovora: interpretativni ples.',
+      fail: '[AI ustaje. Njiše se. Neodređeno pokazuje prema suncu. Duboko se klanja.] ...To je bio plan učenja.' },
+    { id: 'format_wall', text: 'Jedan pasus od 47 strana. Bez novog reda.',
+      fail: 'Fotosintezajeprocesukojembiljkepomoćusvjetlostipretvarajuvoduiugljendioksidušećerikiseonik... (strana 1 od 47)' },
   ],
 };
 
 export const HINTS = {
-  role: 'ROLE tells the AI who to be. An expert role = expert answers. Toasters make toast.',
-  task: 'TASK must be specific and doable: one clear action with a clear scope.',
-  context: 'CONTEXT is who it is for and the constraints. Without it, the AI guesses (badly).',
-  format: 'OUTPUT FORMAT tells the AI how the answer should look so you can actually use it.',
+  role: 'ULOGA kaže AI-ju ko treba da bude. Stručna uloga = stručan odgovor. Toster pravi tost.',
+  task: 'ZADATAK mora biti konkretan i izvodljiv: jedna jasna stvar, jasnog obima.',
+  context: 'KONTEKST je ko si ti i u kakvoj si situaciji. Bez njega AI nagađa (loše).',
+  format: 'FORMAT kaže AI-ju kako odgovor treba da izgleda, da bi mogao stvarno da ga koristiš.',
 };
 
 export const SUCCESS_OUTPUT = [
-  'LESSON PLAN: "How Plants Eat Sunlight" (45 min, Grade 7)',
-  '| Time      | Activity                                         | Materials            |',
-  '| 0-5 min   | Hook: "Why don\'t plants need lunch?" pair-share  | Board                |',
-  '| 5-15 min  | Picture-supported mini lesson (light+water+CO2)  | Illustrated handout  |',
-  '| 15-30 min | Leaf-in-the-sun window demo + sentence frames    | Leaves, paper, tape  |',
-  '| 30-40 min | Leveled reading cards in mixed groups            | Reading cards (3 lvls)|',
-  '| 40-45 min | Exit ticket: draw the photosynthesis "recipe"    | Sticky notes         |',
+  'PLAN UČENJA: Fotosinteza (3 dana po 30 min, 1. razred)',
+  '| Dan | Šta učim                                   | Kako se provjerim                       |',
+  '| 1   | Šta je fotosinteza: svjetlost, voda, CO2   | Objasnim drugu u 3 rečenice, bez sveske |',
+  '| 2   | Hemijski dio, polako: jednačina, dio po dio | Napišem jednačinu napamet i imenujem sve |',
+  '| 3   | Ponavljanje + 10 pitanja kao na kontrolnom | Riješim bez gledanja, pa ispravim greške |',
+  'Savjet tutora: hemijski dio ponovi svaki dan po 10 minuta. Malo, ali redovno.',
 ];
 
 export const cardById = (id) => {
@@ -95,7 +94,7 @@ export function evaluatePrompt(selection, inventory) {
   let output;
   if (success) output = SUCCESS_OUTPUT.join('\n');
   else if (wrong.length) output = CARDS[wrong[0]].find((c) => c.id === selection[wrong[0]]).fail;
-  else output = `ERROR 418: PROMPT INCOMPLETE. You left the ${missing.map((m) => SLOTS.find((s) => s.id === m).label).join(', ')} empty. I am an AI, not a mind reader. (I tried. It was awkward.)`;
+  else output = `GREŠKA 418: PROMPT NIJE POTPUN. Prazno je ostalo: ${missing.map((m) => SLOTS.find((s) => s.id === m).label).join(', ')}. Ja sam AI, ne čitam misli. (Probao sam. Bilo je neprijatno.)`;
 
   return { success, score, results, wrong, missing, output };
 }

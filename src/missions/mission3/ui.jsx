@@ -30,10 +30,10 @@ function SealDilemma() {
       <div className="builder seal" style={{ '--c': seal.color }}>
         <div className="builder-head">
           <div>
-            <div className="builder-title" style={{ color: seal.color }}>SEAL OF {seal.label} <span>// answered by {owner.name}</span></div>
-            <div className="builder-sub">Choose the most responsible action. Strikes: <b>{strikes}/{STRIKES_FOR_LOCKDOWN}</b> (at {STRIKES_FOR_LOCKDOWN}: mandatory compliance training).</div>
+            <div className="builder-title" style={{ color: seal.color }}>PEČAT: {seal.label} <span>// odgovara {owner.name}</span></div>
+            <div className="builder-sub">Izaberi najodgovorniji postupak. Greške: <b>{strikes}/{STRIKES_FOR_LOCKDOWN}</b> (na {STRIKES_FOR_LOCKDOWN}: vanredni čas sa 4.000 slajdova).</div>
           </div>
-          <button className="btn small" onClick={closeModal} data-testid="builder-close">✕ Close (Esc)</button>
+          <button className="btn small" onClick={closeModal} data-testid="builder-close">✕ Zatvori (Esc)</button>
         </div>
         <div className="scenario">📋 {seal.scenario}</div>
         <div className="options">
@@ -52,11 +52,11 @@ function SealDilemma() {
         </div>
         {last && (
           <div className={`ai-output ${last.correct ? 'success' : 'fail'}`} data-testid="seal-result">
-            <div className="ai-head">{last.correct ? `✅ SEAL SECURED — guardrail unlocked: "${seal.clause}"` : '❌ STRIKE — the Administrator is delighted'}</div>
+            <div className="ai-head">{last.correct ? `✅ PEČAT OSVOJEN — otključano pravilo: „${seal.clause}“` : '❌ GREŠKA — Arhivar je oduševljen'}</div>
             <pre>{last.why}</pre>
           </div>
         )}
-        {solved && <div className="builder-foot"><button className="btn primary big" onClick={closeModal} data-testid="seal-continue">Continue ▸</button></div>}
+        {solved && <div className="builder-foot"><button className="btn primary big" onClick={closeModal} data-testid="seal-continue">Nastavi ▸</button></div>}
       </div>
     </div>
   );
@@ -66,14 +66,14 @@ function FinalPromptBuilder() {
   return (
     <PromptBuilderBase
       theme="gold"
-      title="THE FINAL PROMPT" tag="// a parent newsletter about AI in your class"
-      subtitle="Everything you learned: Role, Task, Context and Format from Mission 1, plus the Guardrails you earned at the four Seals."
+      title="KONAČNI PROMPT" tag="// plakat „Pravila korištenja AI u našem odjeljenju“"
+      subtitle="Sve što si naučio/la: Uloga, Zadatak, Kontekst i Format iz Misije 1, plus Zaštitna pravila koja si osvojio/la kod četiri pečata."
       slots={SLOTS} cards={CARDS}
       isAvailable={isFinalCardAvailable}
-      lockedText={() => 'Secure all four Seals of Responsible AI to unlock these guardrails'}
+      lockedText={() => 'Osvoji sva četiri pečata da otključaš zaštitna pravila'}
       assemble={assembleFinal}
       onTest={testFinalPrompt} onSuccess={startVaultSequence}
-      testLabel="📡 BROADCAST THE FINAL PROMPT" thinkingLabel="THE ADMINISTRATOR IS JUDGING…" successFoot="Opening the vault…"
+      testLabel="📡 POŠALJI KONAČNI PROMPT" thinkingLabel="ARHIVAR OCJENJUJE…" successFoot="Otvaram arhivu…"
       successDelay={5200}
     />
   );
@@ -85,9 +85,9 @@ export function StrikesHud() {
   const zaps = useGame((s) => s.ms.zaps ?? 0);
   return (
     <div className="strikes" data-testid="strikes">
-      <span>⚠ STRIKES</span>
+      <span>⚠ GREŠKE</span>
       {Array.from({ length: STRIKES_FOR_LOCKDOWN }, (_, i) => <i key={i} className={i < strikes ? 'on' : ''} />)}
-      <span className="zaps">⚡ Laser zaps: {zaps}</span>
+      <span className="zaps">⚡ Senzori: {zaps}</span>
     </div>
   );
 }
@@ -102,85 +102,78 @@ export function LockdownOverlay() {
     return () => clearInterval(id);
   }, [lockdown]);
   if (!lockdown) return null;
-  const titles = ['Why Slides Matter', 'Slides, Continued', 'Synergy: A Journey', 'Our Values (Draft 14)', 'Clip Art Through the Ages', 'Q&A (No Questions)'];
+  const titles = ['Zašto su slajdovi važni', 'Slajdovi, nastavak', 'Kućni red: uvod u uvod', 'Naše vrijednosti (verzija 14)', 'Kratka istorija krede', 'Pitanja (nema pitanja)'];
   return (
     <div className="lockdown" data-testid="lockdown-overlay">
       <div className="slide">
-        <small>MANDATORY COMPLIANCE TRAINING</small>
+        <small>VANREDNI ČAS ODJELJENSKE ZAJEDNICE</small>
         <h2>{titles[Math.floor(n / 37) % titles.length]}</h2>
         <div className="bullets"><i /><i /><i /></div>
-        <span>SLIDE {Math.min(n, 4000)} OF 4,000</span>
+        <span>SLAJD {Math.min(n, 4000)} OD 4.000</span>
       </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------- finale extras on the debrief
-const NAME_KEY = 'dd-final-prompt-name';
-const readName = () => { try { return localStorage.getItem(NAME_KEY) || ''; } catch { return ''; } };
-const writeName = (v) => { try { localStorage.setItem(NAME_KEY, v); } catch { /* storage unavailable */ } };
-
-// Certificate details. ORGANISER is shown on the certificate as the training organiser.
+// Certificate details. The student's name lives only in component state: it is never stored
+// (no localStorage, no network) and is used for printing only.
 export const ORGANISER = 'JA Montenegro';
-const PAPER = {
-  a4: { label: 'A4', page: 'A4 landscape' },
-  letter: { label: 'US Letter', page: 'letter landscape' },
-};
+export const ISSUER = { name: 'Snežana Kerndl', role: 'nastavnica informatike', school: 'JU Srednja ekonomsko-ugostiteljska škola, Bar' };
+export const SKILLS = ['Pisanje prompta', 'Provjera činjenica', 'Odgovorna upotreba AI'];
 
 function Certificate({ name, date, testId }) {
   return (
     <div className="certificate" data-testid={testId}>
-      <div className="cert-top">AI READY EDUCATORS</div>
-      <div className="cert-title">Certificate of Completion</div>
-      <div className="cert-small">This certifies that</div>
-      <div className="cert-name">{name.trim() || 'Your Name Here'}</div>
-      <div className="cert-small">together with The Mastermind, The Joker, The Boss, The Commentator and The Fighter, completed</div>
-      <div className="cert-course">DUNGEONS &amp; DEADLINES: THE FINAL PROMPT</div>
-      <div className="cert-skills">Prompt Engineering · Fact-Checking AI · Responsible AI Use</div>
-      <div className="cert-organiser">Training organiser: <b>{ORGANISER}</b></div>
+      <div className="cert-top">AI ESCAPE · ZAKLJUČANI SERTIFIKAT</div>
+      <div className="cert-title">AI SERTIFIKAT</div>
+      <div className="cert-course">ODGOVORNI AI ISTRAŽIVAČ</div>
+      <div className="cert-small">Ovaj sertifikat dobija</div>
+      <div className="cert-name">{name.trim() || 'Ime i prezime'}</div>
+      <div className="cert-small">za uspješno završene tri misije i savladane vještine:</div>
+      <div className="cert-skills">{SKILLS.join(' · ')}</div>
+      <div className="cert-organiser">Organizator programa: <b>{ORGANISER}</b></div>
       <div className="cert-foot">
-        <span className="cert-sign"><i />Date: {date}</span>
+        <span className="cert-sign"><i />Datum: {date}</span>
         <span className="seal">✦</span>
-        <span className="cert-sign"><i />{ORGANISER}<br /><small>and THE ADMINISTRATOR (reluctantly)</small></span>
+        <span className="cert-sign"><i />{ISSUER.name}, {ISSUER.role}<br /><small>{ISSUER.school}</small></span>
       </div>
       <div className="cert-credit" data-testid="cert-credit">{PROJECT_CREDIT}</div>
     </div>
   );
 }
 
-/** Print: render a dedicated, page-sized copy straight under <body> and set the paper size. */
-function printCertificate(paper) {
-  let style = document.getElementById('cert-page-style');
-  if (!style) { style = document.createElement('style'); style.id = 'cert-page-style'; document.head.appendChild(style); }
-  style.textContent = `@page { size: ${PAPER[paper].page}; margin: 0; }`;
-  document.documentElement.dataset.paper = paper;
+/** Print: a dedicated, page-sized copy under <body> is the only thing printed (A4 landscape, one page). */
+function printCertificate() {
   window.print();
 }
 
+const MONTHS = ['januar', 'februar', 'mart', 'april', 'maj', 'jun', 'jul', 'avgust', 'septembar', 'oktobar', 'novembar', 'decembar'];
+export const formatDate = (d) => `${d.getDate()}. ${MONTHS[d.getMonth()]} ${d.getFullYear()}.`;
+
 export function Finale() {
-  const [name, setName] = useState(readName);
-  const date = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+  const [name, setName] = useState('');
+  const date = formatDate(new Date());
   return (
     <div className="finale">
       <Certificate name={name} date={date} testId="certificate" />
       {createPortal(<div id="print-certificate"><Certificate name={name} date={date} testId="print-certificate" /></div>, document.body)}
       <div className="cert-controls">
-        <label>Name on certificate <input data-testid="cert-name" value={name} maxLength={40} placeholder="Type your name" onChange={(e) => { setName(e.target.value); writeName(e.target.value); }} /></label>
-        {Object.entries(PAPER).map(([k, p]) => (
-          <button key={k} className="btn" data-testid={`print-${k}`} onClick={() => printCertificate(k)}>🖨 Print ({p.label})</button>
-        ))}
+        <label>Ime i prezime učenika/ce <input data-testid="cert-name" value={name} maxLength={40} placeholder="Upiši ime i prezime" autoComplete="off" onChange={(e) => setName(e.target.value)} /></label>
+        <button className="btn" data-testid="print-a4" onClick={printCertificate}>🖨 Štampaj (A4, položeno)</button>
       </div>
-      <h3>🎓 The whole course in three lines</h3>
+      <p className="muted cert-note">Ime se nigdje ne čuva. Koristi se samo za štampu ovog sertifikata.</p>
+      <h3>🎓 Cijela igra u tri reda</h3>
       <div className="recap">
-        <div><b>Mission 1 · Write it well</b><span>Role + Task + Context + Output Format.</span></div>
-        <div><b>Mission 2 · Check it</b><span>AI can hallucinate. Verify claims with reliable, independent sources.</span></div>
-        <div><b>Mission 3 · Use it responsibly</b><span>Protect student data, don't trust detectors blindly, check for bias, keep a human in charge.</span></div>
+        <div><b>Misija 1 · Napiši dobro</b><span>Uloga + Zadatak + Kontekst + Format.</span></div>
+        <div><b>Misija 2 · Provjeri</b><span>AI može da halucinira. Provjeri tvrdnje u pouzdanim, nezavisnim izvorima.</span></div>
+        <div><b>Misija 3 · Koristi odgovorno</b><span>Čuvaj lične podatke, radi svojom glavom, pazi na stereotipe i stoj iza onoga što predaš.</span></div>
       </div>
       <div className="credits">
-        <b>STARRING</b>
+        <b>ULOGE</b>
         {ROSTER.map((c) => <span key={c.id} style={{ color: c.color }}>{c.name}</span>)}
-        <b>ALSO STARRING</b>
-        <span>PROMPTOTRON 3000 · BREW-9000 (and Jr.) · THE ADMINISTRATOR · two Mop-Bots · a sulking fridge · Kevin the goat (did not exist)</span>
+        <b>U OSTALIM ULOGAMA</b>
+        <span>PROMPTOTRON 3000 · SNACK-O-MAT 9000 (i Junior) · ARHIVAR · dva Usisivač-Bota · jedna durljiva vitrina · naljepnica „0% MASTI“ (lagala je)</span>
       </div>
     </div>
   );

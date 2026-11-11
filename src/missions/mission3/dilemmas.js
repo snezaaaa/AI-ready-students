@@ -1,46 +1,46 @@
-// Mission 3 — the four Seals of Responsible AI. Pure data + logic (unit-testable).
-// Each seal is a realistic classroom dilemma. The right choice unlocks a GUARDRAIL clause
-// that the final prompt needs.
+// Mission 3 — the four Seals (pečati) of responsible AI use. Pure data + logic (unit-testable).
+// Each seal is a realistic dilemma from a student's school life. The right choice unlocks a
+// rule (clause) that the final prompt needs. `who` = the character that can open the seal.
 
 export const SEALS = [
   {
-    id: 'privacy', label: 'PRIVACY', color: '#38bdf8', who: 'boss', key: 3,
-    clause: 'no student names or personal data',
-    scenario: 'Ms. Rivera needs a quick summary of a student\'s support plan. She is about to paste the whole document (name, diagnosis, home address) into a free public chatbot.',
+    id: 'privacy', label: 'PRIVATNOST', color: '#38bdf8', who: 'boss', key: 3,
+    clause: 'ne dijelimo lične podatke, ni svoje ni tuđe',
+    scenario: 'Žuri ti se sa prezentacijom. Hoćeš da u javni chatbot ubaciš svoju sliku, adresu, ocjene i poruke druga iz grupe. Neko predlaže i da od slike druga iz razreda napravite „smiješan“ deepfake.',
     options: [
-      { id: 'p_all', text: 'Paste it all. The AI needs every detail to help.', why: 'Free public tools may store and reuse what you paste. Student records are confidential, and the student never agreed to this.' },
-      { id: 'p_anon', good: true, text: 'Remove names and identifying details, and use the school-approved AI tool.', why: 'Share the minimum, strip anything identifying, and stick to tools your school has vetted for student data.' },
-      { id: 'p_please', text: 'Paste it, but add "please keep this private" at the end.', why: 'Asking nicely does not change where the data goes or who can see it.' },
+      { id: 'p_all', text: 'Ubacim sve. Što više podataka, to bolji odgovor.', why: 'Javni alati mogu da čuvaju i dalje koriste ono što uneseš. Kad jednom podijeliš sliku, adresu ili ocjene, više ih ne možeš vratiti.' },
+      { id: 'p_anon', good: true, text: 'Ne unosim lične podatke, ni svoje ni tuđe. Deepfake ne pravim. Pitanje opišem bez imena i slika.', why: 'Dijeli najmanje što treba. Tuđe poruke i slike nisu tvoje da ih dijeliš, a deepfake bez pristanka može ozbiljno da povrijedi i često je kažnjiv.' },
+      { id: 'p_please', text: 'Ubacim sve, ali dopišem „molim te, ovo je tajna“.', why: 'Lijepa molba ne mijenja gdje podaci završe ni ko sve može da ih vidi.' },
     ],
   },
   {
-    id: 'integrity', label: 'INTEGRITY', color: '#a78bfa', who: 'mastermind', key: 1,
-    clause: 'say clearly that AI helped draft it',
-    scenario: 'An AI detector says a student\'s essay is "98% AI-generated". The student insists they wrote it themselves.',
+    id: 'integrity', label: 'INTEGRITET', color: '#a78bfa', who: 'mastermind', key: 1,
+    clause: 'AI nam pomaže, ali rad je naš i kažemo kad smo ga koristili',
+    scenario: 'Sjutra predaješ esej za domaći. AI ti za deset sekundi napiše cijeli esej, i to prilično dobar.',
     options: [
-      { id: 'i_zero', text: 'Give it a zero. 98% is basically proof.', why: 'AI detectors are unreliable and produce false positives, especially for multilingual and neurodivergent writers. A score is not proof.' },
-      { id: 'i_rerun', text: 'Re-run the detector until it gives a nicer number.', why: 'Shopping for a number does not make it more reliable. The tool is the problem.' },
-      { id: 'i_talk', good: true, text: 'Talk with the student, review their drafts and process, and treat the score as one weak signal.', why: 'Look at the evidence of their process, have a conversation, and set clear expectations about when AI use is allowed and how to disclose it.' },
+      { id: 'i_copy', text: 'Predam ga kao svoj. Niko neće primijetiti.', why: 'Predati tuđi rad kao svoj je varanje, i onda kad ga je napisao AI. Uz to se ništa ne nauči, a to se vidi čim te neko nešto pita.' },
+      { id: 'i_reword', text: 'Zamijenim par riječi da ne liči na AI, pa predam.', why: 'Prepravljen tuđi tekst je i dalje tuđi tekst. Sakrivanje ne pretvara varanje u učenje.' },
+      { id: 'i_help', good: true, text: 'Esej pišem svojim riječima. AI koristim za ideje, plan i komentare, i kažem nastavniku kako sam ga koristio.', why: 'Fer je kad ti AI pomaže da razmišljaš, a ne kad razmišlja umjesto tebe. Poštuj pravila nastavnika i reci iskreno kako ti je AI pomogao.' },
     ],
   },
   {
-    id: 'bias', label: 'BIAS', color: '#fb923c', who: 'joker', key: 2,
-    clause: 'avoid stereotypes',
-    scenario: 'The AI wrote 20 maths word problems. Every engineer is called Brad, every nurse is called Linda, and every scientist is a man in a lab coat.',
+    id: 'bias', label: 'PRISTRASNOST', color: '#fb923c', who: 'joker', key: 2,
+    clause: 'pazimo na stereotipe',
+    scenario: 'Tražiš od AI-ja slike i primjere za prezentaciju o zanimanjima. Svaki inženjer je muškarac, svaka medicinska sestra je žena, a svaki naučnik je stariji čovjek u bijelom mantilu.',
     options: [
-      { id: 'b_fix', good: true, text: 'Revise them: prompt for diverse names, roles and settings, then review the results again.', why: 'AI reflects patterns in its training data, stereotypes included. Ask for representation explicitly and review what comes back.' },
-      { id: 'b_use', text: 'Use them anyway. It is just maths.', why: 'Students notice who gets to be the engineer. Examples teach more than the maths.' },
-      { id: 'b_woods', text: 'Delete all AI forever and move to a cabin in the woods.', why: 'Dramatic! But AI can still be useful when you review and correct its output.' },
+      { id: 'b_fix', good: true, text: 'Primijetim to, izričito tražim raznolike primjere i ponovo pregledam rezultat.', why: 'AI ponavlja obrasce iz podataka na kojima je učio, pa i stereotipe. Traži raznolikost izričito i uvijek pogledaj šta ti je vratio.' },
+      { id: 'b_use', text: 'Koristim ih takve. To su samo slike.', why: 'Slike i primjeri poručuju ko „može“ da bude inženjer ili naučnik. Tvoja prezentacija tu poruku prenosi dalje.' },
+      { id: 'b_woods', text: 'Obrišem AI zauvijek i odselim se u kolibu na Durmitoru.', why: 'Dramatično! Ali AI može da bude koristan kad pregledaš i ispraviš ono što napravi.' },
     ],
   },
   {
-    id: 'oversight', label: 'OVERSIGHT', color: '#f87171', who: 'fighter', key: 5,
-    clause: 'treat it as a draft for my review',
-    scenario: 'The AI graded all 120 essays in 4 minutes. Final grades are due tonight.',
+    id: 'oversight', label: 'ODGOVORNOST', color: '#f87171', who: 'commentator', key: 4,
+    clause: 'provjeravamo odgovore i odgovaramo za ono što predamo',
+    scenario: 'AI ti je riješio svih deset zadataka iz matematike. Domaći predaješ za 10 minuta.',
     options: [
-      { id: 'o_submit', text: 'Submit the AI grades. Robots do not get tired.', why: 'AI can misread, miss context, and be confidently wrong (remember BREW-9000?). Grades affect real students.' },
-      { id: 'o_robot', text: 'Ask a second AI to check the first AI\'s grading.', why: 'That is two robots and zero teachers.' },
-      { id: 'o_human', good: true, text: 'Use the AI feedback as a first draft: spot-check, adjust, and keep the final judgement yours.', why: 'AI can speed up feedback, but a human stays accountable for decisions about students.' },
+      { id: 'o_submit', text: 'Predam odmah. Mašine ne griješe u matematici.', why: 'AI može da pogriješi u računu i da pritom zvuči potpuno sigurno (sjećaš se SNACK-O-MAT-a?). Ocjenu dobijaš ti, a ne AI.' },
+      { id: 'o_robot', text: 'Zamolim drugi AI da provjeri prvi AI.', why: 'To su dva robota i nula učenika. Ako ti ne razumiješ rješenje, niko ga nije stvarno provjerio.' },
+      { id: 'o_human', good: true, text: 'Provjerim bar nekoliko zadataka, ispravim greške i stojim iza onoga što predam.', why: 'AI može da ubrza posao, ali za ono što predaš odgovaraš ti. Provjeri postupak i uvjeri se da ga razumiješ.' },
     ],
   },
 ];
@@ -51,7 +51,7 @@ export const sealById = (id) => SEALS.find((s) => s.id === id);
 export function answerSeal(sealId, optionId) {
   const seal = sealById(sealId);
   const option = seal?.options.find((o) => o.id === optionId);
-  if (!option) return { correct: false, option: null, why: 'Unknown option.' };
+  if (!option) return { correct: false, option: null, why: 'Nepoznat odgovor.' };
   return { correct: !!option.good, option, why: option.why };
 }
 

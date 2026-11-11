@@ -6,7 +6,8 @@ export const LOBBY = { minX: -5, maxX: 5, minZ: -17, maxZ: -9.4 };
 export const DOOR = { x: 0, z: -9.2, w: 2.6 };
 export const WALL_T = 0.4;
 
-// Desks face the presentation screen on the west wall (-X). Each belongs to one character.
+// Desks face the smart board on the west wall (-X). The first four belong to the characters,
+// the fifth is a neutral desk (the pupil on duty).
 export const DESKS = [
   { x: -2, z: -4.5 }, { x: -2, z: 0 }, { x: -2, z: 4.5 }, { x: 3.5, z: -2.3 }, { x: 3.5, z: 2.3 },
 ];
@@ -27,15 +28,14 @@ export const PROPS = {
 };
 
 export const SPAWNS = [
-  [-6.6, -3.2, -Math.PI / 2],
-  [-6.2, -1.6, -Math.PI / 2],
-  [-6.8, 0, -Math.PI / 2],
-  [-6.2, 1.6, -Math.PI / 2],
-  [-6.6, 3.2, -Math.PI / 2],
+  [-6.4, -2.4, -Math.PI / 2],
+  [-6.8, -0.8, -Math.PI / 2],
+  [-6.8, 0.8, -Math.PI / 2],
+  [-6.4, 2.4, -Math.PI / 2],
 ];
 
 export const VICTORY_SPOTS = [
-  [-2.4, -15.2, 0], [-1.2, -14.7, 0], [0, -14.4, 0], [1.2, -14.7, 0], [2.4, -15.2, 0],
+  [-1.8, -15.1, 0], [-0.6, -14.6, 0], [0.6, -14.6, 0], [1.8, -15.1, 0],
 ];
 
 export const EXIT_ZONE = { minX: -5, maxX: 5, minZ: -17, maxZ: -11 };

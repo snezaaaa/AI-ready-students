@@ -1,27 +1,27 @@
-// Mission 2 — THE COFFEE BREAK CRISIS (see registry.js for the mission interface)
+// Mission 2 — KRIZA KOD AUTOMATA, the school hallway (see registry.js for the mission interface)
 import BreakRoom from './BreakRoom.jsx';
 import * as m2 from './logic.js';
 import { FactChecker, CaffeineMeter, NapOverlay } from './ui.jsx';
-import { SOURCES, RELIABLE_IDS } from './factCheck.js';
+import { SOURCES } from './factCheck.js';
 import { SPAWNS, buildColliders, OPEN_SPACES } from './layout.js';
 
-const SHORT = { encyclopedia: 'BOOK', botany: 'FRIDGE', spec: 'SPEC', cctv: 'CCTV', log: 'LOG' };
-const ORDER = ['encyclopedia', 'botany', 'spec', 'cctv', 'log']; // matches character keys 1-5
+// HUD chips: [source id, character key that can unlock it, short label]
+const HUD = [['textbook', 1, 'KNJIGA'], ['health', 1, 'SAJT'], ['cctv', 2, 'KAMERA'], ['teacher', 3, 'PROF'], ['label', 4, 'ETIKETA']];
 
 export default {
-  id: 'mission2', number: 2, title: 'The Coffee Break Crisis', status: 'available',
-  tagline: 'The coffee machine has become "intelligent" and confidently wrong. Find real sources, fact-check its claims, stay awake.',
-  announcement: 'ATTENTION PARTICIPANTS. COFFEE SERVICE HAS BEEN SUSPENDED.',
-  certificate: 'CERTIFICATE 66% UNLOCKED',
-  attemptLabel: 'Fact-check attempts',
-  ranks: ['MASTER FACT-CHECKER', 'SOURCE SLEUTH', 'KEVIN BELIEVER'],
-  extraStats: (s) => `Naps: ${s.ms.naps || 0} · Mop-Bot collisions: ${s.ms.bumps || 0}`,
+  id: 'mission2', number: 2, title: 'Kriza kod automata', status: 'available',
+  tagline: 'Školski automat je postao „pametan“ i potpuno je siguran u stvari koje nisu tačne. Nađi prave izvore, provjeri tvrdnje i ne zaspi.',
+  announcement: 'PAŽNJA, UČENICI. AUTOMAT ZA UŽINU JE VAN KONTROLE.',
+  certificate: 'SERTIFIKAT OTKLJUČAN 66%',
+  attemptLabel: 'Pokušaja provjere',
+  ranks: ['MAJSTOR PROVJERE ČINJENICA', 'LOVAC NA IZVORE', 'VJERUJE LETKU'],
+  extraStats: (s) => `Zaspali na času: ${s.ms.naps || 0} · Sudari sa Usisivač-Botom: ${s.ms.bumps || 0}`,
   startYaw: Math.PI / 2,
   initialState: m2.initialState,
   PuzzleUI: FactChecker,
   HudExtra: CaffeineMeter,
   Overlay: NapOverlay,
-  hudItems: (s) => ORDER.filter((k) => RELIABLE_IDS.includes(k)).map((id, i) => ({ id, label: `${i + 1} ${SHORT[id]}`, color: SOURCES[id].color, got: s.inventory.includes(id) })),
+  hudItems: (s) => HUD.map(([id, key, label]) => ({ id, label: `${key} ${label}`, color: SOURCES[id].color, got: s.inventory.includes(id) })),
   Level: BreakRoom,
   spawns: SPAWNS,
   colliders: buildColliders,
@@ -40,17 +40,18 @@ export default {
     victory: { center: [0, 1.3, -14.8], radius: 5.2, height: 2.3 },
   },
   lesson: {
-    title: 'Fact-Checking AI: Hallucinations & Sources',
+    title: 'Provjera činjenica: halucinacije i izvori',
     points: [
-      ['HALLUCINATIONS', 'AI can state false things with total confidence ("a goat named Kevin, 1987"). Sounding sure is not the same as being right.'],
-      ['CHECK THE SOURCE', 'Ask who wrote it and what they gain. BREW-9000 reviewing itself, or an anonymous forum post, is not evidence.'],
-      ['READ LATERALLY', 'Compare the claim with independent, reliable sources: references, primary data, records, footage.'],
-      ['RIGHT FOR THE RIGHT REASON', 'AI is not always wrong: 2 of the 5 claims were true. True claims need reliable evidence too.'],
+      ['HALUCINACIJE', 'AI može da izmisli nešto i kaže to potpuno sigurno („čips light nema masti“). Zvučati sigurno nije isto što i biti u pravu.'],
+      ['PROVJERI IZVOR', 'Pitaj ko je to napisao i šta time dobija. Letak koji je automat napisao o sebi, TikTok bez izvora ili „drug je čuo“ nisu dokaz.'],
+      ['UPOREDI', 'Uporedi tvrdnju sa nezavisnim, pouzdanim izvorima: udžbenik, nastavnik, deklaracija, zvanični sajt, snimak.'],
+      ['AI NIJE UVIJEK U KRIVU', 'Dvije od pet tvrdnji bile su tačne. I tačna tvrdnja traži pouzdan dokaz. Provjeravaj sve, ne samo ono što ti je sumnjivo.'],
     ],
     example: {
-      bad: '"The AI said decaf has zero caffeine, so it does."',
-      good: '"The AI said decaf has zero caffeine. The supplier\'s lab-tested spec sheet says at least 97% is removed, so small amounts remain. Verdict: the claim is false."',
+      badLabel: 'Slabo zaključivanje', goodLabel: 'Dobro zaključivanje',
+      bad: '„AI je rekao da čips light nema masti, znači nema.“',
+      good: '„AI je rekao da čips light nema masti. Na deklaraciji piše 22 g masti na 100 g. Znači, tvrdnja je netačna.“',
     },
-    extra: 'Classroom tip: when students use AI for research, ask them to show at least one independent source for every claim they keep, and to flag anything they could not verify.',
+    extra: 'Savjet: kad koristiš AI za učenje ili referat, za svaku važnu tvrdnju nađi bar jedan nezavisan izvor. Ono što ne možeš da provjeriš, označi ili izbaci.',
   },
 };

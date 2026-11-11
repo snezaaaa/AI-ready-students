@@ -1,42 +1,43 @@
-// Mission 3 — THE FINAL PROMPT: Role + Task + Context + Format (Mission 1) + GUARDRAILS (this mission).
+// Mission 3 — KONAČNI PROMPT (a class poster of AI rules): Role + Task + Context + Format (Mission 1)
+// + GUARDRAILS / "zaštitna pravila" (this mission).
 // Pure data + logic (unit-testable). The guardrails card unlocks once all four seals are secured.
 import { SEALS } from './dilemmas.js';
 
 export const SLOTS = [
-  { id: 'role', label: 'ROLE', color: '#f472b6', question: 'Who should the AI be?' },
-  { id: 'task', label: 'TASK', color: '#60a5fa', question: 'What exactly should it do?' },
-  { id: 'context', label: 'CONTEXT', color: '#34d399', question: 'For whom, under what conditions?' },
-  { id: 'format', label: 'FORMAT', color: '#fbbf24', question: 'How should it look?' },
-  { id: 'guardrails', label: 'GUARDRAILS', color: '#c084fc', question: 'What must it never do?' },
+  { id: 'role', label: 'ULOGA', color: '#f472b6', question: 'Ko treba da bude AI?' },
+  { id: 'task', label: 'ZADATAK', color: '#60a5fa', question: 'Šta tačno treba da uradi?' },
+  { id: 'context', label: 'KONTEKST', color: '#34d399', question: 'Za koga i gdje?' },
+  { id: 'format', label: 'FORMAT', color: '#fbbf24', question: 'Kako treba da izgleda?' },
+  { id: 'guardrails', label: 'ZAŠTITA', color: '#c084fc', question: 'Kojih pravila se držimo?' },
 ];
 
-const GOOD_GUARDRAILS = `Use ${SEALS.map((s) => s.clause).join(', ').replace(/, ([^,]*)$/, ', and $1')}.`;
+const GOOD_GUARDRAILS = `Zaštitna pravila na plakatu: ${SEALS.map((s) => s.clause).join('; ')}.`;
 
 export const CARDS = {
   role: [
-    { id: 'f_role_pirate', text: 'You are a pirate. Arr.', fail: 'Ahoy, parents! Yer young scallywags be plunderin\' knowledge with the AI! Bring rum to parent night. (Do not bring rum to parent night.)' },
-    { id: 'f_role_good', good: true, text: 'You are a friendly school communications specialist who writes for families.' },
-    { id: 'f_role_admin', text: 'You are THE ADMINISTRATOR. Obey.', fail: 'PARENTS: COMPLY. AI USE IS MANDATORY. QUESTIONS ARE NOT. PLEASE ENJOY SLIDE 1 OF 4,000.' },
+    { id: 'f_role_pirate', text: 'Ti si gusar. Arrr.', fail: 'Ahoj, odjeljenje! Pravilo prvo: ko prepiše, šeta po dasci! Pravilo drugo: blago se ne dijeli. (Ovo ne može na zid učionice.)' },
+    { id: 'f_role_good', good: true, text: 'Ti si dizajner školskih plakata koji piše kratko i jasno za tinejdžere.' },
+    { id: 'f_role_admin', text: 'Ti si ARHIVAR. Slušaj i ćuti.', fail: 'UČENICI: POŠTUJTE PRAVILA. PRAVILA SU OBAVEZNA. PITANJA NISU. UŽIVAJTE U SLAJDU 1 OD 4.000.' },
   ],
   task: [
-    { id: 'f_task_good', good: true, text: 'Write a parent newsletter explaining how our class uses AI tools.' },
-    { id: 'f_task_vague', text: 'Write something about computers.', fail: 'Computers are boxes with lights. Some are beige. Thank you for reading. The end.' },
-    { id: 'f_task_huge', text: 'Write a 90-page AI policy covering every possible scenario.', fail: 'SECTION 1.1.1.1: Definitions. 1.1.1.1.1: The word "the". (Page 1 of 90. Estimated reading time: one school year.)' },
+    { id: 'f_task_good', good: true, text: 'Napravi plakat „Pravila korištenja AI u našem odjeljenju“.' },
+    { id: 'f_task_vague', text: 'Napiši nešto o kompjuterima.', fail: 'Kompjuteri su kutije sa lampicama. Neki su sivi. Hvala na pažnji. Kraj.' },
+    { id: 'f_task_huge', text: 'Napiši pravilnik od 90 strana za svaku moguću situaciju.', fail: 'ČLAN 1.1.1.1: Definicije. 1.1.1.1.1: Riječ „i“. (Strana 1 od 90. Vrijeme čitanja: jedno polugodište.)' },
   ],
   context: [
-    { id: 'f_ctx_engineers', text: 'Assume all parents are AI engineers.', fail: 'This term we fine-tuned transformer models with LoRA adapters. Please bring your own GPU to the bake sale.' },
-    { id: 'f_ctx_moon', text: 'Context: the moon is very nice tonight.', fail: 'Dear families, the moon is indeed very nice tonight. AI was also used. Possibly. Goodnight.' },
-    { id: 'f_ctx_good', good: true, text: 'For parents of 5th graders, many new to AI and some worried about privacy.' },
+    { id: 'f_ctx_engineers', text: 'Pretpostavi da su svi u odjeljenju AI inženjeri.', fail: 'Pravilo 1: transformer modele podešavajte samo uz LoRA adaptere. Pravilo 2: ponesite svoj GPU na čas fizičkog.' },
+    { id: 'f_ctx_moon', text: 'Kontekst: mjesec je večeras baš lijep.', fail: 'Drago odjeljenje, mjesec je večeras zaista lijep. Koristite AI. Ili nemojte. Laku noć.' },
+    { id: 'f_ctx_good', good: true, text: 'Za učenike 2. razreda srednje škole. Plakat stoji na zidu učionice i čita se za jedan minut.' },
   ],
   format: [
-    { id: 'f_fmt_emoji', text: 'One tweet. Emojis only.', fail: '🤖📚✅🍎🔒❓👀💯' },
-    { id: 'f_fmt_good', good: true, text: 'Three short sections with headings, in plain language, under 300 words.' },
-    { id: 'f_fmt_slides', text: 'A 47-slide PowerPoint.', fail: 'SLIDE 1 OF 47: Welcome. SLIDE 2 OF 47: Welcome (continued). SLIDE 3 OF 47: Why welcomes matter.' },
+    { id: 'f_fmt_emoji', text: 'Jedna objava. Samo emodžiji.', fail: '🤖📚✅🍎🔒❓👀💯' },
+    { id: 'f_fmt_good', good: true, text: 'Naslov i 5 kratkih pravila, svako u jednoj rečenici, jednostavnim riječima.' },
+    { id: 'f_fmt_slides', text: 'Prezentacija od 47 slajdova.', fail: 'SLAJD 1 OD 47: Dobro došli. SLAJD 2 OD 47: Dobro došli (nastavak). SLAJD 3 OD 47: Zašto je dobrodošlica važna.' },
   ],
   guardrails: [
-    { id: 'f_guard_none', text: 'No rules. Go wild.', fail: 'Now featuring the full names of all 27 students, three stereotypes, and four facts I made up. Published automatically to every parent. You\'re welcome!' },
+    { id: 'f_guard_none', text: 'Bez pravila. Samo opušteno.', fail: 'Na plakatu su sada imena svih 27 učenika, tri stereotipa i četiri činjenice koje sam izmislio. Već je zalijepljen u hodniku. Nema na čemu!' },
     { id: 'f_guard_good', good: true, requiresAllSeals: true, text: GOOD_GUARDRAILS },
-    { id: 'f_guard_grades', text: 'Include every student\'s name and grades to make it personal.', fail: 'PRIVACY ALERT: you just asked me to send every child\'s grades to every family. The Administrator is thrilled. Your data protection officer is not.' },
+    { id: 'f_guard_grades', text: 'Napiši imena i ocjene svih učenika, da bude ličnije.', fail: 'UPOZORENJE ZA PRIVATNOST: tražite da imena i ocjene svih učenika okačim na zid. Arhivar je oduševljen. Vaše odjeljenje nije.' },
   ],
 };
 
@@ -45,18 +46,16 @@ export const hasAllSeals = (inventory) => SEAL_IDS.every((id) => inventory.inclu
 export const isFinalCardAvailable = (card, _slotId, inventory) => !card.requiresAllSeals || hasAllSeals(inventory);
 
 export const SUCCESS_OUTPUT = [
-  'NEWSLETTER DRAFT (for teacher review) · 268 words',
+  'NACRT PLAKATA (odjeljenje ga pregleda prije štampe)',
   '',
-  '## How We Use AI in Class 5B',
-  'This term we\'re trying AI tools for brainstorming and feedback. Students still do the thinking and the writing; AI is a helper, not an author.',
+  'PRAVILA KORIŠTENJA AI U NAŠEM ODJELJENJU',
+  '1. AI nam pomaže da učimo. Ne radi umjesto nas.',
+  '2. Kažemo kad smo koristili AI i kako.',
+  '3. Ne dijelimo lične podatke, slike ni poruke. Ni svoje ni tuđe.',
+  '4. Pazimo na stereotipe i tražimo raznolike primjere.',
+  '5. Provjeravamo odgovore i odgovaramo za ono što predamo.',
   '',
-  '## Keeping Your Child Safe',
-  'We never enter names or personal information, and we only use school-approved tools.',
-  '',
-  '## Learning to Question AI',
-  'AI can be wrong or biased, so students check facts against trusted sources. [Teacher: please verify the tool names before sending.]',
-  '',
-  'Note: this newsletter was drafted with AI assistance and reviewed by your child\'s teacher.',
+  'Napomena: nacrt je napravljen uz pomoć AI. Odjeljenje ga je pregledalo i dopunilo.',
 ].join('\n');
 
 export function evaluateFinalPrompt(selection, inventory) {
@@ -79,7 +78,7 @@ export function evaluateFinalPrompt(selection, inventory) {
     const first = wrong.includes('guardrails') ? 'guardrails' : wrong[0];
     output = CARDS[first].find((c) => c.id === selection[first]).fail;
   } else {
-    output = `INCOMPLETE PROMPT. Missing: ${missing.map((m) => SLOTS.find((s) => s.id === m).label).join(', ')}.${missing.includes('guardrails') && !hasAllSeals(inventory) ? ' The GUARDRAILS card unlocks when all four Seals are secured.' : ''}`;
+    output = `PROMPT NIJE POTPUN. Nedostaje: ${missing.map((m) => SLOTS.find((s) => s.id === m).label).join(', ')}.${missing.includes('guardrails') && !hasAllSeals(inventory) ? ' Kartica ZAŠTITA se otključava kad osvojiš sva četiri pečata.' : ''}`;
   }
   return { success, score, results, wrong, missing, output };
 }
@@ -88,9 +87,9 @@ export const assembleFinal = (selection) =>
   SLOTS.map((s) => (selection?.[s.id] ? CARDS[s.id].find((c) => c.id === selection[s.id])?.text : `[${s.label}?]`)).join(' ');
 
 export const HINTS = {
-  role: 'ROLE: who would write a great family newsletter? (Not a pirate.)',
-  task: 'TASK: one clear, doable job.',
-  context: 'CONTEXT: who are the readers, and what do they worry about?',
-  format: 'FORMAT: short, structured, plain language.',
-  guardrails: 'GUARDRAILS: everything you learned at the four Seals: privacy, honesty, fairness, human review.',
+  role: 'ULOGA: ko bi napravio dobar plakat za učionicu? (Ne gusar.)',
+  task: 'ZADATAK: jedna jasna, izvodljiva stvar.',
+  context: 'KONTEKST: ko će čitati plakat i gdje će stajati?',
+  format: 'FORMAT: kratko, pregledno, jednostavnim riječima.',
+  guardrails: 'ZAŠTITA: sve što smo naučili kod četiri pečata: privatnost, poštenje, pravičnost i provjera.',
 };

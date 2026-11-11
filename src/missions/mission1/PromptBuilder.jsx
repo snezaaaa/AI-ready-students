@@ -6,14 +6,14 @@ import { testPrompt, startDoorSequence } from './logic.js';
 export default function PromptBuilder() {
   return (
     <PromptBuilderBase
-      title="PROMPT BUILDER" tag="// PROMPTOTRON 3000"
-      subtitle="Pick one card for each part. Glowing cards were found in the room. The others came with the software. (Suspicious.)"
+      title="GRADITELJ PROMPTA" tag="// PROMPTOTRON 3000"
+      subtitle="Izaberi po jednu karticu za svaki dio. Kartice koje sijaju pronađene su u učionici. Ostale su došle uz program. (Sumnjivo.)"
       slots={SLOTS} cards={CARDS}
       isAvailable={isCardAvailable}
-      lockedText={(slot) => `Not found yet — search the room for the ${slot.label} component`}
+      lockedText={(slot) => `Još nije pronađeno — potraži dio ${slot.label} u učionici`}
       assemble={assemblePrompt}
       onTest={testPrompt} onSuccess={startDoorSequence}
-      thinkingLabel="PROMPTOTRON IS THINKING…" successFoot="Unlocking door…"
+      thinkingLabel="PROMPTOTRON RAZMIŠLJA…" successFoot="Otključavam vrata…"
     />
   );
 }

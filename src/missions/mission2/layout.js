@@ -29,11 +29,10 @@ export const SPAWNS = [
   [0.4, 5.6, -Math.PI / 2],
   [-0.6, 6.2, -Math.PI / 2],
   [0.4, 6.8, -Math.PI / 2],
-  [-0.6, 7.4, -Math.PI / 2],
 ];
 
 export const VICTORY_SPOTS = [
-  [-2.4, -15.0, 0], [-1.2, -14.5, 0], [0, -14.2, 0], [1.2, -14.5, 0], [2.4, -15.0, 0],
+  [-1.8, -14.9, 0], [-0.6, -14.4, 0], [0.6, -14.4, 0], [1.8, -14.9, 0],
 ];
 export const EXIT_ZONE = { minX: -4.5, maxX: 4.5, minZ: -16, maxZ: -10.5 };
 
@@ -60,7 +59,7 @@ export function buildColliders() {
     box(PROPS.bookshelf.x, PROPS.bookshelf.z, 0.8, 2.6),
     box(PROPS.fridge.x, PROPS.fridge.z, 1.2, 1.4),
     box(PROPS.cooler.x, PROPS.cooler.z, 0.7, 0.7),
-    // the heavy dishwasher: one collider per position, toggled when the Fighter moves it
+    // the locked tablet locker: one collider per position, toggled when GPT solves its riddle and it rolls aside
     box(PROPS.dishwasher.x, PROPS.dishwasher.z, 1.4, 1.1, { id: 'dishwasher' }),
     box(PROPS.dishwasher.movedX, PROPS.dishwasher.z, 1.4, 1.1, { id: 'dishwasherMoved', enabled: false }),
     box(PROPS.desk.x, PROPS.desk.z, 2.2, 1.0),

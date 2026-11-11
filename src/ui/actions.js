@@ -59,11 +59,10 @@ export function restartMission() {
 }
 
 const SWITCH_LINES = {
-  mastermind: ['I have a plan.', 'Stand back. Thinking in progress.', 'Let me handle the clever part.'],
-  joker: ['Did someone order comic relief?', "I'm here! Nobody panic. Except for comedic effect.", 'Joker time, baby.'],
-  boss: ['Right. Let me show you how leadership works.', 'I am taking control of this situation. And the snacks.', 'Synergy. Deploy.'],
-  commentator: ['AND THE COMMENTATOR ENTERS THE FIELD!', 'Live, exclusive, and unbelievably loud!', 'Testing, testing. Oh, I am always on.'],
-  fighter: ['Ready.', "Point me at the problem.", 'Stretching. Mentally.'],
+  mastermind: ['Imam plan. I rezervni plan. I plan za rezervni plan.', 'Odmaknite se. Razmišljam naglas.', 'Pametni dio prepustite meni.'],
+  joker: ['Neko je tražio malo smijeha?', 'Stigao sam! Bez panike. Osim ako je smiješna.', 'Gemi na sceni!'],
+  boss: ['Dobro. Hajde da ovo lijepo organizujemo.', 'Preuzimam. Već pravim tabelu.', 'Sve se može dogovoriti. Sve.'],
+  commentator: ['Tu sam. Idemo polako i jasno.', 'Rado ću pomoći. I objasniti.', 'Proba mikrofona. Jedan, dva. Čuje se odlično.'],
 };
 
 export function switchTo(i) {

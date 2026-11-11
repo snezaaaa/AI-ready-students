@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { SEALS, answerSeal } from '../../src/missions/mission3/dilemmas.js';
+import { ROSTER } from '../../src/characters/roster.js';
 import { SLOTS, CARDS, evaluateFinalPrompt, isFinalCardAvailable, SEAL_IDS } from '../../src/missions/mission3/finalPrompt.js';
 import { LASERS, laserState, laserHits, checkpointFor, CORRIDOR, CHECKPOINTS, dangerZone } from '../../src/missions/mission3/lasers.js';
 
@@ -17,13 +18,20 @@ test('the right answer is not always in the same position', () => {
 });
 test('answerSeal reports correctness and the explanation', () => {
   assert.equal(answerSeal('privacy', 'p_anon').correct, true);
-  const r = answerSeal('integrity', 'i_zero');
+  const r = answerSeal('integrity', 'i_copy');
   assert.equal(r.correct, false);
-  assert.match(r.why, /unreliable/);
+  assert.match(r.why, /varanje/);
 });
-test('each seal needs a different character', () => {
+test('each seal needs a different one of the four characters, and its key matches', () => {
   assert.equal(new Set(SEALS.map((s) => s.who)).size, 4);
-  assert.ok(!SEALS.some((s) => s.who === 'commentator'), 'the Commentator is saved for the final broadcast');
+  for (const s of SEALS) assert.equal(ROSTER.findIndex((c) => c.id === s.who) + 1, s.key, s.id);
+});
+test('the four dilemmas are about a student\'s life: integrity, bias, privacy, responsibility', () => {
+  assert.deepEqual(SEALS.map((s) => s.id).sort(), ['bias', 'integrity', 'oversight', 'privacy']);
+  assert.match(SEALS.find((s) => s.id === 'integrity').scenario, /esej/);
+  assert.match(SEALS.find((s) => s.id === 'privacy').scenario, /deepfake/);
+  assert.match(SEALS.find((s) => s.id === 'bias').scenario, /inženjer/);
+  assert.match(SEALS.find((s) => s.id === 'oversight').scenario, /matematike/);
 });
 
 // ---------------- final prompt
@@ -32,7 +40,8 @@ test('perfect final prompt succeeds once all seals are secured', () => {
   const r = evaluateFinalPrompt(good, SEAL_IDS);
   assert.equal(r.success, true);
   assert.equal(r.score, 100);
-  assert.match(r.output, /reviewed by your child's teacher/);
+  assert.match(r.output, /PRAVILA KORIŠTENJA AI U NAŠEM ODJELJENJU/);
+  assert.match(r.output, /Odjeljenje ga je pregledalo/);
 });
 test('guardrails card is locked until all four seals are secured', () => {
   const g = CARDS.guardrails.find((c) => c.good);
@@ -40,12 +49,12 @@ test('guardrails card is locked until all four seals are secured', () => {
   assert.equal(isFinalCardAvailable(g, 'guardrails', SEAL_IDS), true);
   const r = evaluateFinalPrompt(good, SEAL_IDS.slice(0, 3));
   assert.equal(r.success, false);
-  assert.match(r.output, /four Seals/);
+  assert.match(r.output, /sva četiri pečata/);
 });
 test('guardrail mistakes are reported before other mistakes', () => {
   const r = evaluateFinalPrompt({ ...good, role: 'f_role_pirate', guardrails: 'f_guard_grades' }, SEAL_IDS);
   assert.deepEqual(r.wrong.sort(), ['guardrails', 'role']);
-  assert.match(r.output, /PRIVACY ALERT/);
+  assert.match(r.output, /UPOZORENJE ZA PRIVATNOST/);
 });
 test('the good guardrails mention every seal clause', () => {
   const text = CARDS.guardrails.find((c) => c.good).text;

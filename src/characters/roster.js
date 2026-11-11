@@ -34,7 +34,7 @@ export const ROSTER = [
     id: 'joker',
     name: 'Gemi',
     color: '#facc15',
-    skill: 'Zasmijava mašine, vidi slike',
+    skill: 'Zasmijava, vidi slike',
     tagline: 'Zasmijava mašine. Kreativan. Vidi slike i kamere.',
     idleStyle: 'bouncy',
     defaultMood: 'grin',

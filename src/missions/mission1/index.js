@@ -43,8 +43,8 @@ export default {
     ],
     example: {
       badLabel: 'Slab prompt', goodLabel: 'Jak prompt',
-      bad: 'Objasni mi biljke.',
-      good: 'Ti si strpljiv tutor iz biologije koji objašnjava srednjoškolcima. Napravi mi plan učenja za kontrolni iz fotosinteze. Ja sam učenik 1. razreda gimnazije, kontrolni je za 3 dana, imam 30 min dnevno i slabije razumijem hemijski dio. Daj tabelu: Dan, Šta učim, Kako se provjerim.',
+      bad: '„Objasni mi biljke.“',
+      good: '„Ti si strpljiv tutor iz biologije koji objašnjava srednjoškolcima. Napravi mi plan učenja za kontrolni iz fotosinteze. Ja sam učenik 1. razreda gimnazije, kontrolni je za 3 dana, imam 30 min dnevno i slabije razumijem hemijski dio. Daj tabelu: Dan, Šta učim, Kako se provjerim.“',
     },
     extra: 'Savjet: prvi odgovor je samo nacrt. Traži doradu („objasni 2. dan jednostavnije“) i uvijek provjeri činjenice prije nego što nešto naučiš napamet ili predaš.',
   },

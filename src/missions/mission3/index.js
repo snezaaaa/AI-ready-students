@@ -51,7 +51,7 @@ export default {
     example: {
       badLabel: 'Slab prompt', goodLabel: 'Jak prompt',
       bad: '„Napravi plakat o AI. Evo imena i ocjena svih iz mog odjeljenja.“',
-      good: '„Ti si dizajner školskih plakata koji piše kratko i jasno za tinejdžere. Napravi plakat „Pravila korištenja AI u našem odjeljenju“. Za učenike 2. razreda srednje škole; plakat stoji na zidu učionice i čita se za jedan minut. Naslov i 5 kratkih pravila, svako u jednoj rečenici. Zaštitna pravila: ne dijelimo lične podatke, rad je naš i kažemo kad smo koristili AI, pazimo na stereotipe, provjeravamo odgovore.“',
+      good: '„Ti si dizajner školskih plakata koji piše kratko i jasno za tinejdžere. Napravi plakat sa pravilima korištenja AI u našem odjeljenju. Za učenike 2. razreda srednje škole; plakat stoji na zidu učionice i čita se za jedan minut. Naslov i 5 kratkih pravila, svako u jednoj rečenici. Zaštitna pravila: ne dijelimo lične podatke, rad je naš i kažemo kad smo koristili AI, pazimo na stereotipe, provjeravamo odgovore.“',
     },
     extra: 'Prije nego što koristiš AI za školu, pitaj nastavnika koja su pravila za taj predmet. Odgovorna upotreba je navika, a ne jedno dugme.',
   },

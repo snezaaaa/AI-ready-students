@@ -19,7 +19,7 @@ const FORMAT = args.format || 'landscape';
 const SEGMENT = args.segment || 'm1';
 const BASE = args.url || 'http://localhost:4173/';
 const FPS = Number(args.fps || 30);   // use e.g. --fps 6 for a quick draft
-const SITE = args.site || 'snezaaaa.github.io/dungeons-and-deadlines';
+const SITE = args.site || 'snezaaaa.github.io/AI-ready-students';
 const OUT = path.resolve(args.out || 'recordings', FORMAT, SEGMENT);
 const FORMATS = {
   landscape: { viewport: { width: 1280, height: 720 }, scale: 1.5, fov: 55 },   // -> 1920x1080
@@ -90,7 +90,7 @@ const tagger = (text, sec) => {
 };
 const startMission = async (id, skip = true) => {
   await click(`[data-testid=select-${id}]`);
-  if (skip) await page.evaluate(() => [...document.querySelectorAll('.title-buttons .btn')].find((b) => /Skip intro/.test(b.textContent)).click());
+  if (skip) await page.evaluate(() => [...document.querySelectorAll('.title-buttons .btn')].find((b) => /Preskoči uvod/.test(b.textContent)).click());
   else await click('[data-testid=start]');
   // wait out the start-of-mission tip (it arrives ~0.6 s in), then start from a clean slate
   await shoot(0.75);
@@ -101,7 +101,7 @@ const say = (lines) => G((l) => window.__game.useGame.getState().say(l, { interr
 // ---------------------------------------------------------------- segments
 const SEGMENTS = {
   async intro() {
-    await shoot(0.4, async (i, total) => { if (i === 0) await card(`<div class="k">DUNGEONS &amp; DEADLINES</div><div class="t">THE FINAL<br>PROMPT</div><div class="s">A 3D comedy escape adventure about using AI well</div>`, 0); await card(null, (i + 1) / total); });
+    await shoot(0.4, async (i, total) => { if (i === 0) await card(`<div class="k">AI ESCAPE</div><div class="t">ZAKLJUČANI<br>SERTIFIKAT</div><div class="s">3D avantura o pametnoj upotrebi AI</div>`, 0); await card(null, (i + 1) / total); });
     await shoot(1.4);
     await shoot(0.4, async (i, total) => card(null, 1 - (i + 1) / total));
     await shoot(1.2);
@@ -111,15 +111,15 @@ const SEGMENTS = {
 
   async m1() {
     await startMission('mission1');
-    // Mastermind solves the whiteboard riddle
+    // GPT solves the whiteboard riddle
     await teleport(0, -5, 4.4, Math.PI);
-    const t1 = tagger('MISSION 1 · THE IMPOSSIBLE PROMPT', 1.9);
+    const t1 = tagger('MISIJA 1 · NEMOGUĆI PROMPT', 1.9);
     await shoot(1.2, t1);
     await hold(['KeyW'], 0.7, t1);
     await tag('', 0);
     await tap('KeyE');
     await shoot(4.2);
-    // the Joker makes the printer laugh
+    // Gemi makes the printer laugh
     await tap('Digit2');
     await teleport(1, 9.5, -3.9, 0);
     await shoot(0.8);
@@ -145,45 +145,45 @@ const SEGMENTS = {
 
   async m2() {
     await startMission('mission2');
-    // the Joker cheers up the sulking fridge
-    await tap('Digit2');
-    await teleport(1, 6.6, 5.0, -Math.PI / 2);
-    const t2 = tagger('MISSION 2 · THE COFFEE BREAK CRISIS', 1.45);
+    // Claude politely opens the sulking drinks cooler
+    await tap('Digit4');
+    await teleport(3, 6.6, 5.0, -Math.PI / 2);
+    const t2 = tagger('MISIJA 2 · KRIZA KOD AUTOMATA', 1.45);
     await shoot(1.0, t2);
     await hold(['KeyW'], 0.45, t2);
     await tag('', 0);
     await tap('KeyE');
     await shoot(5.0);
-    // a Mop-Bot sends the Fighter flying
+    // a vacuum robot sends Gemi flying
     await G(() => window.__game.useGame.getState().clearDialogue());
-    await tap('Digit5');
+    await tap('Digit2');
     await G(() => Object.assign(window.__bots[1], { x: -1.5, z: 3.9, seg: 0, dir: 1, hitCooldown: 0 }));   // heading +x along z=3.9
-    await teleport(4, 3.2, 3.9, Math.PI / 2);
+    await teleport(1, 3.2, 3.9, Math.PI / 2);
     await hold(['KeyW'], 1.3);
     await shoot(1.6);
     // fact-check all five claims, step by step
-    await G(() => { const g = window.__game.useGame.getState(); ['encyclopedia', 'botany', 'spec', 'cctv', 'log'].forEach((k) => g.collect(k)); g.clearDialogue(); g.clearToast(); });
-    await teleport(4, -3.0, 0, Math.PI / 2);
+    await G(() => { const g = window.__game.useGame.getState(); ['textbook', 'label', 'teacher', 'cctv', 'health'].forEach((k) => g.collect(k)); g.clearDialogue(); g.clearToast(); });
+    await teleport(1, -3.0, 0, Math.PI / 2);
     await shoot(0.4);
     await tap('KeyE');
     await shoot(1.0);
-    const answers = [['c1', 'encyclopedia', 'false'], ['c2', 'log', 'true'], ['c3', 'spec', 'false'], ['c4', 'botany', 'true'], ['c5', 'cctv', 'false']];
+    const answers = [['c1', 'health', 'false'], ['c2', 'label', 'true'], ['c3', 'textbook', 'false'], ['c4', 'teacher', 'true'], ['c5', 'cctv', 'false']];
     for (const [c, src, v] of answers) {
       await click(`[data-testid=claim-tab-${c}]`); await shoot(0.3);
       await click(`[data-testid=src-${c}-${src}]`); await shoot(0.45);
       await click(`[data-testid=verdict-${c}-${v}]`); await shoot(0.45);
     }
     await click('[data-testid=submit-factcheck]');
-    await shoot(6.6);   // report types out, then BREW-9000 is grounded
+    await shoot(6.6);   // report types out, then SNACK-O-MAT 9000 is grounded
     await shoot(4.0);
   },
 
   async m3() {
     await startMission('mission3');
-    // the Boss faces the Seal of Privacy
+    // Copilot faces the Seal of Privacy
     await tap('Digit3');
     await teleport(2, -3.2, 4, Math.PI / 2);
-    const t3 = tagger('MISSION 3 · THE FINAL CERTIFICATE', 1.35);
+    const t3 = tagger('MISIJA 3 · KONAČNI SERTIFIKAT', 1.35);
     await shoot(1.0, t3);
     await hold(['KeyW'], 0.35, t3);
     await tag('', 0);
@@ -194,10 +194,10 @@ const SEGMENTS = {
     await click('[data-testid=opt-p_anon]');
     await shoot(2.6);
     await click('[data-testid=seal-continue]');
-    // the Fighter runs the laser corridor (driven by on-screen cues, like a player would)
+    // Claude runs the sensor corridor (driven by on-screen cues, like a player would)
     await G(() => { const g = window.__game.useGame.getState(); ['privacy', 'integrity', 'bias', 'oversight'].forEach((k) => g.collect(k)); g.clearDialogue(); g.clearToast(); g.patchMs({ corridorHint: true }); });
-    await tap('Digit5');
-    await teleport(4, 0, 2.2, 0);
+    await tap('Digit4');
+    await teleport(3, 0, 2.2, 0);
     await shoot(0.5);
     await G(() => {
       const w = window.__world, defs = window.__laserDefs, g = window.__game.useGame;
@@ -220,7 +220,7 @@ const SEGMENTS = {
     });
     for (let k = 0; k < 14 * FPS && !(await G(() => window.__game.useGame.getState().ms.teamInCore)); k++) await frame();
     await shoot(1.0);
-    // the Commentator broadcasts THE FINAL PROMPT
+    // Claude sends the FINAL PROMPT
     await G(() => { const g = window.__game.useGame.getState(); g.clearDialogue(); g.patchMs({ consoleOn: true }); });
     await tap('Digit4');
     await teleport(3, -4.2, -18.6, 0);
@@ -229,7 +229,7 @@ const SEGMENTS = {
     await shoot(0.8);
     for (const id of ['f_role_good', 'f_task_good', 'f_ctx_good', 'f_fmt_good', 'f_guard_good']) { await click(`[data-testid=card-${id}]`); await shoot(0.3); }
     await click('[data-testid=test-prompt]');
-    await shoot(6.8);   // newsletter types out, then the vault opens
+    await shoot(6.8);   // the class poster types out, then the archive opens
     for (let k = 0; k < 4; k++) { await shoot(2.0); await tap('Enter'); }
     await shoot(5.5);   // victory dance with certificates
   },
@@ -238,7 +238,7 @@ const SEGMENTS = {
     await G(() => window.__game.useGame.setState({ missionId: 'mission3', phase: 'complete', ms: {} }));
     await page.evaluate(() => { const i = document.querySelector('[data-testid=cert-name]'); const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(i, 'Your Name Here'); i.dispatchEvent(new Event('input', { bubbles: true })); document.querySelector('[data-testid=certificate]').scrollIntoView({ block: 'center' }); });
     await shoot(2.4);
-    const html = `<div class="k">DUNGEONS &amp; DEADLINES</div><div class="t">THE FINAL<br>PROMPT</div><div class="s">Write better prompts · Fact-check AI · Use AI responsibly</div><div class="u">Play free in your browser: ${SITE}</div>`;
+    const html = `<div class="k">AI ESCAPE</div><div class="t">ZAKLJUČANI<br>SERTIFIKAT</div><div class="s">Piši bolje prompte · Provjeri činjenice · Koristi AI odgovorno</div><div class="u">Igraj besplatno u pregledaču: ${SITE}</div>`;
     await shoot(0.5, async (i, total) => card(i === 0 ? html : null, (i + 1) / total));
     await shoot(3.5);
   },

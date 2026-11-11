@@ -1,81 +1,116 @@
-# Dungeons and Deadlines: THE FINAL PROMPT
+# AI ESCAPE: Zaključani sertifikat
 
-A browser-based 3D comedy escape adventure. Five friends at an *AI Ready Educators* training find that their certificates have been locked, and the only way out is to write a good AI prompt.
+3D avantura u pregledaču za srednjoškolce (15–18 godina). Učenici su zaključani u školi, a njihov **AI sertifikat** ostaje pod ključem dok ne prođu tri misije: napišu dobar prompt, provjere činjenice i pokažu da znaju da koriste AI odgovorno. Pomažu im četiri crtana AI pomoćnika.
 
-Built with **Vite + React + Three.js + React Three Fiber**. It needs no backend, no AI API and no accounts, and it builds to plain static files.
+Ovo je učenička verzija igre *Dungeons and Deadlines: THE FINAL PROMPT*. Originalni projekat nije mijenjan; ovo je zaseban projekat sa novom istorijom.
 
-## Mission 1: The Impossible Prompt (playable)
+Napravljeno pomoću **Vite + React + Three.js + React Three Fiber**. Nema servera, nema AI API-ja, nema naloga. Sve se pretvara u obične statičke fajlove.
 
-1. A cinematic opening plays: *"ATTENTION PARTICIPANTS. YOUR CERTIFICATES HAVE BEEN LOCKED."*
-2. Explore the training center. Each of the four prompt components can only be retrieved by one character, so you have to switch between them:
+## Likovi
 
-| Component | Where | Who can get it |
+Četiri izmišljena crtana lika. Nemaju prave logotipe ni boje kompanija. Nijedan nije „loš“: svaki ima svoju prednost i svaki je potreban u svakoj misiji.
+
+| Taster | Lik | Vještina |
 |---|---|---|
-| ROLE | Riddle on the whiteboard | 1 · The Mastermind (decodes riddles) |
-| TASK | Jammed printer | 2 · The Joker (makes the printer laugh) |
-| OUTPUT FORMAT | Vending machine | 3 · The Boss (negotiates) |
-| CONTEXT | Rusted filing cabinet | 5 · The Fighter (brute force) |
-| *Wake PROMPTOTRON* | Lectern microphone | 4 · The Commentator (broadcast voice) |
+| 1 | **GPT** | Rješava zagonetke. Priča puno i jako je samouvjeren. |
+| 2 | **Gemi** | Zasmijava mašine, kreativan je, vidi slike i kamere. |
+| 3 | **Copilot** | Pregovara sa svime, organizator, voli tabele. |
+| 4 | **Claude** | Jasan glas, sve objasni, pažljiv i pristojan. |
 
-3. At the lectern terminal, open the **Prompt Builder**, pick one card for each part and press **TEST PROMPT**.
-   - Decoy cards fail with absurd AI output, an alarm, a reaction from the current character and a teaching hint. From the second attempt on, the wrong slots are highlighted.
-   - The right combination unlocks the door and plays a cutscene.
-4. Walk through the door to trigger the victory sequence. The debrief screen then explains the Role / Task / Context / Format method with a weak-vs-strong example.
+## Misija 1: Nemogući prompt (učionica)
 
-There are also extra interactions (5 snoopable computers, coffee machine, clock, presentation screen, plant, Mission 2 door) that add jokes, tips and hints about future missions.
+1. Uvod: razglas javlja *„PAŽNJA, UČENICI. VAŠ AI SERTIFIKAT JE ZAKLJUČAN.“*
+2. Istraži učionicu. Svaki dio prompta može da uzme samo jedan lik, pa moraš da ih mijenjaš:
 
-## Mission 2: The Coffee Break Crisis (playable)
-
-Teaches **fact-checking AI output**: hallucinations, source credibility and verification. Start it from the debrief's **Continue to Mission 2** button, or pick **M2** on the title screen.
-
-1. Opening announcement: *"ATTENTION PARTICIPANTS. COFFEE SERVICE HAS BEEN SUSPENDED."* BREW-9000, the break-room coffee machine, has turned "intelligent". It refuses to serve coffee until you accept five claims that it states with total confidence. It also hands you its own brochure as "proof".
-2. Find **reliable evidence** for every claim. Each source needs one character's skill:
-
-| Evidence | Where | Who |
+| Dio prompta | Gdje | Ko |
 |---|---|---|
-| Encyclopedia of Food History | Bookshelf | 1 · The Mastermind |
-| University botany field card | Sulking fridge (tell it a joke) | 2 · The Joker |
-| Supplier spec sheet | Manager's locked drawer | 3 · The Boss |
-| Security camera replay | CCTV monitor (needs narration) | 4 · The Commentator |
-| Maintenance log | Behind the 140 kg dishwasher | 5 · The Fighter |
+| ULOGA | Zagonetka na tabli | 1 · GPT (rješava zagonetke) |
+| ZADATAK | Zaglavljeni štampač | 2 · Gemi (nasmije štampač) |
+| KONTEKST | Ormar sa šifrom (šifra je na slici odjeljenja) | 2 · Gemi (vidi slike) |
+| FORMAT | Automat | 3 · Copilot (pregovara) |
+| *Buđenje PROMPTOTRONA* | Mikrofon na katedri | 4 · Claude (jasan glas) |
 
-   You can also pick up unreliable decoys: BREW-9000's own brochure, and a forum printout from "CoffeeTruthz420".
-3. **Stay awake.** A caffeine meter drains while you explore (about 5 minutes from full). Patrolling **Mop-Bots** knock you back and cost caffeine. Donuts, sugar packets and the water cooler refill it. If it hits 0, everyone naps: that's the failure state, and you wake up at 60% to try again.
-4. At the **Fact-Check Station**, go through the claims one at a time: **① pick ONE source you trust**, then **② decide if the claim is TRUE or FALSE** (step 2 unlocks after step 1). A progress bar shows all five claims, and Submit unlocks once every claim is answered. A claim only counts when the verdict is right *and* the source is reliable. If you cite the brochure, BREW-9000 gloats. Two of the five claims are actually true, because AI isn't always wrong.
-5. When all five are verified, BREW-9000 is grounded, the coffee flows and the vault door opens. Walk into the antechamber for the victory sequence and the debrief on hallucinations and sources (certificate 66%).
+3. Na terminalu na katedri otvori **Graditelj prompta**, izaberi po jednu karticu za svaki dio i pritisni **TESTIRAJ PROMPT**. Prompt služi učeniku:
+   - ULOGA: „Ti si strpljiv tutor iz biologije koji objašnjava srednjoškolcima.“
+   - ZADATAK: „Napravi mi plan učenja za kontrolni iz fotosinteze.“
+   - KONTEKST: „Ja sam učenik 1. razreda gimnazije, kontrolni je za 3 dana, imam 30 min dnevno i slabije razumijem hemijski dio.“
+   - FORMAT: „Daj tabelu: Dan, Šta učim, Kako se provjerim.“
 
-## Mission 3: The Final Certificate (playable finale)
+   Lažne kartice (toster, „uradi nešto sa biljkama“, „kontekst: utorak je“, interpretativni ples...) daju smiješan odgovor, alarm i savjet. Od drugog pokušaja pogrešna polja su označena.
+4. Tačna kombinacija daje plan učenja za 3 dana u tabeli i otključava vrata. Prođi kroz vrata za pobjedu i objašnjenje metode Uloga / Zadatak / Kontekst / Format, uz savjet: prvi odgovor je nacrt, traži doradu i provjeri činjenice.
 
-Teaches **responsible AI use in the classroom**, then brings all three missions together.
+Tu su i dodatne šale: računari na klupama, pult sa užinom, sat, pametna tabla, sumnjivi fikus, vrata Misije 2.
 
-1. Opening announcement: *"ATTENTION PARTICIPANTS. THE FINAL CERTIFICATE REQUIRES... ONE LAST PROMPT."* THE ADMINISTRATOR guards the Certificate Vault with a 4,000-slide presentation.
-2. **Hall of Seals:** four realistic classroom dilemmas. Each needs one character, and each correct answer unlocks a guardrail for the final prompt:
+## Misija 2: Kriza kod automata (školski hodnik)
 
-| Seal | Dilemma | Who |
-|---|---|---|
-| INTEGRITY | An AI detector says an essay is "98% AI" | 1 · The Mastermind |
-| BIAS | AI word problems full of stereotypes | 2 · The Joker |
-| PRIVACY | Pasting a student's support plan into a public chatbot | 3 · The Boss |
-| OVERSIGHT | AI graded 120 essays; grades due tonight | 5 · The Fighter |
+Uči **provjeru činjenica**: halucinacije, pouzdanost izvora i provjeru.
 
-   Every option comes with an explanation. A wrong answer is a strike, and 3 strikes means **lockdown**: everyone sits through mandatory compliance training (the failure state), then the strikes reset. Secured seals are kept.
-3. **Laser Corridor of Mandatory Compliance:** stop at the amber **WAIT** line until a gate goes dark (it flickers before it switches on), and press **Space** just before each red **JUMP** zone. One running jump clears a whole zone. There is a checkpoint after every hazard, and after 4 zaps the Administrator offers a "compliance exemption" that skips the corridor, so nobody gets stuck. Fairness is tested two ways: a unit test runs a simulated human player (reaction delay, imprecise jump timing, real acceleration) more than 3,000 times, and the end-to-end test plays the corridor live with keyboard input.
-4. **Vault Core:** the team catches up with you. The Commentator powers the console, then you write **THE FINAL PROMPT**, a parent newsletter about AI use, using Role, Task, Context and Format plus the guardrails you earned. Unsafe guardrails ("include every student's grades") are rejected.
-5. Finale: the vault opens, golden certificates float down to each character, and the debrief covers responsible use with a recap of the whole course. It also has a **printable certificate** you can put your own name on. The certificate shows **JA Montenegro** as training organiser and the project credit line, and prints on a single landscape page in **A4** or **US Letter** (one button for each). To change the organiser, edit `ORGANISER` in `src/missions/mission3/ui.jsx`; the credit line is `PROJECT_CREDIT` in `src/credits.js` (also shown on the title screen).
+1. **SNACK-O-MAT 9000**, školski automat za grickalice i sokove, postao je „pametan“. Ne izbacuje ništa dok ne prihvatiš pet tvrdnji koje izgovara potpuno sigurno. Dvije su tačne, tri su izmišljene:
 
-### Controls
-| Key | Action |
+| Tvrdnja | Istina |
 |---|---|
-| W A S D / arrows | Move (Shift = run, Space = jump) |
-| Mouse | Third-person camera (click the game to lock the mouse, or drag; mouse wheel zooms) |
-| E | Interact |
-| 1 – 5 | Switch character |
-| Esc | Pause (also closes the Prompt Builder) |
-| Enter / click subtitles | Skip the current line (Enter during the intro skips it) |
+| Energetska pića poboljšavaju pamćenje pred kontrolni. | netačno |
+| Limenka gaziranog soka od 0,33 l može imati oko 35 g šećera. | tačno |
+| Mozak koristi samo 10% svog kapaciteta. | netačno |
+| Voda pomaže koncentraciji kad si dehidriran. | tačno |
+| Čips sa natpisom „light“ nema masti. | netačno |
 
-## Run locally
+2. Pronađi **pouzdan dokaz** za svaku tvrdnju. Svaki izvor otključava jedan lik:
 
-You need Node.js 18 or newer.
+| Izvor | Gdje | Ko |
+|---|---|---|
+| Udžbenik biologije | Polica školske biblioteke | 1 · GPT |
+| Zvanični zdravstveni sajt | Tablet u ormariću sa zagonetkom | 1 · GPT |
+| Snimak školske kamere | Monitor kamere | 2 · Gemi |
+| Nastavnica biologije | Telefon u katedri | 3 · Copilot |
+| Deklaracija na limenci | Durljiva vitrina sa sokovima (treba lijepa riječ) | 4 · Claude |
+
+   Nepouzdani mamci: letak samog SNACK-O-MAT-a, snimak ekrana sa TikToka i ceduljica „drug iz odjeljenja je čuo“.
+3. **Ne zaspi.** Skala **energije** pada dok istražuješ (oko 5 minuta od pune). **Usisivač-Botovi** te odbace i troše energiju. Puni se na česmi, jabukom iz kantine i užinom iz ranca. Na 0% cijela ekipa **zaspi na času** (neuspjeh), pa se budi sa 60%.
+4. Na **Stanici za provjeru činjenica** idi tvrdnju po tvrdnju: **① izaberi JEDAN izvor kojem vjeruješ**, pa **② odluči da li je tvrdnja TAČNA ili NETAČNA**. Tvrdnja se računa samo ako je sud tačan **i** izvor pouzdan.
+5. Kad je svih pet provjereno, automat priznaje grešku i izbacuje užinu, a vrata ka arhivi se otvaraju. Objašnjenje na kraju: halucinacije, AI zvuči sigurno i kad griješi, kako provjeriti izvor, AI nije uvijek u krivu.
+
+## Misija 3: Konačni sertifikat (školska arhiva)
+
+Uči **odgovornu upotrebu AI** i spaja sve tri misije.
+
+1. **ARHIVAR** čuva arhivu prezentacijom od 4.000 slajdova.
+2. **Dvorana pečata:** četiri dileme iz života učenika. Svaki pečat otvara jedan lik, a tačan odgovor otključava jedno zaštitno pravilo za konačni prompt. Svaki odgovor ima objašnjenje.
+
+| Pečat | Dilema | Ko |
+|---|---|---|
+| INTEGRITET | AI ti napiše cijeli esej za domaći. Šta je fer, a šta varanje? | 1 · GPT |
+| PRISTRASNOST | AI daje slike i primjere pune stereotipa („inženjer je uvijek muškarac“). | 2 · Gemi |
+| PRIVATNOST | Slika, adresa, ocjene i poruke druga u javnom chatbotu; deepfake druga iz razreda. | 3 · Copilot |
+| ODGOVORNOST | AI ti je riješio zadatke iz matematike, a predaješ za 10 minuta. Ko odgovara za greške? | 4 · Claude |
+
+   Pogrešan odgovor je greška. Tri greške znače **vanredni čas** sa 4.000 slajdova (neuspjeh); poslije toga se greške brišu, a osvojeni pečati ostaju.
+3. **Hodnik sa senzorima:** stani kod linije **ČEKAJ** dok se kapija ne ugasi i pritisni **Space** tik prije svake crvene zone **SKOČI**. Poslije svake prepreke je kontrolna tačka. Poslije četiri aktivirana senzora Arhivar nudi opravdanje (preskakanje hodnika), da niko ne ostane zaglavljen.
+4. **Jezgro arhive:** Claude uključuje konzolu, a ti pišeš **KONAČNI PROMPT**: plakat „Pravila korištenja AI u našem odjeljenju“ (Uloga, Zadatak, Kontekst, Format + zaštitna pravila koja si osvojio/la). Nebezbjedna pravila („napiši imena i ocjene svih učenika“) se odbijaju.
+5. Finale: arhiva se otvara, a završni ekran objašnjava odgovornu upotrebu i ponavlja sve tri misije. Tu je i **sertifikat za štampu**.
+
+## Sertifikat
+
+- Naslov **AI SERTIFIKAT · Odgovorni AI istraživač**, polje za ime i prezime učenika/ce, tri savladane vještine (Pisanje prompta · Provjera činjenica · Odgovorna upotreba AI) i datum.
+- Potpis: **Snežana Kerndl, nastavnica informatike · JU Srednja ekonomsko-ugostiteljska škola, Bar**. Organizator programa: **JA Montenegro**.
+- Štampa se na **A4, položeno, jedna strana**.
+- **Ime se nigdje ne čuva.** Postoji samo dok je stranica otvorena i koristi se samo za štampu.
+
+Podaci o potpisu i organizatoru su u `src/missions/mission3/ui.jsx` (`ISSUER`, `ORGANISER`), a tekst o projektu u `src/credits.js`.
+
+### Kontrole
+| Taster | Radnja |
+|---|---|
+| W A S D / strelice | Kretanje (Shift = trčanje, Space = skok) |
+| Miš | Kamera iz trećeg lica (klikni na igru ili prevuci; točkić zumira) |
+| E | Akcija |
+| 1 – 4 | Promjena lika |
+| Esc | Pauza (zatvara i prozor sa zagonetkom) |
+| Enter / klik na titl | Preskače trenutnu rečenicu (u uvodu preskače uvod) |
+
+## Pokretanje na svom računaru
+
+Treba ti Node.js 18 ili noviji.
 
 ```bash
 npm install
@@ -85,9 +120,9 @@ npm install
 npm run dev
 ```
 
-Then open the URL that Vite prints (usually http://localhost:5173).
+Zatim otvori adresu koju Vite ispiše (obično http://localhost:5173).
 
-### Production build
+### Produkciona verzija
 ```bash
 npm run build
 ```
@@ -96,26 +131,22 @@ npm run build
 npm run preview
 ```
 
-`npm run build` writes a fully static site to `dist/`. The build uses relative paths (`base: './'`), so `dist/` works from any domain or sub-folder.
+`npm run build` pravi potpuno statički sajt u folderu `dist/`. Koriste se relativne putanje (`base: './'` u `vite.config.js`), pa `dist/` radi sa bilo kog domena ili podfoldera.
 
-## Publish as a public website
+## Objavljivanje
 
-Any static host works. Pick one:
+**GitHub Pages:** u repozitorijumu otvori *Settings → Pages → Source: GitHub Actions*. Workflow `.github/workflows/deploy-pages.yml` testira, gradi i objavljuje pri svakom push-u na granu `main`. Sajt je na `https://<korisnik>.github.io/<repo>/`.
 
-**Netlify (drag & drop, no account setup beyond sign-in):** run `npm run build`, then drag the `dist/` folder onto https://app.netlify.com/drop. If you connect the Git repo instead, `netlify.toml` is already set up.
+**Netlify:** pokreni `npm run build`, pa prevuci folder `dist/` na https://app.netlify.com/drop. Ako povežeš Git repo, `netlify.toml` je već podešen.
 
-**Vercel:** import the repo at https://vercel.com/new. Vercel detects Vite automatically (build: `npm run build`, output: `dist`).
+**Vercel, Cloudflare Pages, itch.io:** otpremi sadržaj foldera `dist/` (Vercel sam prepozna Vite).
 
-**GitHub Pages:** push the project to GitHub, then go to *Settings → Pages → Source: GitHub Actions*. The included workflow `.github/workflows/deploy-pages.yml` tests, builds and publishes on every push to `main`. The site appears at `https://<user>.github.io/<repo>/`.
-
-**Cloudflare Pages / itch.io / S3:** upload the contents of `dist/`. For itch.io, zip the *contents* of `dist/` and choose "HTML game".
-
-## Tests
+## Testovi
 
 ```bash
 npm test
 ```
-These are unit tests for the puzzle rules and the collision/level layout (Node's built-in test runner).
+Unit testovi za pravila zagonetki, četiri lika i raspored nivoa (ugrađeni Node test runner).
 
 ```bash
 npm i -D playwright && npx playwright install chromium
@@ -124,11 +155,11 @@ npm i -D playwright && npx playwright install chromium
 ```bash
 npm run build && (npx vite preview --port 4173 &) && npm run test:e2e
 ```
-This runs automated play-throughs of all three missions in real Chromium with WebGL (`test:e2e:m1`, `test:e2e:m2` and `test:e2e:m3` run them separately). Mission 3's covers its intro, the barrier, wrong-character and wrong-answer handling, the 3-strike lockdown, all four seals, a laser zap and checkpoint, the team catching up, the console, rejection of an unsafe guardrail, the vault cutscene, victory, and the named certificate. Mission 2's covers mission select, its intro, caffeine drain, Mop-Bot knockback, every character's evidence, the dishwasher collider swap, snacks, the nap failure state, rejection of an unreliable source, highlighting of the bad claim, the grounded cutscene, victory and the debrief. Mission 1's covers the loading and title screens, the intro, movement, wall collision, jumping, character switching, wrong-character and right-character interactions, all four pickups, the terminal, pause, a failed prompt, a successful prompt, the door cutscene, walking through the door, victory, the debrief, and the phone-width layout. It saves screenshots to `tests/e2e/screenshots/`.
+Automatski prelazi sve tri misije u pravom Chromiumu sa WebGL-om (`test:e2e:m1`, `test:e2e:m2`, `test:e2e:m3` pokreću ih posebno). Provjerava i da sertifikat staje na tačno jednu A4 stranu i da se ime ne čuva. Screenshotovi idu u `tests/e2e/screenshots/`.
 
-## Recording gameplay videos (trailers for social media)
+## Snimanje videa
 
-`tools/record/` records smooth 30 fps gameplay videos automatically. It takes over the page's clock and renders one frame at a time, so the result is perfectly smooth even on a slow machine. Each segment is a scripted sequence of real gameplay: walking, character switching, puzzles, cutscenes. You need Playwright, Chromium and ffmpeg.
+`tools/record/` automatski snima glatke videe igre u 30 fps.
 
 ```bash
 npm run build && (npx vite preview --port 4173 &)
@@ -137,78 +168,57 @@ npm run build && (npx vite preview --port 4173 &)
 ```bash
 npm run record -- --format landscape --segment m1
 ```
-Formats: `landscape` (1920x1080: YouTube, LinkedIn, X) or `vertical` (1080x1920: Reels, TikTok, Shorts). Segments: `intro`, `m1`, `m2`, `m3`, `outro`. Add `--maxsec 3` for a short preview, and `--site your.url` to change the address shown on the end card.
+Formati: `landscape` (1920x1080) ili `vertical` (1080x1920). Segmenti: `intro`, `m1`, `m2`, `m3`, `outro`.
 
 ```bash
 npm run record:assemble -- landscape
 ```
-This turns the frames into `recordings/<format>/<segment>.mp4` clips plus `dungeons-and-deadlines-trailer-<format>.mp4`. The videos have no sound, so add music in your social media app. Rendering takes about 20–30 seconds of computer time per second of video when there's no graphics card.
+Za sastavljanje MP4 fajlova treba `ffmpeg`.
 
-## Project structure
+## Struktura projekta
 
 ```
 src/
-  App.jsx                    Canvas + UI shell
-  game/
-    store.js                 Zustand store: phase, progress, dialogue queue, puzzle state
-    world.js                 Per-frame mutable state (positions, camera, cinematics)
-    collision.js             Pure circle-vs-AABB collision (unit tested)
-    interaction.js           Nearest-interactable lookup
-    audio.js                 Generated WebAudio sound effects (no audio files)
+  App.jsx                    Canvas + UI
+  credits.js                 Tekst o projektu (naslovna i sertifikat)
+  game/                      Stanje igre, fizika, sudari, zvuk (WebAudio, bez audio fajlova)
   characters/
-    roster.js                The 5 characters as data (look, personality, skill, model)
-    BlockyAvatar.jsx         Procedural blocky avatar: faces, moods, clothing, idle styles, emotes
-    Avatar.jsx               Chooses procedural or GLB model, with automatic fallback
+    roster.js                4 lika kao podaci (izgled, karakter, vještina, model)
+    BlockyAvatar.jsx         Proceduralni avatar: lica, raspoloženja, odjeća, pokreti
+    Avatar.jsx               Bira proceduralni ili GLB model
   scene/
-    GameScene.jsx            Physics loop, third-person + cinematic camera, mouse look
-    canvasTexture.js         All in-world text drawn on canvas (no font downloads)
-  ui/PromptBuilderBase.jsx   Reusable card-based prompt builder (Missions 1 and 3)
-tools/record/                Trailer recorder (record.mjs) and MP4 assembly (assemble.sh)
+    GameScene.jsx            Petlja fizike, kamera, miš
+    canvasTexture.js         Sav tekst na 3D objektima (crta se na canvasu, bez preuzimanja fontova)
+  ui/                        HUD, titlovi, meniji, tastatura, zajednički graditelj prompta
   missions/
-    registry.js              Mission list + the shared mission interface
-    mission1/
-      index.js               Mission definition plugged into the registry
-      layout.js              Level geometry, colliders, spawns (shared by renderer & physics)
-      TrainingCenter.jsx     The 3D training center + lobby
-      logic.js               Interactables, dialogue, objectives, cutscenes, win flow
-      promptPuzzle.js        Puzzle rules & cards (pure, unit tested)
-      PromptBuilder.jsx      The puzzle modal
-    mission2/
-      index.js               Mission definition (HUD items, caffeine meter, nap overlay, lesson)
-      layout.js              Break room, antechamber, colliders, Mop-Bot routes (unit tested)
-      BreakRoom.jsx          The 3D break room, BREW-9000, Mop-Bots, vault antechamber
-      logic.js               Evidence, snacks, caffeine, naps, Mop-Bots, fact-check flow
-      factCheck.js           Claims, sources & evaluation rules (pure, unit tested)
-      ui.jsx                 Fact-Check Station, caffeine meter, nap overlay
-    mission3/
-      index.js               Mission definition (strikes HUD, lockdown overlay, finale/certificate)
-      layout.js              Hall of Seals, Laser Corridor, Vault Core (unit tested)
-      VaultHall.jsx          The 3D vault: seals, the Administrator's screen, lasers, vault door
-      logic.js               Seals, strikes & lockdown, lasers & checkpoints, final prompt, finale
-      dilemmas.js            The four responsible-AI dilemmas (pure, unit tested)
-      finalPrompt.js         Final prompt cards & rules (pure, unit tested)
-      lasers.js              Laser timing & hit rules (pure; corridor solvability is simulated in tests)
-      ui.jsx                 Seal dilemma, final prompt builder, strikes HUD, lockdown, certificate
-  ui/                        HUD, subtitles, Prompt Builder, menus, keyboard controller
+    registry.js              Lista misija i zajednički interfejs
+    mission1/                Učionica: promptPuzzle.js (kartice i pravila), logic.js (dijalozi), TrainingCenter.jsx (3D)
+    mission2/                Hodnik: factCheck.js (tvrdnje i izvori), logic.js, BreakRoom.jsx (3D), ui.jsx
+    mission3/                Arhiva: dilemmas.js (4 dileme), finalPrompt.js, lasers.js, logic.js, VaultHall.jsx (3D), ui.jsx (sertifikat)
+tests/unit/                  Unit testovi
+tests/e2e/                   Automatski prelazi sve tri misije
+tools/record/                Snimanje videa
 ```
 
-### Adding more missions
-All three missions plug into `src/missions/registry.js` through the same interface, which is documented at the top of that file. To add a bonus mission, create `src/missions/mission4/` following the existing folders (`layout.js`, a level component, `logic.js`, and an `index.js` that exports the mission object), then add it to the `MISSIONS` list. The title screen, the "Continue to Mission N" button, the HUD, cutscene cameras and the debrief all read from the registry.
+Interna imena u kodu (`mastermind`, `joker`, `boss`, `commentator`, `brew`, `caffeine`, `fridge`, `dishwasher`...) ostala su iz originalnog projekta. Igrač ih ne vidi.
 
-## Custom avatars (GLB)
+## Sopstveni avatari (GLB)
 
-Each character in `src/characters/roster.js` has a `model` field. To replace one with a custom avatar, for example one generated from a reference photo with a tool like Ready Player Me, Meshy, Tripo or Blender:
+Svaki lik u `src/characters/roster.js` ima polje `model`. Da ga zamijeniš svojim avatarom:
 
-1. Export a humanoid **.glb** that faces **+Z**, has its feet at **y = 0** and is about 2 units tall.
-2. Put it in `public/avatars/`, e.g. `public/avatars/boss.glb`.
-3. Change the roster entry:
+1. Izvezi humanoidni **.glb** koji gleda prema **+Z**, stoji na **y = 0** i visok je oko 2 jedinice.
+2. Stavi ga u `public/avatars/`, npr. `public/avatars/boss.glb`.
+3. Promijeni unos u rosteru:
 ```js
 model: {
   type: 'glb', url: 'avatars/boss.glb', scale: 1, yOffset: 0,
   clips: { idle: 'Idle', walk: 'Walk', run: 'Run', cheer: 'Cheer', dance: 'Dance' },
 },
 ```
-`clips` maps game states to the animation clip names inside your GLB. Missing clips are skipped. If the file fails to load, the game falls back to the procedural avatar automatically. Gameplay, switching, dialogue and the camera don't depend on which model is used.
+Ako fajl ne može da se učita, igra se sama vraća na proceduralni avatar.
 
-## Credits
-All visuals are procedural, made from three.js primitives and canvas textures. All sounds are synthesized with WebAudio. No third-party game assets are used.
+## Zasluge
+
+Razvijeno kao samostalan projekat nakon obuke trenera „AI-Ready Educators“, u organizaciji JA Europe i JA Montenegro.
+
+Sva grafika je proceduralna (three.js oblici i canvas teksture). Svi zvukovi nastaju u WebAudio. Nema tuđih grafičkih ni zvučnih materijala.

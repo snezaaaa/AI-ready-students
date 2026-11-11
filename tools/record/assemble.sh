@@ -24,5 +24,5 @@ for seg in "${SEGMENTS[@]}"; do
   echo "file '$(basename "$out")'" >> "$LIST"
   echo "$out  ($dur s)"
 done
-ffmpeg -loglevel error -y -f concat -safe 0 -i "$LIST" -c copy -movflags +faststart "$DIR/dungeons-and-deadlines-trailer-$FORMAT.mp4"
-echo "trailer: $DIR/dungeons-and-deadlines-trailer-$FORMAT.mp4"
+ffmpeg -loglevel error -y -f concat -safe 0 -i "$LIST" -c copy -movflags +faststart "$DIR/ai-escape-trailer-$FORMAT.mp4"
+echo "trailer: $DIR/ai-escape-trailer-$FORMAT.mp4"

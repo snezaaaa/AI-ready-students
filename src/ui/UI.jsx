@@ -281,8 +281,8 @@ function CompleteScreen() {
           {L.points.map(([k, v]) => <div key={k} className="lesson"><b>{k}</b><span>{v}</span></div>)}
         </div>
         <div className="compare">
-          <div className="bad"><b>❌ {L.example.badLabel}</b><p>“{L.example.bad}”</p></div>
-          <div className="good"><b>✅ {L.example.goodLabel}</b><p>“{L.example.good}”</p></div>
+          <div className="bad"><b>❌ {L.example.badLabel}</b><p>{L.example.bad}</p></div>
+          <div className="good"><b>✅ {L.example.goodLabel}</b><p>{L.example.good}</p></div>
         </div>
         <p className="muted">{L.extra}</p>
         {mission.Finale && <mission.Finale />}

@@ -11,39 +11,31 @@ export const SLOTS = [
 export const CARDS = {
   role: [
     { id: 'role_good', good: true, text: 'Ti si strpljiv tutor iz biologije koji objašnjava srednjoškolcima.' },
-    { id: 'role_toaster', text: 'Ti si toster. Toster koji misli.',
-      fail: 'BIP. KAO TOSTER, MOJ PLAN UČENJA JE: 1) Hljeb. 2) Toplota. 3) Tost. Da ti kontrolni bude blago zapečen?' },
-    { id: 'role_none', text: '(bez uloge, snaći će se AI sam)',
-      fail: 'Zdravo! Ja sam Opšti Asistent. Evo opšteg odgovora o opštim stvarima, napisanog sasvim uopšteno.' },
+    { id: 'role_toaster', text: 'Ti si toster.', fail: 'TOSTER: Mogu samo da ispečem hljeb. → Pogrešna uloga daje beskoristan odgovor.' },
+    { id: 'role_none', text: '(bez uloge)', fail: 'Evo opšteg teksta o učenju, za bilo koga. → Bez uloge AI ne zna kako da ti se obrati.' },
   ],
   task: [
     { id: 'task_good', good: true, text: 'Napravi mi plan učenja za kontrolni iz fotosinteze.' },
-    { id: 'task_vague', text: 'Uradi nešto sa biljkama, valjda.',
-      fail: 'Zadatak završen. Pružio sam emotivnu podršku jednom fikusu. Sad mu je mnogo bolje.' },
-    { id: 'task_huge', text: 'Objasni mi cijelu biologiju. Sve. Odmah.',
-      fail: 'Počinjem „Cijelu biologiju“. Završavam za oko 14.000 godina. Lekcija 1: Ćelija (1. dio od 9.000)...' },
+    { id: 'task_vague', text: 'Uradi nešto sa biljkama.', fail: 'Evo liste sobnih biljaka. → Nejasan zadatak: AI ne zna da ti treba plan učenja.' },
+    { id: 'task_huge', text: 'Objasni mi cijelu biologiju. Odmah.', fail: 'Lekcija 1 od 9.000... → Prevelik zadatak. Traži jednu konkretnu stvar.' },
   ],
   context: [
     { id: 'context_good', good: true, text: 'Ja sam učenik 1. razreda gimnazije, kontrolni je za 3 dana, imam 30 min dnevno i slabije razumijem hemijski dio.' },
-    { id: 'context_tuesday', text: 'Kontekst: utorak je.',
-      fail: 'Pošto je utorak, pretpostavio sam da imaš između 3 i 97 godina i laboratoriju u podrumu.' },
-    { id: 'context_vibes', text: 'Bez konteksta. Samo vajb.',
-      fail: 'Plan je spreman za doktora botanike sa laboratorijom od 2 miliona eura. Korak 1: kalibriši elektronski mikroskop.' },
+    { id: 'context_tuesday', text: 'Kontekst: utorak je.', fail: 'Plan za 30 dana, po 3 sata dnevno. → AI ne zna koliko imaš vremena ni šta ti ne ide.' },
+    { id: 'context_vibes', text: 'Bez konteksta.', fail: 'Plan za studente biologije. → Bez konteksta AI nagađa ko si.' },
   ],
   format: [
     { id: 'format_good', good: true, text: 'Daj tabelu: Dan, Šta učim, Kako se provjerim.' },
-    { id: 'format_dance', text: 'Format odgovora: interpretativni ples.',
-      fail: '[AI ustaje. Njiše se. Neodređeno pokazuje prema suncu. Duboko se klanja.] ...To je bio plan učenja.' },
-    { id: 'format_wall', text: 'Jedan pasus od 47 strana. Bez novog reda.',
-      fail: 'Fotosintezajeprocesukojembiljkepomoćusvjetlostipretvarajuvoduiugljendioksidušećerikiseonik... (strana 1 od 47)' },
+    { id: 'format_dance', text: 'Format: kako god.', fail: 'Dugačak tekst bez reda. → Nisi rekao/la kako odgovor treba da izgleda.' },
+    { id: 'format_wall', text: 'Jedan pasus od 47 strana.', fail: 'Fotosintezajeprocesukojembiljke... (strana 1 od 47) → Ovo ne možeš koristiti za učenje.' },
   ],
 };
 
 export const HINTS = {
-  role: 'ULOGA kaže AI-ju ko treba da bude. Stručna uloga = stručan odgovor. Toster pravi tost.',
-  task: 'ZADATAK mora biti konkretan i izvodljiv: jedna jasna stvar, jasnog obima.',
-  context: 'KONTEKST je ko si ti i u kakvoj si situaciji. Bez njega AI nagađa (loše).',
-  format: 'FORMAT kaže AI-ju kako odgovor treba da izgleda, da bi mogao stvarno da ga koristiš.',
+  role: 'ULOGA: izaberi stručnjaka za ono što ti treba.',
+  task: 'ZADATAK: jedna jasna, konkretna stvar.',
+  context: 'KONTEKST: ko si i kakva je situacija.',
+  format: 'FORMAT: kako odgovor treba da izgleda.',
 };
 
 export const SUCCESS_OUTPUT = [
@@ -94,7 +86,7 @@ export function evaluatePrompt(selection, inventory) {
   let output;
   if (success) output = SUCCESS_OUTPUT.join('\n');
   else if (wrong.length) output = CARDS[wrong[0]].find((c) => c.id === selection[wrong[0]]).fail;
-  else output = `GREŠKA 418: PROMPT NIJE POTPUN. Prazno je ostalo: ${missing.map((m) => SLOTS.find((s) => s.id === m).label).join(', ')}. Ja sam AI, ne čitam misli. (Probao sam. Bilo je neprijatno.)`;
+  else output = `PROMPT NIJE POTPUN. Nedostaje: ${missing.map((m) => SLOTS.find((s) => s.id === m).label).join(', ')}.`;
 
   return { success, score, results, wrong, missing, output };
 }

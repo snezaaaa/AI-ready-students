@@ -69,7 +69,7 @@ check('energy barrier blocks the corridor before the seals', (await pos(0)).z >=
 // ---- wrong character, wrong answer, right answer
 await useSeal('Digit2', 1, 'privacy');
 let s = await st();
-check('wrong character cannot open the PRIVACY seal', !s.builderOpen && /Copilot/.test(s.line), s.line.slice(0, 70));
+check('wrong character cannot open the PRIVACY seal', !s.builderOpen && /Ovo može samo Copilot\. Pritisni 3\./.test(s.line), s.line.slice(0, 70));
 await useSeal('Digit3', 2, 'privacy');
 check('Copilot opens the PRIVACY dilemma', await page.isVisible('[data-testid=seal-dilemma]'));
 await shot('m3-04-dilemma');

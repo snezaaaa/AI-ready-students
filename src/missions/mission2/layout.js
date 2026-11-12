@@ -34,6 +34,12 @@ export const SPAWNS = [
 export const VICTORY_SPOTS = [
   [-1.8, -14.9, 0], [-0.6, -14.4, 0], [0.6, -14.4, 0], [1.8, -14.9, 0],
 ];
+// Bonus stars [x, y, z]: above tables/desks/sofa (jump up first) and in mid-air. Each gives a little energy.
+export const STARS = [
+  [PROPS.donutTable.x, 3.3, PROPS.donutTable.z], [PROPS.table2.x, 3.3, PROPS.table2.z], [PROPS.sofa.x, 3.0, PROPS.sofa.z],
+  [PROPS.desk.x - 0.5, 3.3, PROPS.desk.z], [PROPS.cctv.x, 3.3, PROPS.cctv.z + 0.1],
+  [-3, 2.7, -3], [4.5, 2.7, 5.6], [-6, 3.3, 5.8], [0, 2.7, -6.3], [-7.5, 2.7, 6.5],
+];
 export const EXIT_ZONE = { minX: -4.5, maxX: 4.5, minZ: -16, maxZ: -10.5 };
 
 // Mop-Bot patrol loops (kept to open lanes between furniture).
@@ -62,11 +68,11 @@ export function buildColliders() {
     // the locked tablet locker: one collider per position, toggled when GPT solves its riddle and it rolls aside
     box(PROPS.dishwasher.x, PROPS.dishwasher.z, 1.4, 1.1, { id: 'dishwasher' }),
     box(PROPS.dishwasher.movedX, PROPS.dishwasher.z, 1.4, 1.1, { id: 'dishwasherMoved', enabled: false }),
-    box(PROPS.desk.x, PROPS.desk.z, 2.2, 1.0),
-    box(PROPS.cctv.x, PROPS.cctv.z, 1.6, 0.8),
-    box(PROPS.donutTable.x, PROPS.donutTable.z, 1.4, 1.4),
-    box(PROPS.table2.x, PROPS.table2.z, 1.4, 1.4),
-    box(PROPS.sofa.x, PROPS.sofa.z, 2.6, 1.0),
+    box(PROPS.desk.x, PROPS.desk.z, 2.2, 1.0, { top: 0.82 }),   // `top` = platform you can jump onto
+    box(PROPS.cctv.x, PROPS.cctv.z, 1.6, 0.8, { top: 0.8 }),
+    box(PROPS.donutTable.x, PROPS.donutTable.z, 1.4, 1.4, { top: 0.8 }),
+    box(PROPS.table2.x, PROPS.table2.z, 1.4, 1.4, { top: 0.8 }),
+    box(PROPS.sofa.x, PROPS.sofa.z, 2.6, 1.0, { top: 0.6 }),
     box(-9.3, 7.3, 0.9, 0.9), box(9.3, -7.3, 0.9, 0.9),          // plants
     box(-3.4, -15.4, 1.4, 0.7), box(3.4, -15.4, 1.4, 0.7),        // antechamber pedestals
   ];

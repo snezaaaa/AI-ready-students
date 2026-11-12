@@ -31,7 +31,7 @@ function SealDilemma() {
         <div className="builder-head">
           <div>
             <div className="builder-title" style={{ color: seal.color }}>PEČAT: {seal.label} <span>// odgovara {owner.name}</span></div>
-            <div className="builder-sub">Izaberi najodgovorniji postupak. Greške: <b>{strikes}/{STRIKES_FOR_LOCKDOWN}</b> (na {STRIKES_FOR_LOCKDOWN}: vanredni čas sa 4.000 slajdova).</div>
+            <div className="builder-sub">Izaberi najodgovorniji postupak. Greške: <b>{strikes}/{STRIKES_FOR_LOCKDOWN}</b></div>
           </div>
           <button className="btn small" onClick={closeModal} data-testid="builder-close">✕ Zatvori (Esc)</button>
         </div>
@@ -67,7 +67,7 @@ function FinalPromptBuilder() {
     <PromptBuilderBase
       theme="gold"
       title="KONAČNI PROMPT" tag="// plakat „Pravila korištenja AI u našem odjeljenju“"
-      subtitle="Sve što si naučio/la: Uloga, Zadatak, Kontekst i Format iz Misije 1, plus Zaštitna pravila koja si osvojio/la kod četiri pečata."
+      subtitle="Izaberi po jednu karticu u svakoj koloni. Zaštitna pravila si osvojio/la kod pečata."
       slots={SLOTS} cards={CARDS}
       isAvailable={isFinalCardAvailable}
       lockedText={() => 'Osvoji sva četiri pečata da otključaš zaštitna pravila'}
@@ -102,7 +102,7 @@ export function LockdownOverlay() {
     return () => clearInterval(id);
   }, [lockdown]);
   if (!lockdown) return null;
-  const titles = ['Zašto su slajdovi važni', 'Slajdovi, nastavak', 'Kućni red: uvod u uvod', 'Naše vrijednosti (verzija 14)', 'Kratka istorija krede', 'Pitanja (nema pitanja)'];
+  const titles = ['Pravila arhive', 'Pravila arhive, nastavak', 'Još pravila', 'Pravila o pravilima'];
   return (
     <div className="lockdown" data-testid="lockdown-overlay">
       <div className="slide">
@@ -173,7 +173,7 @@ export function Finale() {
         <b>ULOGE</b>
         {ROSTER.map((c) => <span key={c.id} style={{ color: c.color }}>{c.name}</span>)}
         <b>U OSTALIM ULOGAMA</b>
-        <span>PROMPTOTRON 3000 · SNACK-O-MAT 9000 (i Junior) · ARHIVAR · dva Usisivač-Bota · jedna durljiva vitrina · naljepnica „0% MASTI“ (lagala je)</span>
+        <span>PROMPTOTRON 3000 · SNACK-O-MAT 9000 · ARHIVAR · Usisivač-Botovi</span>
       </div>
     </div>
   );

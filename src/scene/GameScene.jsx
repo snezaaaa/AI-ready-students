@@ -10,7 +10,14 @@ import { ROSTER } from '../characters/roster.js';
 import Avatar from '../characters/Avatar.jsx';
 import { getMission } from '../missions/registry.js';
 
-const WALK = 4.0, RUN = 6.8, RADIUS = 0.42, GRAVITY = 20, JUMP_V = 6.2;
+const WALK = 4.0, RUN = 6.8, RADIUS = 0.42, GRAVITY = 20, JUMP_V = 6.2, MAX_JUMPS = 2;
+// Furniture colliders with a `top` height are platforms: you can jump onto them and stand there.
+const onTop = (c, b) => b.top !== undefined && b.enabled !== false && c.y >= b.top - 0.06;
+const groundAt = (c) => {
+  let g = 0;
+  for (const b of world.colliders) if (onTop(c, b) && inRect(c.x, c.z, b) && b.top > g) g = b.top;
+  return g;
+};
 const angleDamp = (a, b, k, dt) => {
   let d = ((b - a + Math.PI) % (Math.PI * 2)) - Math.PI;
   if (d < -Math.PI) d += Math.PI * 2;
@@ -38,7 +45,8 @@ function step(dt, st) {
       const len = Math.hypot(ix, iz);
       if (len > 0) { ix /= len; iz /= len; }
       run = keys.has('ShiftLeft') || keys.has('ShiftRight');
-      if ((world.jumpRequest || keys.has('Space')) && c.grounded) { c.vy = JUMP_V; c.grounded = false; sfx.jump(); }
+      if ((world.jumpRequest || keys.has('Space')) && c.grounded) { c.vy = JUMP_V; c.grounded = false; c.jumps = 1; world.jumpRequest = false; sfx.jump(); }
+      else if (world.jumpRequest && !c.grounded && (c.jumps || 0) < MAX_JUMPS) { c.vy = JUMP_V * 0.92; c.jumps = MAX_JUMPS; world.jumpRequest = false; sfx.jump(); }   // double jump
     }
     const max = run ? RUN : WALK;
     c.vx = THREE.MathUtils.damp(c.vx, ix * max, 12, dt);
@@ -47,16 +55,18 @@ function step(dt, st) {
     c.x += c.vx * dt; c.z += c.vz * dt;
     if (isActive) {
       const others = world.chars.filter((_, j) => j !== i).map((o) => ({ x: o.x, z: o.z, r: 0.42 }));
-      resolveAll(c, RADIUS, world.colliders, st.phase === 'victory' ? [] : others);
+      resolveAll(c, RADIUS, world.colliders.filter((b) => !onTop(c, b)), st.phase === 'victory' ? [] : others);
     }
     const moved = Math.hypot(c.x - ox, c.z - oz);
     const actual = moved / Math.max(dt, 1e-4);
     c.speed = THREE.MathUtils.damp(c.speed, actual / WALK, 10, dt);
     c.walkPhase += moved * 2.3;
     // jump / gravity
-    if (!c.grounded || c.y > 0) {
+    const ground = groundAt(c);
+    if (c.grounded && c.y > ground + 0.01) c.grounded = false;   // walked off a platform
+    if (!c.grounded || c.y > ground) {
       c.vy -= GRAVITY * dt; c.y += c.vy * dt;
-      if (c.y <= 0) { c.y = 0; c.vy = 0; c.grounded = true; }
+      if (c.y <= ground && c.vy <= 0) { c.y = ground; c.vy = 0; c.grounded = true; c.jumps = 0; }
     }
     // facing
     if (Math.hypot(ix, iz) > 0.1) c.yaw = angleDamp(c.yaw, Math.atan2(ix, iz), 12, dt);
@@ -97,6 +107,15 @@ function Characters({ mission }) {
     if (controllable) {
       st.setNearby(findNearby(st));
     } else if (st.nearby) st.setNearby(null);
+
+    // ---- bonus stars: grab them by jumping (the body spans roughly y .. y + 1.7) ----
+    if (controllable && mission.stars) {
+      const a = world.chars[st.active];
+      mission.stars.forEach(([x, y, z], i) => {
+        if (st.stars.includes(i)) return;
+        if (Math.hypot(a.x - x, a.z - z) < 0.75 && y > a.y - 0.2 && y < a.y + 1.9) { st.collectStar(i); sfx.pickup(); mission.onStar?.(); }
+      });
+    }
 
     mission.update?.(Math.min(dtRaw, 0.25), st);
   });
@@ -219,6 +238,22 @@ function MouseLook() {
   return null;
 }
 
+// Bonus stars floating above furniture and in mid-air (positions come from the mission).
+function Stars({ mission }) {
+  const got = useGame((s) => s.stars);
+  const refs = useRef([]);
+  useFrame((s) => {
+    refs.current.forEach((m, i) => { if (m) { m.rotation.y = s.clock.elapsedTime * 2 + i; m.position.y = mission.stars[i][1] + Math.sin(s.clock.elapsedTime * 3 + i) * 0.08; } });
+  });
+  if (!mission.stars) return null;
+  return mission.stars.map(([x, y, z], i) => !got.includes(i) && (
+    <mesh key={mission.id + i} ref={(el) => (refs.current[i] = el)} position={[x, y, z]}>
+      <octahedronGeometry args={[0.22]} />
+      <meshStandardMaterial color="#fde047" emissive="#facc15" emissiveIntensity={2.2} toneMapped={false} />
+    </mesh>
+  ));
+}
+
 // Marks the scene ready once shaders are compiled and a few frames rendered.
 function ReadySignal() {
   const frames = useRef(0);
@@ -244,6 +279,7 @@ export default function GameScene() {
     <>
       <color attach="background" args={['#120f22']} />
       <Level />
+      <Stars mission={mission} />
       <Characters mission={mission} />
       <CameraRig mission={mission} />
       <MouseLook />

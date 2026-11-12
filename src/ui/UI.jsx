@@ -40,7 +40,7 @@ function DialogueDirector() {
     const s = useGame.getState();
     if (!current && qlen) { s.advanceDialogue(); return; }
     if (!current || paused) return;
-    const ms = (current.duration ?? Math.min(8, Math.max(2.4, 1.4 + current.text.length * 0.052))) * 1000;
+    const ms = (current.duration ?? Math.min(10, Math.max(3.6, 2.2 + current.text.length * 0.085))) * 1000;
     const id = setTimeout(() => { if (useGame.getState().dialogue.current === current) useGame.getState().advanceDialogue(); }, ms);
     return () => clearTimeout(id);
   }, [current, qlen, paused]);
@@ -84,7 +84,7 @@ function Subtitles() {
 function LoadingScreen() {
   const [p, setP] = useState(5);
   useEffect(() => { const id = setInterval(() => setP((x) => Math.min(95, x + (100 - x) * 0.08)), 80); return () => clearInterval(id); }, []);
-  const tips = ['Palimo dramatična svjetla…', 'Zaključavamo sertifikat…', 'Krijemo djelove prompta…', 'Učimo štampač da se smije…'];
+  const tips = ['Učitavanje…', 'Zaključavamo sertifikat…', 'Krijemo djelove prompta…', 'Skoro gotovo…'];
   return (
     <div className="screen loading">
       <Logo small />
@@ -109,7 +109,7 @@ function TitleScreen() {
   return (
     <div className="screen title">
       <Logo />
-      <p className="pitch">Četiri AI pomoćnika. Jedna zaključana škola. Nula sertifikata.<br />Akciona avantura o tome kako se piše dobar prompt, provjeravaju činjenice i AI koristi pametno.</p>
+      <p className="pitch">Škola je zaključana, a sa njom i tvoj AI sertifikat.<br />Tri misije: napiši dobar prompt, provjeri činjenice, koristi AI odgovorno.</p>
       <div className="lineup">
         {ROSTER.map((c, i) => (
           <div key={c.id} className="lineup-card" style={{ '--c': c.color }}>
@@ -155,7 +155,7 @@ function Controls() {
       <span><kbd>Miš</kbd> kamera</span>
       <span><kbd>E</kbd> akcija</span>
       <span><kbd>1</kbd>–<kbd>4</kbd> promjena lika</span>
-      <span><kbd>Space</kbd> skok</span>
+      <span><kbd>Space</kbd> skok (2× = dupli skok)</span>
       <span><kbd>Esc</kbd> pauza</span>
     </div>
   );
@@ -207,6 +207,7 @@ function HUD() {
             </div>
           ))}
         </div>
+        {mission.stars && <div className="stars-hud" data-testid="stars">⭐ Zvjezdice: {st.stars.length}/{mission.stars.length} <small>(skači!)</small></div>}
         {HudExtra && <HudExtra />}
       </div>
       <div className="char-bar">
@@ -252,8 +253,7 @@ function PauseMenu() {
     <div className="screen pause" data-testid="pause-menu">
       <div className="panel">
         <h2>PAUZA</h2>
-        <p className="muted">I zvono je na pauzi. (Nije.)</p>
-        <button className="btn primary" onClick={resume}>Nastavi</button>
+                <button className="btn primary" onClick={resume}>Nastavi</button>
         <button className="btn" onClick={restartMission}>Počni misiju ispočetka</button>
         <button className="btn" onClick={() => useGame.getState().toggleMute()}>{muted ? 'Uključi zvuk' : 'Isključi zvuk'}</button>
         <button className="btn" onClick={() => { useGame.getState().resetMission(); useGame.setState({ phase: 'title' }); }}>Nazad na naslovnu</button>
@@ -275,7 +275,7 @@ function CompleteScreen() {
       <div className="panel wide">
         <div className="stamp">{mission.certificate}</div>
         <h1>MISIJA {mission.number} ZAVRŠENA</h1>
-        <p className="stats">Vrijeme: {Math.floor(secs / 60)} min {secs % 60} s · {mission.attemptLabel}: {st.attempts}{mission.extraStats ? ` · ${mission.extraStats(st)}` : ''} · Titula: {rank}</p>
+        <p className="stats">Vrijeme: {Math.floor(secs / 60)} min {secs % 60} s · {mission.attemptLabel}: {st.attempts}{mission.extraStats ? ` · ${mission.extraStats(st)}` : ''}{mission.stars ? ` · Zvjezdice: ${st.stars.length}/${mission.stars.length}` : ''} · Titula: {rank}</p>
         <h3>📚 Šta si upravo naučio/la: {L.title}</h3>
         <div className="lesson-grid">
           {L.points.map(([k, v]) => <div key={k} className="lesson"><b>{k}</b><span>{v}</span></div>)}

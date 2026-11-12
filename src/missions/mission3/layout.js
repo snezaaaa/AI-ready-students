@@ -30,6 +30,12 @@ export const CORE_SPOTS = [[-3, -18.6], [-1.6, -17.9], [1.6, -17.9], [3, -18.6]]
 export const VICTORY_SPOTS = [
   [-1.8, -24.3, 0], [-0.6, -23.8, 0], [0.6, -23.8, 0], [1.8, -24.3, 0],
 ];
+// Bonus stars [x, y, z]: mid-air in the hall and core, and right above the JUMP zones of the corridor.
+export const STARS = [
+  [-3, 2.7, 6], [3, 2.7, 6], [-3, 3.3, 11.5], [3, 3.3, 11.5], [0, 2.7, 12.5],
+  [0, 2.3, -6.0], [0, 2.6, -8.0], [0, 2.3, -13.0],
+  [-3, 2.7, -22], [3, 3.3, -22],
+];
 export const CORE_ENTRY_Z = -16.6;
 
 export function buildColliders() {

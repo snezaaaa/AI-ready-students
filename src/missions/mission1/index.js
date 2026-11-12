@@ -2,7 +2,7 @@
 import TrainingCenter from './TrainingCenter.jsx';
 import PromptBuilder from './PromptBuilder.jsx';
 import * as m1 from './logic.js';
-import { SPAWNS, buildColliders, OPEN_SPACES } from './layout.js';
+import { SPAWNS, buildColliders, OPEN_SPACES, STARS } from './layout.js';
 
 const COMPONENTS = [['role', 'ULOGA', '#f472b6'], ['task', 'ZADATAK', '#60a5fa'], ['context', 'KONTEKST', '#34d399'], ['format', 'FORMAT', '#fbbf24']];
 
@@ -12,12 +12,13 @@ export default {
   announcement: 'PAŽNJA, UČENICI. VAŠ AI SERTIFIKAT JE ZAKLJUČAN.',
   certificate: 'SERTIFIKAT OTKLJUČAN 33%',
   attemptLabel: 'Pokušaja sa promptom',
-  ranks: ['ČAROBNJAK ZA PROMPTE', 'ŠEGRT ZA PROMPTE', 'ODUŠEVLJENI TOSTER'],
+  ranks: ['MAJSTOR PROMPTA', 'DOBAR PROMPTER', 'POČETNIK'],
   startYaw: Math.PI / 2,
   PuzzleUI: PromptBuilder,
   hudItems: (s) => COMPONENTS.map(([id, label, color]) => ({ id, label, color, got: s.inventory.includes(id) })),
   Level: TrainingCenter,
   spawns: SPAWNS,
+  stars: STARS,
   colliders: buildColliders,
   openSpaces: OPEN_SPACES,
   interactables: m1.INTERACTABLES,

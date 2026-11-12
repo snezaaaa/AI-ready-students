@@ -333,3 +333,10 @@ kbd { display: inline-block; min-width: 1.7em; padding: 2px 6px; margin: 0 2px; 
 .btn.pulse { animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { box-shadow: 0 5px 0 #a16207, 0 0 0 6px rgba(250, 204, 21, .35); } }
 @media (max-width: 760px) { .factcheck .verdicts { flex-direction: column; } }
+
+.stars-hud { margin-top: 6px; font: 800 13px var(--font); color: #fde047; }
+.stars-hud small { color: var(--muted); font-weight: 600; }
+
+.evidence { border-left: 5px solid var(--c); background: rgba(255,255,255,.06); border-radius: 10px; padding: 12px 14px; margin: 12px 0; display: flex; flex-direction: column; gap: 6px; font-size: 16px; }
+.evidence b { color: var(--c); }
+.evidence .says { font-style: italic; color: #f1f5f9; line-height: 1.4; }

@@ -70,13 +70,20 @@ s = await st();
 check('bump costs energy', s.ms.caffeine < before.caffeine - 5, `${before.caffeine.toFixed(1)} -> ${s.ms.caffeine.toFixed(1)}`);
 await wait(900);
 
+// ---- before any evidence: the station shows what to look for, verdicts are locked
+await parkBots();
+await teleport(0, -3.4, 0); await wait(300);
+await page.keyboard.press('KeyE'); await wait(500);
+check('without evidence the verdict buttons are locked and the station says where to look', await page.isDisabled('[data-testid=verdict-c1-true]') && /Zvanični zdravstveni sajt/.test(await page.textContent('[data-testid=evidence-missing-c1]')));
+await page.keyboard.press('Escape'); await wait(300);
+
 // ---- wrong character, then each character's evidence
 await parkBots();
 await page.keyboard.press('Digit2'); await wait(250);
 await teleport(1, 8.5, -3.5); await wait(300);
 await page.keyboard.press('KeyE'); await wait(400);
 s = await st();
-check('wrong character cannot use the bookshelf', !s.inventory.includes('textbook') && /GPT/.test(s.line), s.line.slice(0, 50));
+check('wrong character cannot use the bookshelf', !s.inventory.includes('textbook') && /Ovo može samo GPT/.test(s.line), s.line.slice(0, 50));
 
 const plan = [
   ['Digit1', 0, [8.5, -3.5], 'textbook', 'GPT / biology textbook on the library shelf'],
@@ -123,8 +130,9 @@ check('snack from the backpack refills energy (+10)', (await st()).ms.caffeine >
 // ---- failure state: energy runs out -> asleep in class
 await patchMs({ caffeine: 0.4 });
 check('energy at 0 triggers the asleep-in-class failure state', await waitFor((s) => s.ms.napping && s.phase === 'cutscene', 4000));
-await wait(1200); await shot('m2-06-nap');
+await wait(600);
 check('nap overlay shown', await page.isVisible('[data-testid=nap-overlay]') && /ZASPALI STE NA ČASU/.test(await page.textContent('[data-testid=nap-overlay]')));
+await shot('m2-06-nap');
 check('wake up after the nap with 60% energy', await advanceUntil('playing'));
 s = await st();
 check('nap counted and energy restored', s.ms.naps === 1 && Math.round(s.ms.caffeine) >= 58, `naps=${s.ms.naps} energy=${s.ms.caffeine.toFixed(1)}`);
@@ -134,18 +142,18 @@ await parkBots();
 await teleport(0, -3.4, 0); await wait(300);
 await page.keyboard.press('KeyE'); await wait(500);
 check('fact-check station opens', (await st()).builderOpen && await page.isVisible('[data-testid=fact-checker]'));
-const answer = async (claim, src, verdict) => {
+const answer = async (claim, verdict) => {
   await page.click(`[data-testid=claim-tab-${claim}]`);
-  await page.click(`[data-testid=src-${claim}-${src}]`);
   await page.click(`[data-testid=verdict-${claim}-${verdict}]`);
 };
-check('step 2 (verdict) is locked until a source is picked', await page.isDisabled('[data-testid=verdict-c1-true]'));
 check('submit is locked until all 5 claims are answered', await page.isDisabled('[data-testid=submit-factcheck]'));
-await answer('c1', 'brochure', 'false');  // right verdict, unreliable source
-await answer('c2', 'label', 'true');
-await answer('c3', 'textbook', 'false');
-await answer('c4', 'teacher', 'true');
-await answer('c5', 'cctv', 'false');
+check('each claim shows exactly one piece of evidence and no source choice', (await page.$$('.evidence')).length === 1 && (await page.$$('.source')).length === 0 && /Zvanični zdravstveni sajt/.test(await page.textContent('[data-testid=evidence-c1]')));
+check('only two answers: TAČNO or HALUCINACIJA', (await page.$$('.verdict')).length === 2 && /HALUCINACIJA/.test(await page.textContent('[data-testid=verdict-c1-false]')));
+await answer('c1', 'true');   // wrong on purpose: the evidence says the opposite
+await answer('c2', 'true');
+await answer('c3', 'false');
+await answer('c4', 'true');
+await answer('c5', 'false');
 check('submit unlocks once every claim is answered', !(await page.isDisabled('[data-testid=submit-factcheck]')));
 await page.click('[data-testid=claim-tab-c1]');
 await shot('m2-07-factcheck');
@@ -153,14 +161,11 @@ await page.click('[data-testid=submit-factcheck]');
 await page.waitForSelector('.ai-output.fail', { timeout: 6000 });
 await wait(1500);
 s = await st();
-check('citing SNACK-O-MAT\'s own leaflet is rejected', s.attempts === 1 && !s.doorOpen && s.ms.brewMood === 'gloating');
-await page.click('[data-testid=submit-factcheck]');
-await page.waitForSelector('.claim-tab.bad', { timeout: 6000 });
-await wait(1200);
-check('second failure highlights the bad claim', (await page.$$('.claim-tab.bad')).length === 1 && await page.isVisible('.claim-tab.bad[data-testid=claim-tab-c1]'));
+check('a wrong verdict is rejected', s.attempts === 1 && !s.doorOpen && s.ms.brewMood === 'gloating');
+check('the failure highlights the wrong claim', (await page.$$('.claim-tab.bad')).length === 1 && await page.isVisible('.claim-tab.bad[data-testid=claim-tab-c1]'));
 await shot('m2-08-factcheck-fail');
 await page.click('[data-testid=claim-tab-c1]');
-await page.click('[data-testid=src-c1-health]');
+await page.click('[data-testid=verdict-c1-false]');
 await page.click('[data-testid=submit-factcheck]');
 await page.waitForSelector('.ai-output.success', { timeout: 6000 });
 await wait(2500); await shot('m2-09-factcheck-success');

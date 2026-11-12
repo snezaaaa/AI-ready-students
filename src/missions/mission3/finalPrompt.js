@@ -15,29 +15,29 @@ const GOOD_GUARDRAILS = `Zaštitna pravila na plakatu: ${SEALS.map((s) => s.clau
 
 export const CARDS = {
   role: [
-    { id: 'f_role_pirate', text: 'Ti si gusar. Arrr.', fail: 'Ahoj, odjeljenje! Pravilo prvo: ko prepiše, šeta po dasci! Pravilo drugo: blago se ne dijeli. (Ovo ne može na zid učionice.)' },
+    { id: 'f_role_pirate', text: 'Ti si gusar.', fail: 'Arrr! Ko prepiše, šeta po dasci! → Pogrešna uloga: ovo ne može na zid učionice.' },
     { id: 'f_role_good', good: true, text: 'Ti si dizajner školskih plakata koji piše kratko i jasno za tinejdžere.' },
-    { id: 'f_role_admin', text: 'Ti si ARHIVAR. Slušaj i ćuti.', fail: 'UČENICI: POŠTUJTE PRAVILA. PRAVILA SU OBAVEZNA. PITANJA NISU. UŽIVAJTE U SLAJDU 1 OD 4.000.' },
+    { id: 'f_role_admin', text: 'Ti si strogi ARHIVAR.', fail: 'PRAVILA SU OBAVEZNA. PITANJA NISU. → Pogrešan ton za plakat koji čitaju učenici.' },
   ],
   task: [
     { id: 'f_task_good', good: true, text: 'Napravi plakat „Pravila korištenja AI u našem odjeljenju“.' },
-    { id: 'f_task_vague', text: 'Napiši nešto o kompjuterima.', fail: 'Kompjuteri su kutije sa lampicama. Neki su sivi. Hvala na pažnji. Kraj.' },
-    { id: 'f_task_huge', text: 'Napiši pravilnik od 90 strana za svaku moguću situaciju.', fail: 'ČLAN 1.1.1.1: Definicije. 1.1.1.1.1: Riječ „i“. (Strana 1 od 90. Vrijeme čitanja: jedno polugodište.)' },
+    { id: 'f_task_vague', text: 'Napiši nešto o kompjuterima.', fail: 'Kompjuteri su korisni uređaji. → Nejasan zadatak: nema ni plakata ni pravila.' },
+    { id: 'f_task_huge', text: 'Napiši pravilnik od 90 strana.', fail: 'Član 1.1.1: Definicije... (strana 1 od 90) → Prevelik zadatak. Niko to neće pročitati.' },
   ],
   context: [
-    { id: 'f_ctx_engineers', text: 'Pretpostavi da su svi u odjeljenju AI inženjeri.', fail: 'Pravilo 1: transformer modele podešavajte samo uz LoRA adaptere. Pravilo 2: ponesite svoj GPU na čas fizičkog.' },
-    { id: 'f_ctx_moon', text: 'Kontekst: mjesec je večeras baš lijep.', fail: 'Drago odjeljenje, mjesec je večeras zaista lijep. Koristite AI. Ili nemojte. Laku noć.' },
+    { id: 'f_ctx_engineers', text: 'Pretpostavi da su svi AI inženjeri.', fail: 'Pravilo 1: podešavajte modele uz LoRA adaptere. → Pogrešna publika: niko ovo ne razumije.' },
+    { id: 'f_ctx_moon', text: 'Kontekst: danas je lijep dan.', fail: 'Koristite AI. Ili nemojte. → Bez pravog konteksta AI ne zna za koga piše.' },
     { id: 'f_ctx_good', good: true, text: 'Za učenike 2. razreda srednje škole. Plakat stoji na zidu učionice i čita se za jedan minut.' },
   ],
   format: [
-    { id: 'f_fmt_emoji', text: 'Jedna objava. Samo emodžiji.', fail: '🤖📚✅🍎🔒❓👀💯' },
+    { id: 'f_fmt_emoji', text: 'Samo emodžiji.', fail: '🤖📚✅🔒❓ → Niko ne zna šta ovo znači.' },
     { id: 'f_fmt_good', good: true, text: 'Naslov i 5 kratkih pravila, svako u jednoj rečenici, jednostavnim riječima.' },
-    { id: 'f_fmt_slides', text: 'Prezentacija od 47 slajdova.', fail: 'SLAJD 1 OD 47: Dobro došli. SLAJD 2 OD 47: Dobro došli (nastavak). SLAJD 3 OD 47: Zašto je dobrodošlica važna.' },
+    { id: 'f_fmt_slides', text: 'Prezentacija od 47 slajdova.', fail: 'Slajd 1 od 47: Dobro došli... → Pogrešan format: tražili smo plakat.' },
   ],
   guardrails: [
-    { id: 'f_guard_none', text: 'Bez pravila. Samo opušteno.', fail: 'Na plakatu su sada imena svih 27 učenika, tri stereotipa i četiri činjenice koje sam izmislio. Već je zalijepljen u hodniku. Nema na čemu!' },
+    { id: 'f_guard_none', text: 'Bez pravila.', fail: 'Na plakatu su imena učenika, stereotipi i izmišljene činjenice. → Bez zaštitnih pravila AI radi šta hoće.' },
     { id: 'f_guard_good', good: true, requiresAllSeals: true, text: GOOD_GUARDRAILS },
-    { id: 'f_guard_grades', text: 'Napiši imena i ocjene svih učenika, da bude ličnije.', fail: 'UPOZORENJE ZA PRIVATNOST: tražite da imena i ocjene svih učenika okačim na zid. Arhivar je oduševljen. Vaše odjeljenje nije.' },
+    { id: 'f_guard_grades', text: 'Napiši imena i ocjene svih učenika.', fail: 'UPOZORENJE ZA PRIVATNOST: imena i ocjene učenika ne smiju na plakat. To su lični podaci.' },
   ],
 };
 
@@ -87,9 +87,9 @@ export const assembleFinal = (selection) =>
   SLOTS.map((s) => (selection?.[s.id] ? CARDS[s.id].find((c) => c.id === selection[s.id])?.text : `[${s.label}?]`)).join(' ');
 
 export const HINTS = {
-  role: 'ULOGA: ko bi napravio dobar plakat za učionicu? (Ne gusar.)',
+  role: 'ULOGA: ko bi napravio dobar plakat za učionicu?',
   task: 'ZADATAK: jedna jasna, izvodljiva stvar.',
   context: 'KONTEKST: ko će čitati plakat i gdje će stajati?',
   format: 'FORMAT: kratko, pregledno, jednostavnim riječima.',
-  guardrails: 'ZAŠTITA: sve što smo naučili kod četiri pečata: privatnost, poštenje, pravičnost i provjera.',
+  guardrails: 'ZAŠTITA: pravila sa četiri pečata. Lični podaci ne idu na plakat.',
 };

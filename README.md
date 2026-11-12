@@ -6,6 +6,16 @@ Ovo je učenička verzija igre *Dungeons and Deadlines: THE FINAL PROMPT*. Origi
 
 Napravljeno pomoću **Vite + React + Three.js + React Three Fiber**. Nema servera, nema AI API-ja, nema naloga. Sve se pretvara u obične statičke fajlove.
 
+## Skakanje i zvjezdice
+
+- **Dupli skok:** pritisni Space dvaput.
+- **Platforme:** možeš da skočiš na klupe, stolove, pult i sofu i da stojiš na njima.
+- **Zvjezdice:** u svakoj misiji ima 10 zvjezdica. Do svake se dolazi skokom (sa poda, duplim skokom ili sa klupe). Broj se vidi u HUD-u i na završnom ekranu. U Misiji 2 svaka zvjezdica daje i malo energije.
+
+## Tekst u igri
+
+Svaka interakcija ima **jednu kratku rečenicu**, bez šala. Titl ostaje duže na ekranu. Kad lik ne može nešto da uradi, piše samo ko može i koji taster da pritisneš („Ovo može samo GPT. Pritisni 1.“).
+
 ## Likovi
 
 Četiri izmišljena crtana lika. Nemaju prave logotipe ni boje kompanija. Nijedan nije „loš“: svaki ima svoju prednost i svaki je potreban u svakoj misiji.
@@ -36,10 +46,10 @@ Napravljeno pomoću **Vite + React + Three.js + React Three Fiber**. Nema server
    - KONTEKST: „Ja sam učenik 1. razreda gimnazije, kontrolni je za 3 dana, imam 30 min dnevno i slabije razumijem hemijski dio.“
    - FORMAT: „Daj tabelu: Dan, Šta učim, Kako se provjerim.“
 
-   Lažne kartice (toster, „uradi nešto sa biljkama“, „kontekst: utorak je“, interpretativni ples...) daju smiješan odgovor, alarm i savjet. Od drugog pokušaja pogrešna polja su označena.
+   Lažne kartice (toster, „uradi nešto sa biljkama“, „kontekst: utorak je“...) daju kratak loš odgovor i objašnjenje zašto je loš.
 4. Tačna kombinacija daje plan učenja za 3 dana u tabeli i otključava vrata. Prođi kroz vrata za pobjedu i objašnjenje metode Uloga / Zadatak / Kontekst / Format, uz savjet: prvi odgovor je nacrt, traži doradu i provjeri činjenice.
 
-Tu su i dodatne šale: računari na klupama, pult sa užinom, sat, pametna tabla, sumnjivi fikus, vrata Misije 2.
+Računari na klupama i pametna tabla daju kratke savjete.
 
 ## Misija 2: Kriza kod automata (školski hodnik)
 
@@ -65,9 +75,9 @@ Uči **provjeru činjenica**: halucinacije, pouzdanost izvora i provjeru.
 | Nastavnica biologije | Telefon u katedri | 3 · Copilot |
 | Deklaracija na limenci | Durljiva vitrina sa sokovima (treba lijepa riječ) | 4 · Claude |
 
-   Nepouzdani mamci: letak samog SNACK-O-MAT-a, snimak ekrana sa TikToka i ceduljica „drug iz odjeljenja je čuo“.
-3. **Ne zaspi.** Skala **energije** pada dok istražuješ (oko 5 minuta od pune). **Usisivač-Botovi** te odbace i troše energiju. Puni se na česmi, jabukom iz kantine i užinom iz ranca. Na 0% cijela ekipa **zaspi na času** (neuspjeh), pa se budi sa 60%.
-4. Na **Stanici za provjeru činjenica** idi tvrdnju po tvrdnju: **① izaberi JEDAN izvor kojem vjeruješ**, pa **② odluči da li je tvrdnja TAČNA ili NETAČNA**. Tvrdnja se računa samo ako je sud tačan **i** izvor pouzdan.
+   Nepouzdani izvori (letak samog SNACK-O-MAT-a, snimak ekrana sa TikToka, ceduljica „drug iz odjeljenja je čuo“) mogu da se pokupe, ali igra odmah kaže da se ne računaju kao dokaz.
+3. **Ne zaspi.** Skala **energije** pada dok istražuješ (oko 5 minuta od pune). **Usisivač-Botovi** te odbace i troše energiju. Puni se na česmi, jabukom iz kantine, užinom iz ranca i zvjezdicama. Robota možeš da preskočiš ili da skočiš na sto. Na 0% cijela ekipa **zaspi na času** (neuspjeh), pa se budi sa 60%.
+4. Na **Stanici za provjeru** idi tvrdnju po tvrdnju. Uz svaku tvrdnju stoji **jedan dokaz** (onaj koji si pronašao/la). Pročitaj ga i označi: **TAČNO** ili **HALUCINACIJA**. Dok nemaš dokaz, dugmad su zaključana i piše gdje da ga tražiš.
 5. Kad je svih pet provjereno, automat priznaje grešku i izbacuje užinu, a vrata ka arhivi se otvaraju. Objašnjenje na kraju: halucinacije, AI zvuči sigurno i kad griješi, kako provjeriti izvor, AI nije uvijek u krivu.
 
 ## Misija 3: Konačni sertifikat (školska arhiva)
@@ -101,7 +111,8 @@ Podaci o potpisu i organizatoru su u `src/missions/mission3/ui.jsx` (`ISSUER`, `
 ### Kontrole
 | Taster | Radnja |
 |---|---|
-| W A S D / strelice | Kretanje (Shift = trčanje, Space = skok) |
+| W A S D / strelice | Kretanje (Shift = trčanje) |
+| Space | Skok; još jednom u vazduhu = dupli skok |
 | Miš | Kamera iz trećeg lica (klikni na igru ili prevuci; točkić zumira) |
 | E | Akcija |
 | 1 – 4 | Promjena lika |

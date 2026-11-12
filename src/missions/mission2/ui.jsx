@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useGame } from '../../game/store.js';
 import { sfx } from '../../game/audio.js';
-import { CLAIMS, SOURCES, sourcesFor } from './factCheck.js';
+import { CLAIMS, SOURCES, evidenceFor } from './factCheck.js';
+import { ROSTER } from '../../characters/roster.js';
 import { submitFactCheck, startGroundedSequence } from './logic.js';
 
 // ---------------------------------------------------------------- energy meter (HUD)
@@ -34,22 +35,13 @@ export function NapOverlay() {
 }
 
 // ---------------------------------------------------------------- fact-check station
-const VERDICTS = [[true, '✔ TAČNO'], [false, '✖ NETAČNO (halucinacija)']];
+const VERDICTS = [[true, '✔ TAČNO'], [false, '✖ HALUCINACIJA']];
 const NONE = {};
-
-const STATUS_TEXT = {
-  ok: '✔ provjereno',
-  lucky: '⚠ tačan odgovor, ali nepouzdan izvor',
-  unreliable: '✖ nepouzdan izvor',
-  wrong: '✖ izvor kaže suprotno',
-  missing: '✖ nije odgovoreno',
-};
+const STATUS_TEXT = { ok: '✔ tačno', wrong: '✖ dokaz kaže suprotno', missing: '✖ nije odgovoreno' };
 
 /**
- * One claim at a time, two explicit steps:
- *   STEP 1  pick ONE source you trust   (radio-style)
- *   STEP 2  decide TRUE or FALSE         (unlocks after step 1)
- * A progress bar shows all five claims; SUBMIT unlocks when every claim is answered.
+ * One claim at a time. Each claim shows ONE piece of evidence (found in the hallway);
+ * the player reads it and marks the claim TRUE or HALLUCINATION.
  */
 export function FactChecker() {
   const inventory = useGame((s) => s.inventory);
@@ -70,11 +62,11 @@ export function FactChecker() {
     return () => clearInterval(id);
   }, [result]);
 
-  const setAnswer = (claimId, patch) => {
+  const setVerdict = (claimId, verdict) => {
     sfx.interact();
-    useGame.getState().patchMs((m) => ({ answers: { ...m.answers, [claimId]: { ...(m.answers?.[claimId] || {}), ...patch } } }));
+    useGame.getState().patchMs((m) => ({ answers: { ...m.answers, [claimId]: { verdict } } }));
   };
-  const isDone = (c) => !!answers[c.id]?.source && typeof answers[c.id]?.verdict === 'boolean';
+  const isDone = (c) => typeof answers[c.id]?.verdict === 'boolean' && !!evidenceFor(c.id, inventory);
   const doneCount = CLAIMS.filter(isDone).length;
 
   const onSubmit = () => {
@@ -87,11 +79,12 @@ export function FactChecker() {
     }, 700);
   };
 
-  const showStatus = result && !result.success && attempts >= 2;
-  const reliableFound = inventory.filter((k) => SOURCES[k]?.reliable).length;
+  const showStatus = result && !result.success;
   const c = CLAIMS[current];
   const a = answers[c.id] || {};
-  const options = sourcesFor(c.id, inventory);
+  const evId = evidenceFor(c.id, inventory);
+  const ev = evId ? SOURCES[evId] : null;
+  const need = SOURCES[c.reliable];
   const status = showStatus ? result.results[c.id] : null;
   const isLast = current === CLAIMS.length - 1;
 
@@ -100,11 +93,8 @@ export function FactChecker() {
       <div className="builder factcheck">
         <div className="builder-head">
           <div>
-            <div className="builder-title">STANICA ZA PROVJERU ČINJENICA <span>// prizemljujemo SNACK-O-MAT</span></div>
-            <div className="builder-sub how">
-              Za svaku od 5 tvrdnji: <b>① izaberi JEDAN izvor kojem vjeruješ</b>, pa <b>② odluči da li je tvrdnja TAČNA ili NETAČNA</b>.
-              Odgovori na svih 5, pa pošalji. Pouzdanih dokaza do sada: <b>{reliableFound}/5</b>.
-            </div>
+            <div className="builder-title">PROVJERA ČINJENICA</div>
+            <div className="builder-sub how">Pročitaj dokaz i označi: <b>TAČNO</b> ili <b>HALUCINACIJA</b>. Dokaza: <b>{CLAIMS.filter((x) => evidenceFor(x.id, inventory)).length}/5</b></div>
           </div>
           <button className="btn small" onClick={() => useGame.getState().closeBuilder()} data-testid="builder-close">✕ Zatvori (Esc)</button>
         </div>
@@ -126,58 +116,40 @@ export function FactChecker() {
           <div className="claim-count">Tvrdnja {current + 1} od {CLAIMS.length}{status && <em className="claim-status"> · {STATUS_TEXT[status]}</em>}</div>
           <div className="claim-text big">SNACK-O-MAT kaže: „{c.text}“</div>
 
-          <div className="step">
-            <div className="step-title"><span className="step-num">1</span> Kojem <u>jednom</u> izvoru vjeruješ? <small>Pogledaj ko ga je napisao.</small></div>
-            <div className="sources" role="radiogroup">
-              {options.map((sid) => {
-                const src = SOURCES[sid];
-                const sel = a.source === sid;
-                return (
-                  <button key={sid} role="radio" aria-checked={sel} data-testid={`src-${c.id}-${sid}`} disabled={busy}
-                    className={`source ${sel ? 'sel' : ''}`} style={{ '--c': src.color }}
-                    onClick={() => setAnswer(c.id, { source: sid })}>
-                    <span className="radio" aria-hidden="true" />
-                    <b>{src.title}</b>
-                    <small>Autor: {src.author}</small>
-                    <span className="says">„{src.claims[c.id]}“</span>
-                  </button>
-                );
-              })}
+          {ev ? (
+            <div className="evidence" style={{ '--c': ev.color }} data-testid={`evidence-${c.id}`}>
+              <b>🔎 Dokaz: {ev.short}</b>
+              <span className="says">„{ev.claims[c.id]}“</span>
             </div>
-            {!options.some((sid) => SOURCES[sid].reliable) && (
-              <div className="source-missing">🔍 Za ovu tvrdnju imaš samo materijale samog SNACK-O-MAT-a (ili glasine). Prvo nađi pravi dokaz u hodniku: svaki izvor otključava jedan od likova.</div>
-            )}
-          </div>
+          ) : (
+            <div className="source-missing" data-testid={`evidence-missing-${c.id}`}>🔒 Još nemaš dokaz. Potraži u hodniku: <b>{need.short}</b> (treba {ROSTER.find((x) => x.id === need.who).name}).</div>
+          )}
 
-          <div className={`step ${a.source ? '' : 'locked'}`}>
-            <div className="step-title"><span className="step-num">2</span> Prema tom izvoru, tvrdnja je…{!a.source && <small> prvo izaberi izvor</small>}</div>
-            <div className="verdicts">
-              {VERDICTS.map(([v, label]) => (
-                <button key={label} data-testid={`verdict-${c.id}-${v}`} disabled={busy || !a.source}
-                  className={`verdict ${v ? 'true' : 'false'} ${a.verdict === v ? 'sel' : ''}`}
-                  onClick={() => setAnswer(c.id, { verdict: v })}>{label}</button>
-              ))}
-            </div>
+          <div className="verdicts">
+            {VERDICTS.map(([v, label]) => (
+              <button key={label} data-testid={`verdict-${c.id}-${v}`} disabled={busy || !ev}
+                className={`verdict ${v ? 'true' : 'false'} ${a.verdict === v ? 'sel' : ''}`}
+                onClick={() => setVerdict(c.id, v)}>{label}</button>
+            ))}
           </div>
 
           <div className="claim-nav">
             <button className="btn small" disabled={current === 0} onClick={() => setCurrent(current - 1)} data-testid="claim-prev">◀ Prethodna</button>
-            {!isLast && <button className={`btn ${isDone(c) ? 'primary pulse' : ''}`} onClick={() => setCurrent(current + 1)} data-testid="claim-next">Sljedeća tvrdnja ▶</button>}
+            {!isLast && <button className={`btn ${isDone(c) ? 'primary pulse' : ''}`} onClick={() => setCurrent(current + 1)} data-testid="claim-next">Sljedeća ▶</button>}
           </div>
         </div>
 
         <div className="builder-foot">
           <button className="btn primary big" onClick={onSubmit} disabled={busy || doneCount < CLAIMS.length} data-testid="submit-factcheck">
-            {busy && !result ? 'SNACK-O-MAT PREGLEDA…' : '⚡ POŠALJI PROVJERU'}
+            {busy && !result ? 'PREGLEDAM…' : '⚡ POŠALJI'}
           </button>
-          <span className="muted">{doneCount < CLAIMS.length ? `Odgovoreno: ${doneCount} od ${CLAIMS.length}` : 'Sve tvrdnje su odgovorene!'} · Pokušaja: {attempts}</span>
+          <span className="muted">Odgovoreno: {doneCount}/{CLAIMS.length} · Pokušaja: {attempts}</span>
         </div>
 
         {(result || busy) && (
           <div className={`ai-output ${result ? (result.success ? 'success' : 'fail') : ''}`} data-testid="ai-output">
-            <div className="ai-head">{!result ? 'ANALIZIRAM…' : result.success ? `✅ SVE TVRDNJE PROVJERENE — TAČNOST ${result.score}%` : `❌ PROVJERA ODBIJENA — TAČNOST ${result.score}%`}</div>
+            <div className="ai-head">{!result ? 'ANALIZIRAM…' : result.success ? `✅ SVE PROVJERENO — TAČNOST ${result.score}%` : `❌ NIJE PROŠLO — TAČNOST ${result.score}%`}</div>
             <pre>{typed}</pre>
-            {result?.success && <div className="ai-foot">Izbacujem užinu… otključavam hodnik ka arhivi…</div>}
           </div>
         )}
       </div>

@@ -9,6 +9,7 @@ import { ROSTER } from '../characters/roster.js';
  */
 const initialProgress = () => ({
   inventory: [],          // collected prompt component slot ids
+  stars: [],              // indices of collected bonus stars (see mission.stars)
   flags: {},              // mission-specific flags (e.g. terminalOn)
   attempts: 0,
   lastResult: null,
@@ -52,6 +53,7 @@ export const useGame = create((set, get) => ({
     set((s) => ({ inventory: [...s.inventory, slotId] }));
     return true;
   },
+  collectStar: (i) => set((s) => (s.stars.includes(i) ? s : { stars: [...s.stars, i] })),
   showToast: (toast) => set({ toast: { ...toast, key: Math.random() } }),
   clearToast: () => set({ toast: null }),
 

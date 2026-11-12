@@ -38,6 +38,13 @@ export const VICTORY_SPOTS = [
   [-1.8, -15.1, 0], [-0.6, -14.6, 0], [0.6, -14.6, 0], [1.8, -15.1, 0],
 ];
 
+// Bonus stars [x, y, z]: above desks (jump on the desk, then jump again) and in mid-air (jump / double jump).
+export const STARS = [
+  ...DESKS.map((d) => [d.x, 3.5, d.z]),
+  [PROPS.coffee.x - 1, 3.6, PROPS.coffee.z],
+  [0.8, 2.7, 0], [-4.5, 2.7, -6], [-8, 2.7, 6], [7, 3.3, 6],
+];
+
 export const EXIT_ZONE = { minX: -5, maxX: 5, minZ: -17, maxZ: -11 };
 
 export function buildColliders() {
@@ -56,17 +63,18 @@ export function buildColliders() {
     { minX: LOBBY.maxX, maxX: LOBBY.maxX + t, minZ: LOBBY.minZ - t, maxZ: LOBBY.maxZ },
     { minX: LOBBY.minX, maxX: LOBBY.maxX, minZ: LOBBY.minZ - t, maxZ: LOBBY.minZ },
     // furniture
-    ...DESKS.map((d) => box(d.x, d.z, DESK_SIZE.w, DESK_SIZE.d)),
+    // `top` = platform height: you can jump onto these and stand on them
+    ...DESKS.map((d) => box(d.x, d.z, DESK_SIZE.w, DESK_SIZE.d, { top: 0.82 })),
     box(PROPS.lectern.x, PROPS.lectern.z, 0.9, 1.1),
     box(-11.6, 0, 0.8, 7.4),                                  // screen stage
     box(PROPS.printer.x, PROPS.printer.z, 1.4, 1.3),
     box(PROPS.cabinet.x, PROPS.cabinet.z, 1.0, 1.0),
     box(PROPS.vending.x, PROPS.vending.z, 1.3, 1.4),
-    box(PROPS.coffee.x, PROPS.coffee.z, 3.2, 1.1),
+    box(PROPS.coffee.x, PROPS.coffee.z, 3.2, 1.1, { top: 1.0 }),
     box(PROPS.plant.x, PROPS.plant.z, 0.9, 0.9),
     box(-11.2, -8.2, 0.9, 0.9), box(-11.2, 8.2, 0.9, 0.9),   // decorative plants
     box(PROPS.whiteboard.x, 8.85, 3.6, 0.3),
-    box(-3.8, -16.6, 1.6, 0.8), box(3.8, -16.6, 1.6, 0.8),   // lobby benches
+    box(-3.8, -16.6, 1.6, 0.8, { top: 0.56 }), box(3.8, -16.6, 1.6, 0.8, { top: 0.56 }),   // lobby benches
   ];
   return c;
 }

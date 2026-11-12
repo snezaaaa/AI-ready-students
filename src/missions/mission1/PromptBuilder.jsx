@@ -7,7 +7,7 @@ export default function PromptBuilder() {
   return (
     <PromptBuilderBase
       title="GRADITELJ PROMPTA" tag="// PROMPTOTRON 3000"
-      subtitle="Izaberi po jednu karticu za svaki dio. Kartice koje sijaju pronađene su u učionici. Ostale su došle uz program. (Sumnjivo.)"
+      subtitle="Izaberi po jednu karticu u svakoj koloni. Kartice koje sijaju su one koje si pronašao/la."
       slots={SLOTS} cards={CARDS}
       isAvailable={isCardAvailable}
       lockedText={(slot) => `Još nije pronađeno — potraži dio ${slot.label} u učionici`}

@@ -32,6 +32,7 @@ test('empty selection fails and names the empty parts', () => {
   assert.equal(r.score, 0);
   assert.equal(r.missing.length, 4);
   assert.match(r.output, /ULOGA/);
+  assert.match(r.output, /Nedostaje/);
 });
 
 test('every slot has exactly one good card and decoys with failure text', () => {

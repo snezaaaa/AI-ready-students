@@ -3,7 +3,6 @@ import { useGame } from '../game/store.js';
 import { world, emote } from '../game/world.js';
 import { initAudio, sfx } from '../game/audio.js';
 import { getMission } from '../missions/registry.js';
-import { ROSTER } from '../characters/roster.js';
 import { findNearby } from '../game/interaction.js';
 
 const G = () => useGame.getState();
@@ -58,22 +57,12 @@ export function restartMission() {
   startMission({ skipIntro: true });
 }
 
-const SWITCH_LINES = {
-  mastermind: ['Imam plan. I rezervni plan. I plan za rezervni plan.', 'Odmaknite se. Razmišljam naglas.', 'Pametni dio prepustite meni.'],
-  joker: ['Neko je tražio malo smijeha?', 'Stigao sam! Bez panike. Osim ako je smiješna.', 'Gemi na sceni!'],
-  boss: ['Dobro. Hajde da ovo lijepo organizujemo.', 'Preuzimam. Već pravim tabelu.', 'Sve se može dogovoriti. Sve.'],
-  commentator: ['Tu sam. Idemo polako i jasno.', 'Rado ću pomoći. I objasniti.', 'Proba mikrofona. Jedan, dva. Čuje se odlično.'],
-};
-
 export function switchTo(i) {
   const s = G();
   if (!['playing'].includes(s.phase) || s.builderOpen || s.paused) return;
   if (!s.switchCharacter(i)) return;
   sfx.switch();
   emote(i, 'cheer', 0.9);
-  const id = ROSTER[i].id;
-  const lines = SWITCH_LINES[id];
-  s.say({ who: id, text: lines[Math.floor(Math.random() * lines.length)], duration: 1.8 }, { interrupt: true });
 }
 
 export function interact() {

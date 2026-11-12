@@ -61,7 +61,7 @@ function useTextures() {
     return {
       floor, books, skyline,
       breakSign: sign(512, 128, '#7c2d12', '#fde68a', ['ŠKOLSKI HODNIK'], 54),
-      noNap: sign(256, 128, '#1e3a8a', '#ffffff', ['NE SPAVAJ', 'Kućni red, član 7'], 34),
+      noNap: sign(256, 128, '#1e3a8a', '#ffffff', ['NE SPAVAJ', 'pazi na energiju'], 34),
       station: sign(512, 128, '#f59e0b', '#111111', ['PROVJERA ČINJENICA', 'vjeruj · ali · provjeri'], 44),
       manager: sign(256, 64, '#111827', '#facc15', ['KATEDRA · NE DIRAJ'], 26),
       m3: sign(512, 256, '#1e1b4b', '#c4b5fd', ['MISIJA 3', 'KONAČNI SERTIFIKAT', 'SLJEDEĆA MISIJA'], 44),
@@ -69,7 +69,7 @@ function useTextures() {
       donutLabel: sign(256, 64, '#dcfce7', '#166534', ['JABUKE · KANTINA'], 26),
       bulletin: makeCanvasTexture(512, 320, (g, w, h) => {
         g.fillStyle = '#b45309'; g.fillRect(0, 0, w, h); g.fillStyle = '#d97706'; g.fillRect(12, 12, w - 24, h - 24);
-        const notes = [['#fef9c3', 'IZGUBLJENO: moja volja za kontrolni. Viđena kod automata.'], ['#e0f2fe', 'Raspored zvonjenja: uvijek prerano ujutru.'], ['#ffffff', 'ZdravljeHack420: „light čips je bukvalno vazduh lol“'], ['#fce7f3', 'Sekcija: šah, srijedom. Ponesi strpljenje.']];
+        const notes = [['#fef9c3', 'Kontrolni iz biologije: petak, 3. čas.'], ['#e0f2fe', 'Raspored zvonjenja'], ['#ffffff', 'ZdravljeHack420: „light čips je bukvalno vazduh“'], ['#fce7f3', 'Šahovska sekcija: srijedom.']];
         notes.forEach(([c, t], i) => { const x = 30 + (i % 2) * 240, y = 30 + Math.floor(i / 2) * 140; g.save(); g.translate(x + 100, y + 60); g.rotate((i - 1.5) * 0.04); g.fillStyle = c; g.fillRect(-100, -60, 200, 120); g.fillStyle = '#111'; g.font = 'bold 17px system-ui'; wrapText(g, t, -88, -32, 176, 21); g.fillStyle = '#dc2626'; g.beginPath(); g.arc(0, -52, 6, 0, 7); g.fill(); g.restore(); });
       }),
     };

@@ -60,6 +60,20 @@ await page.keyboard.press('Space');
 let yJump = 0;
 for (let i = 0; i < 12; i++) { yJump = Math.max(yJump, await page.evaluate(() => window.__world.chars[0].y)); await wait(50); }
 check('jump works', yJump > 0.1, `y=${yJump.toFixed(2)}`);
+// ---- double jump, standing on a desk, bonus star
+await wait(900);
+await page.keyboard.press('Space'); await wait(260); await page.keyboard.press('Space');
+let yDouble = 0;
+for (let i = 0; i < 14; i++) { yDouble = Math.max(yDouble, await page.evaluate(() => window.__world.chars[0].y)); await wait(40); }
+check('double jump goes higher than a single jump', yDouble > 1.25, `y=${yDouble.toFixed(2)}`);
+await wait(900);
+await page.evaluate(() => { const c = window.__world.chars[0]; c.x = -2; c.z = 0; c.y = 1.2; c.vy = 0; c.vx = c.vz = 0; c.grounded = false; });
+await wait(700);
+const onDesk = await page.evaluate(() => { const c = window.__world.chars[0]; return { y: c.y, grounded: c.grounded }; });
+check('you can stand on a desk (platform)', Math.abs(onDesk.y - 0.82) < 0.02 && onDesk.grounded, JSON.stringify(onDesk));
+await page.keyboard.press('Space'); await wait(600);
+check('jumping from the desk grabs the star above it', (await page.evaluate(() => window.__game.useGame.getState().stars.length)) === 1 && /1\/10/.test(await page.textContent('[data-testid=stars]')));
+await wait(700); await shot('04b-on-desk-star');
 
 // ---- character switching
 await page.keyboard.press('Digit3');
@@ -77,7 +91,7 @@ await shot('05-interact-prompt');
 await page.keyboard.press('KeyE');
 await wait(400);
 let s = await st();
-check('wrong character cannot solve the riddle (fails gracefully)', s.inventory.length === 0 && /GPT/.test(s.line), s.line.slice(0, 60));
+check('wrong character cannot solve the riddle: one short line that names who can', s.inventory.length === 0 && /Ovo može samo GPT\. Pritisni 1\./.test(s.line), s.line.slice(0, 60));
 
 const plan = [['Digit1', 0, 'whiteboard', 'role'], ['Digit2', 1, 'printer', 'task'], ['Digit3', 2, 'vending', 'format'], ['Digit2', 1, 'cabinet', 'context']];
 for (const [key, idx, obj, slot] of plan) {
@@ -144,7 +158,7 @@ for (let i = 0; i < 8 && (await st()).phase === 'victory'; i++) { await page.key
 check('mission complete screen with lesson', await waitPhase('complete', 10000));
 await wait(600); await shot('13-complete');
 const dtxt = await page.textContent('[data-testid=complete-screen]');
-check('debrief is in Montenegrin: 33% + the four ingredients', /33%/.test(dtxt) && /MISIJA 1 ZAVRŠENA/.test(dtxt) && /ULOGA/.test(dtxt) && /prvi odgovor je samo nacrt/.test(dtxt));
+check('debrief is in Montenegrin: 33% + the four ingredients', /33%/.test(dtxt) && /MISIJA 1 ZAVRŠENA/.test(dtxt) && /ULOGA/.test(dtxt) && /prvi odgovor je samo nacrt/.test(dtxt) && /Zvjezdice: \d+\/10/.test(dtxt));
 check('debrief offers "Nastavi na Misiju 2"', /Nastavi na Misiju 2/.test(await page.textContent('[data-testid=next-mission]').catch(() => '')));
 
 // ---- responsive: small viewport loading/title

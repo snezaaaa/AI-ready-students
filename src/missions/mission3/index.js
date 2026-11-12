@@ -3,15 +3,15 @@ import VaultHall from './VaultHall.jsx';
 import * as m3 from './logic.js';
 import { VaultPuzzle, StrikesHud, LockdownOverlay, Finale } from './ui.jsx';
 import { SEALS } from './dilemmas.js';
-import { SPAWNS, buildColliders, OPEN_SPACES } from './layout.js';
+import { SPAWNS, buildColliders, OPEN_SPACES, STARS } from './layout.js';
 
 export default {
   id: 'mission3', number: 3, title: 'Konačni sertifikat', status: 'available',
-  tagline: 'Školska arhiva. Četiri pečata odgovorne upotrebe AI, hodnik sa senzorima i jedan konačni prompt. I prezentacija od 4.000 slajdova.',
+  tagline: 'Školska arhiva: 4 dileme o odgovornoj upotrebi AI, hodnik sa senzorima i konačni prompt.',
   announcement: 'PAŽNJA, UČENICI. ZA KONAČNI SERTIFIKAT TREBA... JOŠ JEDAN PROMPT.',
   certificate: 'SERTIFIKAT OTKLJUČAN 100%',
   attemptLabel: 'Pokušaja sa konačnim promptom',
-  ranks: ['AI ISTRAŽIVAČ: ODLIČAN (5)', 'AI ISTRAŽIVAČ', 'AI ISTRAŽIVAČ (IZ TREĆE, ALI VRIJEDI)'],
+  ranks: ['AI ISTRAŽIVAČ: ODLIČAN (5)', 'AI ISTRAŽIVAČ', 'AI ISTRAŽIVAČ: POČETNIK'],
   extraStats: (s) => `Greške kod pečata: ${s.ms.strikes || 0} · Vanredni časovi: ${s.ms.lockdowns || 0} · Aktivirani senzori: ${s.ms.zaps || 0}`,
   startYaw: 0,
   initialState: m3.initialState,
@@ -25,6 +25,7 @@ export default {
   ],
   Level: VaultHall,
   spawns: SPAWNS,
+  stars: STARS,
   colliders: buildColliders,
   openSpaces: OPEN_SPACES,
   interactables: m3.INTERACTABLES,

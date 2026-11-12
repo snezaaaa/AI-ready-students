@@ -55,12 +55,12 @@ function useStaticTextures() {
     });
     const whiteboard = makeCanvasTexture(1024, 512, (g, w, h) => {
       g.fillStyle = '#f8fafc'; g.fillRect(0, 0, w, h);
-      g.fillStyle = '#1d4ed8'; g.font = `bold 46px "Comic Sans MS", "Chalkboard SE", system-ui`; g.fillText('ZAGONETKA br. 1  (samo za genijalce)', 40, 70);
+      g.fillStyle = '#1d4ed8'; g.font = `bold 46px "Comic Sans MS", "Chalkboard SE", system-ui`; g.fillText('ZAGONETKA', 40, 70);
       g.fillStyle = '#111827'; g.font = `36px "Comic Sans MS", "Chalkboard SE", system-ui`;
       wrapText(g, '„Stručnjak sam, a nisam osoba. Igram nekoga, a nisam na sceni. Daj me AI-ju i znaće ko treba da bude. Šta sam ja?“', 40, 140, w - 80, 50);
       g.fillStyle = '#dc2626'; g.fillText('?????', 40, 420);
-      g.fillStyle = '#16a34a'; g.font = `28px "Comic Sans MS", system-ui`; g.fillText('- Gemi: „pantomimičar?“   - Copilot: „tabela?“', 40, 480);
-      g.fillStyle = '#fde047'; g.fillRect(820, 300, 160, 140); g.fillStyle = '#111'; g.font = '24px system-ui'; g.fillText('GPT:', 832, 340); g.fillText('ovo možeš', 832, 372); g.fillText('samo TI :)', 832, 404);
+      g.fillStyle = '#16a34a'; g.font = `28px "Comic Sans MS", system-ui`; g.fillText('Pomoć: jedan od 4 dijela prompta.', 40, 480);
+      g.fillStyle = '#fde047'; g.fillRect(820, 300, 160, 140); g.fillStyle = '#111'; g.font = '24px system-ui'; g.fillText('Rješava:', 832, 340); g.fillText('GPT', 832, 372); g.fillText('(taster 1)', 832, 404);
     });
     const vending = makeCanvasTexture(256, 512, (g, w, h) => {
       g.fillStyle = '#0f172a'; g.fillRect(0, 0, w, h);

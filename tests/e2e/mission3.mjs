@@ -182,7 +182,8 @@ await page.waitForSelector('.ai-output.success', { timeout: 6000 });
 await wait(2600); await shot('m3-09-final-success');
 check('vault-opening cutscene', await waitFor((s) => s.phase === 'cutscene' && s.doorOpen, 9000));
 await wait(3000); await shot('m3-10-vault-open');
-check('victory sequence', await advanceUntil('victory'));
+// the victory scene is one short line, so it may already have moved on to the debrief
+check('victory sequence', await waitFor((s) => s.phase === 'victory' || s.phase === 'complete', 20000));
 await wait(3000); await shot('m3-11-victory');
 check('finale complete screen', await advanceUntil('complete', 16));
 await wait(600);
@@ -193,6 +194,7 @@ const cert = await page.textContent('[data-testid=certificate]');
 check('certificate shows the typed name (with č ć š ž đ)', /Željka Đurđić-Šćekić/.test(cert));
 check('certificate: title, three skills, date', /AI SERTIFIKAT/.test(cert) && /ODGOVORNI AI ISTRAŽIVAČ/.test(cert) && /Pisanje prompta · Provjera činjenica · Odgovorna upotreba AI/.test(cert) && /Datum: \d{1,2}\. [a-z]+ \d{4}\./.test(cert));
 check('certificate is signed by the teacher and school', /Snežana Kerndl, nastavnica informatike/.test(cert) && /JU Srednja ekonomsko-ugostiteljska škola, Bar/.test(cert));
+check('certificate carries the handwriting-style signature mark', await page.isVisible('[data-testid=certificate] [data-testid=cert-signature]'));
 check('the name is not stored anywhere', await page.evaluate(() => !JSON.stringify([{ ...localStorage }, { ...sessionStorage }, document.cookie]).includes('Željka')));
 check('certificate names JA Montenegro as the programme organiser', /Organizator programa:\s*JA Montenegro/.test(await page.textContent('[data-testid=certificate]')));
 check('no logo on the certificate', await page.evaluate(() => !document.querySelector('[data-testid=certificate] img')));

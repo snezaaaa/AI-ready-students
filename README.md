@@ -102,7 +102,7 @@ Uči **odgovornu upotrebu AI** i spaja sve tri misije.
 ## Sertifikat
 
 - Naslov **AI SERTIFIKAT · Odgovorni AI istraživač**, polje za ime i prezime učenika/ce, tri savladane vještine (Pisanje prompta · Provjera činjenica · Odgovorna upotreba AI) i datum.
-- Potpis: **Snežana Kerndl, nastavnica informatike · JU Srednja ekonomsko-ugostiteljska škola, Bar**. Organizator programa: **JA Montenegro**.
+- Potpis: nacrtan rukopisni potpis („skerndl“, stilizovan, nije skeniran pravi potpis) iznad **Snežana Kerndl, nastavnica informatike · JU Srednja ekonomsko-ugostiteljska škola, Bar**. Organizator programa: **JA Montenegro**.
 - Štampa se na **A4, položeno, jedna strana**.
 - **Ime se nigdje ne čuva.** Postoji samo dok je stranica otvorena i koristi se samo za štampu.
 
